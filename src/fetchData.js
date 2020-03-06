@@ -1,17 +1,17 @@
 
 async function fetchData(search_key,sort_key) {
-    return fetch(`https://lxn3dioazc.execute-api.ap-northeast-1.amazonaws.com/prototype?id=` + search_key,
+    return fetch(`https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/owner?id=` + search_key,
     {  mode: 'cors'  })
     .then((response) => {
         return response.json();
     })
     .then((myJson) => {
-        if(myJson.Rows)return modeling(myJson.Rows);
-        else return [];
+        return myJson.items
     });
 }
 
 // Dynamo の JSON から内部用 JSON リストに成形
+// 【TODO】APIができたので、もう用無し
 function modeling(data){
     var items = data.L
     //  ラムダ側で以下の処理を済ませておく
