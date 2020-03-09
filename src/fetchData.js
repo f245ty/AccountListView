@@ -1,7 +1,6 @@
 
-async function fetchData(state) {
-    
-    const query = state;
+function getQeryString(state, csv_flag) {
+
     var sort_string;
     // リストの中のソートキーを取得
     if (!state.sort) {
@@ -9,14 +8,22 @@ async function fetchData(state) {
     } else {
         sort_string = Object.keys(state.sort)
     }
+
     // query_stringを作成
     var query_string = '?id=' + state.id
         + '&sort=' + sort_string
         + '&order=' + state.order
         + '&page=' + state.page
-        + '&rows=' + state.rows;
+        + '&rows=' + (csv_flag ? 0 : state.rows)
     console.log("query_string :" + query_string);
 
+    return query_string;
+}
+
+async function fetchData(state, csv_flag = false) {
+    
+    var query_string = getQeryString(state, csv_flag)
+    
     // 検索モードによってAPIを変更する
     let url = "";
     if (state.type === "owner") {
@@ -41,8 +48,8 @@ async function fetchData(state) {
                 return modeling(myJson, state);
             } else {
                 // console.error("Failed to search. : " + myJson.errorType);
-                query.items = [];
-                return query;
+                state.items = [];
+                return state;
             }
 
         });
@@ -71,7 +78,7 @@ function modeling(data, state) {
             rows.push(col);
         });
         // console.log("Received");
-        
+
         // 検索時のqueryと返ってきたqueryをマージ
         let result = data.query;
         result.type = state.type;
@@ -79,13 +86,8 @@ function modeling(data, state) {
         result.sort = state.sort;
         result.order = state.order;
         result.items = rows;
-        console.log(result);
-
-        if (state.rows === 0) {
-            return result;
-        } else {
-            return result;
-        }
+        // console.log(result);
+        return result;
 
     } else {
         data.items = [];
