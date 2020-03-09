@@ -1,7 +1,6 @@
 import React from 'react';
 import fetchData from './fetchData';
 import { Parser } from 'json2csv';
-import _ from 'lodash';
 import { Row, Col } from 'react-bootstrap';
 
 class CreateCSV extends React.Component {
@@ -16,13 +15,12 @@ class CreateCSV extends React.Component {
 
         // csv出力
         // console.info("Export CSV files.");
-        this.state = this.props.query;
-        let old_data = _.cloneDeep(this.state);
-        this.state.rows = 0;
-
+        var state = this.props.query;
+        
         // 全件取得　row=0のとき
         fetchData(
-            (this.state)).then((data) => this.downloadCSV(data, old_data)
+            state, true
+            ).then((data) => this.downloadCSV(data, state)
             );
         e.preventDefault();
     }
