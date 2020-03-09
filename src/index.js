@@ -1,11 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './style.css';
 import App from './App';
 import ItemList from './ItemList';
 import * as serviceWorker from './serviceWorker';
-
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 ReactDOM.render(<ItemList />, document.querySelector('#ItemList'));

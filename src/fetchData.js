@@ -1,36 +1,97 @@
 
-async function fetchData(search_key,sort_key) {
-    return fetch(`https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/owner?id=` + search_key,
-    {  mode: 'cors'  })
-    .then((response) => {
-        return response.json();
-    })
-    .then((myJson) => {
-        return myJson.items
-    });
+async function fetchData(state) {
+    
+    const query = state;
+    var sort_string;
+    // リストの中のソートキーを取得
+    if (!state.sort) {
+        sort_string = "";
+    } else {
+        sort_string = Object.keys(state.sort)
+    }
+    // query_stringを作成
+    var query_string = '?id=' + state.id
+        + '&sort=' + sort_string
+        + '&order=' + state.order
+        + '&page=' + state.page
+        + '&rows=' + state.rows;
+    console.log("query_string :" + query_string);
+
+    // 検索モードによってAPIを変更する
+    let url = "";
+    if (state.type === "owner") {
+        url = 'https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/owner';
+    } else if (state.type === "user") {
+        url = 'https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/user';
+    }
+
+    // responseからデータ取得
+    return fetch(url + query_string, { mode: 'cors' })
+        .then((response) => {
+            return response.json();
+        })
+        .then((myJson) => {
+            // console.log(myJson)
+            if (myJson.items) {
+                if (myJson.items.message) {
+                    // console.info("Not found data. : " + myJson.items.message);
+                } else {
+                    // console.info("Success!");
+                }
+                return modeling(myJson, state);
+            } else {
+                // console.error("Failed to search. : " + myJson.errorType);
+                query.items = [];
+                return query;
+            }
+
+        });
 }
 
+
 // Dynamo の JSON から内部用 JSON リストに成形
-// 【TODO】APIができたので、もう用無し
-function modeling(data){
-    var items = data.L
-    //  ラムダ側で以下の処理を済ませておく
-    // 【TODO】行番号を加える処理を入れる
-    // 【TODO】ソート処理を入れる
-    var rows = [];
-    var count = 0;
-    items.forEach(item => {
-        var col = {};
-        col['#'] = ++count;
-        for( var value in item.M){
-            if( item.M[value].S ){
-                col[value] = item.M[value].S;
+function modeling(data, state) {
+    if (!data.items.message) {
+        var items = data.items;
+
+        var rows = [];
+        var count = 0;
+        items.forEach(item => {
+            var col = {};
+            col['#'] = ++count;
+            for (var value in item) {
+                if (item[value] === "1") {
+                    col[value] = "●";
+                } else if (item[value] === "0") {
+                    col[value] = "";
+                } else {
+                    col[value] = item[value];
+                }
             }
-            if( item.M[value].L );
+            rows.push(col);
+        });
+        // console.log("Received");
+        
+        // 検索時のqueryと返ってきたqueryをマージ
+        let result = data.query;
+        result.type = state.type;
+        result.id = data.query.id;
+        result.sort = state.sort;
+        result.order = state.order;
+        result.items = rows;
+        console.log(result);
+
+        if (state.rows === 0) {
+            return result;
+        } else {
+            return result;
         }
-        rows.push(col);
-    });
-    return rows;
+
+    } else {
+        data.items = [];
+        // console.log("rows = 0 : "+data);
+        return data;
+    }
 }
 
 export default fetchData;
