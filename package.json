@@ -7,6 +7,7 @@
     "@testing-library/react": "^9.4.1",
     "@testing-library/user-event": "^7.2.1",
     "amazon-cognito-identity-js": "^3.2.5",
+    "aws-api-gateway-client": "^0.3.3",
     "aws-sdk": "^2.634.0",
     "create-react-app": "^3.4.0",
     "jsonwebtoken": "^8.5.1",

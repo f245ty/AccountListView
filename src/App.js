@@ -19,8 +19,6 @@ class App extends React.Component {
   id_token = '';
 
   render(){
-    AWS.config.region = 'ap-northeast-1';
-    AWS.config.credentials = new AWS.CognitoIdentityCredentials({IdentityPoolId: 'ap-northeast-1:9cd11c18-7668-4ea3-8427-40a8aed8ec94'});
     jwt.decode('');
 
     return(
