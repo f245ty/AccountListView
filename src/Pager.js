@@ -115,16 +115,14 @@ class Pager extends React.Component {
 
         return (
             <div>
-                <Row>
+                <Row className="text-center">
                     <Col className="text-left">
                         <p>検索結果：{this.props.query.total} 件</p>
                     </Col>
                     <Col>
-                        <Pagination className="text-align-center">{items}</Pagination>
+                        <Pagination size="sm" className="text-center ailgn-items-center" >{items}</Pagination>
                     </Col>
-                    {/* <Col>
-                        <p>データ更新日：</p>
-                    </Col> */}
+                    <Col></Col>
                 </Row>
             </div>
         );

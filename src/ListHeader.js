@@ -36,7 +36,7 @@ class ListHeader extends React.Component {
 
         // console.info("Sort. ");
         fetchData(
-            this.state).then((data) => { this.props.updateList(data) }
+            this.state, this.props.header_label).then((data) => { this.props.updateList(data) }
             );
         e.preventDefault();
 
@@ -51,11 +51,11 @@ class ListHeader extends React.Component {
             <tr>
                 {Object.keys(row).map((col, index) => (
                     <th className="res_header"
-                        key={index} 
-                        onClick={e => { if (col !== "#") this.onClick(col, e); }} >
-                        {this.props.header_label[col]}
-                        {(this.sort_key[col]) && (<span>{this.sort_key[col]}</span>)}
-                    </th>
+                    key={index}
+                    onClick={e => { if (col !== "#") this.onClick(col, e); }} >
+                    {this.props.header_label[col]}
+                    {(this.sort_key[col]) && (<span>{this.sort_key[col]}</span>)}
+                </th>
                 ))}
             </tr>
         );

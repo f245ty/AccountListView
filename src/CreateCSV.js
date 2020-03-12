@@ -30,7 +30,7 @@ class CreateCSV extends React.Component {
         try {
             // jsonからcsvに変換し、ファイルを出力
             const json2csvParser = new Parser();
-            const csv = json2csvParser.parse(this.parseColumns(data));
+            const csv = json2csvParser.parse(this.parseColumns(data.items));
             var bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
             var blob = new Blob([bom, csv], { "type": "csv/plain" })
             let link = document.createElement('a')
@@ -58,11 +58,10 @@ class CreateCSV extends React.Component {
         return y + ('0' + m).slice(-2) + ('0' + d).slice(-2);
     }
 
-    parseColumns(data) {
+    parseColumns(items) {
 
         // ヘッダーを日本語に変換
         var jp_header = [];
-        var items = data.items;
         items.map((item) => {
             var col = [];
             for (var value in item) {
@@ -76,10 +75,12 @@ class CreateCSV extends React.Component {
     render() {
         return (
             <Row>
-                <Col>
-                    <p className="text-left">データ更新日：</p>
+                <Col className="text-left">
+                    <p>データ更新日：</p>
                 </Col>
-                <Col className="pull-right">
+                <Col></Col>
+                <Col></Col>
+                <Col>
                     <button className="csv_button"
                         onClick={(e) => this.onExportCSV(e)} >
                         CSV出力 < i className="fas fa-download" ></i >

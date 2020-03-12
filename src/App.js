@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="App">
       <Navbar>
-        <img src="images/favicon.ico" alt="header logo" ></img>
+        <img src="images/header_img.png" alt="header logo" ></img>
         <a href="# " className="pull-right">ログアウト</a>
       </Navbar>
       <Container className="main">
