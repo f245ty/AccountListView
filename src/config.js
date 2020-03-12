@@ -18,9 +18,10 @@ export const HEADER_LABEL = {
 }
 
 
-
-
 // 表示ラベルの順番、ラベルの表示、非表示の設定
 export const PERMISSION_LABELS = ['p_read', 'p_upload', 'p_download', 'p_delete', 'p_admin']
-export const OWNER_LABELS = ['owner', 'path', 'folder', 'user_email', 'user_name']
-export const USER_LABELS = ['path', 'owner', 'folder']
+export const OWNER_LABELS = ['#', 'owner', 'path', 'folder', 'user_email', 'user_name']
+export const USER_LABELS = ['#', 'path', 'owner', 'folder']
+export const PERMISSION_LABELS_CSV = ['#', 'p_read', 'p_upload', 'p_download', 'p_delete', 'p_admin']
+export const OWNER_LABELS_CSV = ['#', 'path', 'folder', 'owner', 'user_email', 'user_name']
+export const USER_LABELS_CSV = ['#', 'path', 'owner', 'folder']

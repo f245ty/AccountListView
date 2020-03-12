@@ -1,6 +1,6 @@
 import ItemList from './ItemList';
 import AWS from 'aws-sdk';
-import {PERMISSION_LABELS,OWNER_LABELS,USER_LABELS} from './config'
+import {PERMISSION_LABELS,OWNER_LABELS,USER_LABELS,OWNER_LABELS_CSV,USER_LABELS_CSV} from './config'
 
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
 
@@ -57,7 +57,7 @@ async function fetchData(state, csv_flag = false) {
     
     return apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function(result){
-        state = modeling(result.data, state)
+        state = modeling(result.data, state, csv_flag)
         return state
 
     }).catch( function(result){
@@ -71,13 +71,16 @@ async function fetchData(state, csv_flag = false) {
 
 
 // Dynamo の JSON から内部用 JSON リストに成形
-function modeling(data, state) {
+function modeling(data, state, csv_flag) {
     var items = data.items;
 
     var rows = [];
     var count = 0;
 
-    var labels = state.type == 'owner' ? OWNER_LABELS : USER_LABELS
+
+    var labels = [];
+    if(csv_flag == true ) labels = state.type == 'owner' ? OWNER_LABELS_CSV : USER_LABELS_CSV
+    else labels = state.type == 'owner' ? OWNER_LABELS : USER_LABELS
     labels = labels.concat(PERMISSION_LABELS)
 
     items.forEach(item => {
