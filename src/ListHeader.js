@@ -7,25 +7,8 @@
 import React from 'react';
 import fetchData from './fetchData';
 
+import { HEADER_LABEL } from './config'
 
-// 日本語ヘッダーを定義
-const HEADER_LABEL = {
-    "#": "#",
-    "user_email": "メールアドレス",
-    "user_name": "ユーザ名",
-    "path": "フォルダパス",
-    "folder": "フォルダ",
-    "permission": "権限",
-    "owner": "管理者",
-    "p_read": "閲覧権限",
-    "p_download": "ダウンロード権限",
-    "p_upload": "アップロード権限",
-    "p_admin": "管理権限",
-    "p_delete": "削除権限",
-    "p_notify_ul": "アップロード通知",
-    "p_notify_dl": "ダウンロード通知",
-    "p_owner": "フォルダ所有権"
-}
 
 
 class ListHeader extends React.Component {

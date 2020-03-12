@@ -3,6 +3,9 @@ import fetchData from './fetchData';
 import { Parser } from 'json2csv';
 import { Row, Col } from 'react-bootstrap';
 
+import { HEADER_LABEL } from './config'
+
+
 class CreateCSV extends React.Component {
 
     constructor(props) {
@@ -36,6 +39,7 @@ class CreateCSV extends React.Component {
             let link = document.createElement('a')
             link.href = window.URL.createObjectURL(blob)
 
+
             link.download = '権限情報_' + this.getDate() + '.csv'
             link.click()
 
@@ -58,15 +62,16 @@ class CreateCSV extends React.Component {
         return y + ('0' + m).slice(-2) + ('0' + d).slice(-2);
     }
 
+
+    // json2csv 変換用に JSON の Key を日本語に変換
     parseColumns(items) {
 
         // ヘッダーを日本語に変換
         var jp_header = [];
         items.map((item) => {
             var col = [];
-            for (var value in item) {
-                col[this.props.header_label[value]] = item[value];
-            }
+            for (var key in item)
+                col[HEADER_LABEL[key]] = item[key];
             jp_header.push(col);
         })
         return jp_header;

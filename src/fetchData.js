@@ -1,6 +1,9 @@
 import ItemList from './ItemList';
 import AWS from 'aws-sdk';
+import {PERMISSION_LABELS,OWNER_LABELS,USER_LABELS} from './config'
+
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
+
 
 AWS.config.region = 'ap-northeast-1';
 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
@@ -66,11 +69,6 @@ async function fetchData(state, csv_flag = false) {
 
 
 
-// 表示ラベルの順番、ラベルの表示、非表示の設定
-const PERMISSION_LABELS = ['p_read', 'p_upload', 'p_download', 'p_delete', 'p_admin']
-const OWNER_LABELS = ['owner', 'path', 'folder', 'user_email', 'user_name']
-const USER_LABELS = ['path', 'owner', 'folder']
-
 
 // Dynamo の JSON から内部用 JSON リストに成形
 function modeling(data, state) {
@@ -99,8 +97,6 @@ function modeling(data, state) {
 
         rows.push(col);
     });
-
-    console.log(rows)
 
     // 検索時のqueryと返ってきたqueryをマージ
     let result = data.query;
