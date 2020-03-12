@@ -39,9 +39,9 @@ class SearchControl extends React.Component {
         // console.log(this.state);
         // console.info("Searching...");
         // APIを叩いて、画面を更新する
-        fetchData(
-            (this.state)).then((data) => { this.props.updateList(data) }
-            );
+        fetchData( this.state).then((data) => {
+            this.props.updateList(data)
+        } );
         e.preventDefault();
     }
 

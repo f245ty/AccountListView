@@ -24,16 +24,11 @@ async function fetchData(state, csv_flag = false) {
     // クレデンシャルの取得
     //【TODO】切り出し
     AWS.config.credentials.get((err) => {
-        console.log(AWS.config.credentials);
-        console.log("Cognito Identify Id: " + AWS.config.credentials.identityId);  
         if(!err)
         {
-            console.log('できた');
-            console.log(AWS.config.credentials);
         }
         else
         {
-            console.log(err)
         }
     });
     
@@ -59,39 +54,23 @@ async function fetchData(state, csv_flag = false) {
     
     return apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function(result){
-        return modeling(result.data, state);
-        //This is where you would put a success callback
+        state = modeling(result.data, state)
+        return state
+
     }).catch( function(result){
-        //This is where you would put an error callback
         state.items = [];
         return state;
     });
 }
 
-// ヘッダーを日本語に変換する
-function display_header(col) {
 
-    var header_label = {
-        "#": "#",
-        "user_email": "メールアドレス",
-        "user_name": "ユーザ名",
-        "folder_path": "フォルダパス",
-        "permission": "権限",
-        "owner": "管理者",
-        "p_view": "閲覧権限",
-        "p_download": "ダウンロード権限",
-        "p_upload": "アップロード権限",
-        "p_admin": "管理権限",
-        "p_delete": "削除権限",
-        "p_notify_ul": "アップロード通知",
-        "p_notify_dl": "ダウンロード通知",
-        "p_owner": "フォルダ所有権"
-    }
 
-    // Object.keys(header_label).map((h_col, index) => {
-    //     console.log(h_col)
-    // })
-}
+
+// 表示ラベルの順番、ラベルの表示、非表示の設定
+const PERMISSION_LABELS = ['p_read', 'p_upload', 'p_download', 'p_delete', 'p_admin']
+const OWNER_LABELS = ['owner', 'path', 'folder', 'user_email', 'user_name']
+const USER_LABELS = ['path', 'owner', 'folder']
+
 
 // Dynamo の JSON から内部用 JSON リストに成形
 function modeling(data, state) {
@@ -99,6 +78,9 @@ function modeling(data, state) {
 
     var rows = [];
     var count = 0;
+
+    var labels = state.type == 'owner' ? OWNER_LABELS : USER_LABELS
+    labels = labels.concat(PERMISSION_LABELS)
 
     items.forEach(item => {
         var col = {};
@@ -112,9 +94,13 @@ function modeling(data, state) {
                 col[value] = item[value];
             }
         }
-        display_header(item)
+
+        col = swapColumns(col, labels)  // 列を指定ラベル順に変更
+
         rows.push(col);
     });
+
+    console.log(rows)
 
     // 検索時のqueryと返ってきたqueryをマージ
     let result = data.query;
@@ -126,5 +112,19 @@ function modeling(data, state) {
     // console.log(result);
     return result;
 }
+
+
+// ラベルの順番を変更
+// items: {}
+// labels: [] 順番の指定
+//
+// items に存在しない列があった場合は、強制的に列を追加する
+function swapColumns(item , labels){
+    var swapped = {}
+    for( let label of labels ) swapped[label] = label in item ? item[label] : ""
+    return swapped
+}
+
+
 
 export default fetchData;

@@ -44,10 +44,9 @@ class ItemList extends React.Component {
             page: state.page,
             total: state.total
         });
-        // console.info("Set received data.");
-        // console.log(this.state);
     }
 
+    
     render() {
 
         var items = this.state.items;
@@ -80,10 +79,11 @@ class ItemList extends React.Component {
                                             query={this.state}
                                             updateList={(data) => { this.updateList(data); }}
                                             header_label={this.header_label} />
+                                        
                                         {items.map((row, index) => (
                                             <tr key={index}>
                                                 {Object.keys(row).map((col, index) => {
-                                                    if (this.header_label[col]) return (<td key={index}>{row[col]}</td>)
+                                                    return (<td key={index}>{row[col]}</td>)
                                                 })}
                                             </tr>))}
                                     </tbody>
