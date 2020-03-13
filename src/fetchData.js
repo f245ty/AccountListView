@@ -1,6 +1,7 @@
 import ItemList from './ItemList';
 import AWS from 'aws-sdk';
 import {PERMISSION_LABELS,OWNER_LABELS,USER_LABELS,OWNER_LABELS_CSV,USER_LABELS_CSV} from './config'
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
 
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
 
@@ -68,8 +69,6 @@ async function fetchData(state, csv_flag = false) {
 
 
 
-
-
 // Dynamo の JSON から内部用 JSON リストに成形
 function modeling(data, state, csv_flag) {
     var items = data.items;
@@ -102,13 +101,13 @@ function modeling(data, state, csv_flag) {
     });
 
     // 検索時のqueryと返ってきたqueryをマージ
+    // 【TODO】リファクタリング
     let result = data.query;
     result.type = state.type;
     result.id = data.query.id;
     result.sort = state.sort;
     result.order = state.order;
     result.items = rows;
-    // console.log(result);
     return result;
 }
 

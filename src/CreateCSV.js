@@ -81,7 +81,7 @@ class CreateCSV extends React.Component {
         return (
             <Row>
                 <Col className="text-left">
-                    <p>データ更新日：</p>
+                    <p>データ更新日：{this.props.query.datetime}</p>
                 </Col>
                 <Col></Col>
                 <Col></Col>

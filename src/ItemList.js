@@ -25,7 +25,8 @@ class ItemList extends React.Component {
             pages: null,   // 全体ページ数
             rows: null,   // 1ページの表示件数
             page: null,   // 表示するページ番号
-            total: 0    // 検索合計件数
+            total: 0,    // 検索合計件数
+            datetime: ""
         };
 
     }
@@ -42,7 +43,8 @@ class ItemList extends React.Component {
             pages: state.pages,
             rows: state.rows,
             page: state.page,
-            total: state.total
+            total: state.total,
+            datetime: state.datetime
         });
     }
 
@@ -83,7 +85,9 @@ class ItemList extends React.Component {
                                         {items.map((row, index) => (
                                             <tr key={index}>
                                                 {Object.keys(row).map((col, index) => {
-                                                    return (<td key={index}>{row[col]}</td>)
+                                                    return (
+                                                            <td key={index} class={col.indexOf('p_')==0 || col == '#' ?"text-center":"text-left"}>{row[col]}</td>
+                                                        )
                                                 })}
                                             </tr>))}
                                     </tbody>

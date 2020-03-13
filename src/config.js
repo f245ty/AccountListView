@@ -3,10 +3,9 @@ export const HEADER_LABEL = {
     "#": "#",
     "user_email": "メールアドレス",
     "user_name": "ユーザ名",
-    "path": "フォルダパス",
-    "folder": "フォルダ",
+    "folder_path": "フォルダパス",
     "permission": "権限",
-    "owner": "管理者",
+    "owner_name": "管理者名",
     "p_read": "閲覧権限",
     "p_download": "ダウンロード権限",
     "p_upload": "アップロード権限",
@@ -20,8 +19,8 @@ export const HEADER_LABEL = {
 
 // 表示ラベルの順番、ラベルの表示、非表示の設定
 export const PERMISSION_LABELS = ['p_read', 'p_upload', 'p_download', 'p_delete', 'p_admin']
-export const OWNER_LABELS = ['#', 'owner', 'path', 'folder', 'user_email', 'user_name']
-export const USER_LABELS = ['#', 'path', 'owner', 'folder']
+export const OWNER_LABELS = ['#', 'owner_name', 'folder_path', 'user_email', 'user_name']
+export const USER_LABELS = ['#', 'folder_path', 'owner_name']
 export const PERMISSION_LABELS_CSV = ['#', 'p_read', 'p_upload', 'p_download', 'p_delete', 'p_admin']
-export const OWNER_LABELS_CSV = ['#', 'path', 'folder', 'owner', 'user_email', 'user_name']
-export const USER_LABELS_CSV = ['#', 'path', 'owner', 'folder']
+export const OWNER_LABELS_CSV = ['#', 'folder_path', 'owner_name', 'user_email', 'user_name']
+export const USER_LABELS_CSV = ['#', 'folder_path', 'owner_name']
