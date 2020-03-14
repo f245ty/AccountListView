@@ -6,6 +6,14 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { Nav,Navbar } from 'react-bootstrap';
 import HeaderMenu from './HeaderMenu'
+import { Route, HashRouter, BrowserRouter } from 'react-router-dom';
+
+
+const MENU_ITEM = {
+  "#owner":"管理フォルダ一覧",
+  "#user":"権限付きフォルダ一覧"
+}
+
 
 function App() {
   return (
@@ -13,11 +21,18 @@ function App() {
       <HeaderMenu />
       <Container fluid>
         <Row>
-          <Nav variant="pills" className="flex-column">
-            <Nav.Link href="/index.html#owner">管理フォルダ一覧</Nav.Link>
-            <Nav.Link href="/index.html#user">権限付きフォルダ一覧</Nav.Link>
-          </Nav>
-          <Col className="main">
+          <BrowserRouter>
+            <Route render={(p) =>{
+              let hash = p.location.hash
+              return(
+                <Nav variant="pills" className="flex-column">
+                  <Nav.Link href="#owner" active={hash=="#owner"? true:false}>{MENU_ITEM['#owner']}</Nav.Link>
+                  <Nav.Link href="#user" active={hash=="#user"? true:false}>{MENU_ITEM['#user']}</Nav.Link>
+                </Nav>
+              )
+            }}/>
+          </BrowserRouter>
+          <Col className="mr-auto">
             <div id="ItemList"></div>
           </Col>
         </Row>
