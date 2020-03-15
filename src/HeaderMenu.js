@@ -3,10 +3,8 @@ import Button from 'react-bootstrap/Button';
 import { Navbar } from 'react-bootstrap';
 import logo from './header_img.png';
 import Cookies from 'universal-cookie';
+import { LOGIN_URI, LOGOUT_URI } from './config'
 import jwt from 'jsonwebtoken';
-
-
-var login = 'https://login.microsoftonline.com/8a08112f-92e8-43fe-9a0a-56d393b9f042/oauth2/v2.0/authorize?client_id=3a0aef16-07ab-4f88-8122-4114b7c496a1&scope=openid+profile+email&response_type=id_token&response_mode=fragment&nonce=1112' 
 
 const cookies = new Cookies();
 
@@ -25,11 +23,12 @@ class HeaderMenu extends React.Component {
     onClickLogin(e){
         if(this.props.is_logged_in === true){
             cookies.set('id_token', "", { path: '/' });
-            document.location = "/";
-            e.preventDefault();
+            document.location = LOGOUT_URI;
         }
         else{
-            document.location = login;
+            let nonce = Math.random().toString(36).slice(-8);
+            cookies.set('nonce', nonce, { path: '/' });
+            document.location = LOGIN_URI + nonce;
         }
     }
 

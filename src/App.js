@@ -10,6 +10,7 @@ import HeaderMenu from './HeaderMenu'
 import { Route, BrowserRouter } from 'react-router-dom';
 import ItemList from './ItemList';
 import Cookies from 'universal-cookie';
+import jwt from 'jsonwebtoken';
 
 
 const MENU_ITEM = {
@@ -42,6 +43,7 @@ class App extends React.Component {
 
   setLogout()
   {
+    cookies.set('id_token', "", { path: '/' });
     this.setState({
       is_logged_in: false,
       client_config: {}
@@ -49,15 +51,23 @@ class App extends React.Component {
   }
 
 
-  getClientConfig(id_token)
+  getClientConfig(id_token_jwt)
   {
     let url = "https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/";
+
+
+    // nonce が一致しなかったらトークンを破棄
+    let nonce = cookies.get('nonce');
+    let id_token = jwt.decode(id_token_jwt);
+    if(nonce !== id_token.nonce)return;
+    else cookies.set('nonce', "", { path: '/' });
+
 
     var params = {
         AccountId: "707439530427",
         IdentityPoolId: "ap-northeast-1:9cd11c18-7668-4ea3-8427-40a8aed8ec94",
         Logins: {
-            "login.microsoftonline.com/8a08112f-92e8-43fe-9a0a-56d393b9f042/v2.0": id_token
+            "login.microsoftonline.com/8a08112f-92e8-43fe-9a0a-56d393b9f042/v2.0": id_token_jwt
         }
     };
 
