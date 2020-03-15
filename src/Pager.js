@@ -6,37 +6,39 @@
 import React from 'react';
 import fetchData from './fetchData';
 import Pagination from 'react-bootstrap/Pagination';
-import Row from 'react-bootstrap/Row';
-import { Col } from 'react-bootstrap';
+import { Navbar } from 'react-bootstrap';
+import CreateCSV from './CreateCSV';
 
 
 class Pager extends React.Component {
 
-    constructor(props) {
+    constructor(props){
         super(props);
-        this.state = {};
+        this.state ={
+            client_config: props.client_config
+        }
     }
-
 
     handlePage(e, num) {
         // console.info("Go to #" + num + " page. ");
-        this.state = this.props.query;
-        this.state.page = num;
+
+        var state = this.props.query;
+        state.page = num;
+
         // APIを叩いて、画面を更新する
-        fetchData(
-            this.state).then((data) => { this.props.updateList(data) }
-            );
+        fetchData(state, this.state.client_config ).then((data) => { this.props.updateList(data) } );
     }
-
-
 
     render() {
 
         // -2:前後2ページ表示
         var items = [];
-        this.state = this.props.query;
-        var active = this.state.page;
-        var end = this.state.pages;
+
+        var state = this.props.query;
+
+        var active = state.page;
+        var end = state.pages;
+
 
         // 最初のページ
         if (this.props.query.page !== 1) {
@@ -114,17 +116,17 @@ class Pager extends React.Component {
         }
 
         return (
-            <div>
-                <Row className="text-center">
-                    <Col className="text-left">
-                        <p>検索結果：{this.props.query.total} 件</p>
-                    </Col>
-                    <Col>
-                        <Pagination size="sm" className="text-center ailgn-items-center" >{items}</Pagination>
-                    </Col>
-                    <Col></Col>
-                </Row>
-            </div>
+            <Navbar>
+                <Navbar.Text className="mr-auto">
+                    <Pagination size="sm" className="text-center ailgn-items-center" >{items}</Pagination>
+                </Navbar.Text>
+                <Navbar.Text >
+                    データ更新日:{this.props.query.datetime} 検索結果:{this.props.query.total} 件
+                </Navbar.Text>
+                <CreateCSV query={this.props.query} header_label={this.header_label}
+                    client_config={this.state.client_config}
+                />
+            </Navbar>
         );
     }
 }

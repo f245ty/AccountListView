@@ -7,9 +7,9 @@ import React from 'react';
 import fetchData from './fetchData';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
 import { Nav, Navbar } from 'react-bootstrap';
-import { HashRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { DEFAULT_ROWS_PAR_PAGE } from './config'
 
 
 const maxPageValue = 100
@@ -24,10 +24,11 @@ class SearchControl extends React.Component {
             order: "asc",   // ASC or DESC 
             items: [],
             pages: null,   // 全体ページ数
-            rows: 1,   // 1ページの表示件数
+            rows: DEFAULT_ROWS_PAR_PAGE,   // 1ページの表示件数
             page: 1,   // 表示するページ番号
             total: null,   // 検索合計件数
-            datetime: ""
+            datetime: "",
+            client_config: props.client_config
         };
         this.onChangeText = this.onChangeText.bind(this);
         this.onClick = this.onClick.bind(this);
@@ -35,27 +36,26 @@ class SearchControl extends React.Component {
     }
 
 
-    onSubmit = (e) => {
+    onClickSearch = (e, hash) => {
         // console.info("Submit");
         // console.log(this.state);
         // console.info("Searching...");
         // APIを叩いて、画面を更新する
-        fetchData( this.state ).then((data) => {
-            console.log(data)
+        var state = this.state;
+        state.type = hash; 
+        fetchData( state , this.state.client_config ).then((data) => {
             this.props.updateList(data)
         } );
+        return false;
     }
 
-    onChangeText = (e) => { this.state.id = e.target.value; }
+    onChangeText = (e) => { this.setState({id : e.target.value}); }
 
-    onChangeRow = (e) => { this.state.rows = e.target.value; }
+    onChangeRow = (e) => { this.setState({rows : e.target.value}); }
 
     onClick = (e, e_type) => { ; }
 
-
-    render_form = (hash) => {
-        
-        this.state.type = hash
+    render() {
 
         const options = [];
         for (let i = 1; i <= maxPageValue; i += 1) {
@@ -64,37 +64,28 @@ class SearchControl extends React.Component {
             )
         }
 
-        return(
-            <Form inline onSubmit={(e) => this.onSubmit()} >
-                <Form.Group as={Row} controlId="formPlaintextEmail">
-                    <Form.Control placeholder="完全一致検索を行います。" type="text" onChange={e => { this.onChangeText(e); }} />
-                </Form.Group>
-                <Form.Group className="form_group text-left">
-                    <Form.Control as="select" onChange={e => { this.onChangeRow(e); }}>
-                        {options}
-                    </Form.Control>
-                    <Navbar.Text> 件 / 1ページ </Navbar.Text>
-                </Form.Group>
-                <Button type="submit" value="検索"><i className="fa fa-search"></i>検索</Button>
-            </Form>
-    )}
-
-
-    render() {
         return (
-            <Navbar bg="dark" variant="dark">
-                <Navbar.Brand href="#home">
-                    {"取得日時：" + this.state.datetime}
-                </Navbar.Brand>
-                <Nav className="mr-auto">
-                </Nav>
-                    <HashRouter hashType="noslash">
-                        <Switch>
-                            <Route path="/owner" component={ () => { return this.render_form("owner") } /* 管理対象フォルダ一覧 */} />
-                            <Route path="/user" component={ () => { return this.render_form("user") } /* 権限月フォルダ一覧 */} />
-                        </Switch>
-                    </HashRouter>
-            </Navbar>
+            <BrowserRouter hashType="noslash">
+                <Route render={ (p) => {
+                    return(
+                        <Navbar bg="dark" variant="dark">
+                            <Nav className="mr-auto">
+                                <Form.Control placeholder="完全一致検索を行います。" type="text" onChange={e => { this.onChangeText(e); }} />
+                            </Nav>
+                            <Nav>
+                                <Form.Control as="select" defaultValue={DEFAULT_ROWS_PAR_PAGE} onChange={e => { this.onChangeRow(e); }}>
+                                        {options}
+                                </Form.Control>
+                            </Nav>
+                            <Form inline onClick={(e) => this.onClickSearch(e, p.location.hash.replace('#',''))} >
+                                <Form.Group>
+                                    <Button type="button" value="検索"><i className="fa fa-search"></i> 検索</Button>
+                                </Form.Group>
+                            </Form>
+                        </Navbar>
+                    )
+                }} />
+                </BrowserRouter>
         );
     }
 }

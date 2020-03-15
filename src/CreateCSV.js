@@ -10,7 +10,9 @@ class CreateCSV extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            client_config: props.client_config
+        };
         this.old_data = {};
     }
 
@@ -19,10 +21,12 @@ class CreateCSV extends React.Component {
         // csv出力
         // console.info("Export CSV files.");
         var state = this.props.query;
-        
+
         // 全件取得　row=0のとき
         fetchData(
-            state, true
+            state,
+            this.state.client_config,
+            true
             ).then((data) => this.downloadCSV(data, state)
             );
         e.preventDefault();
@@ -46,7 +50,9 @@ class CreateCSV extends React.Component {
         } catch (error) {
             console.error(error)
         } finally {
-            this.state.rows = old_data.rows;
+            this.setState( {
+                rows : old_data.rows
+            })
         }
 
     }
@@ -68,11 +74,11 @@ class CreateCSV extends React.Component {
 
         // ヘッダーを日本語に変換
         var jp_header = [];
-        items.map((item) => {
-            var col = [];
+        jp_header = items.map((item) => {
+            var col = {};
             for (var key in item)
                 col[HEADER_LABEL[key]] = item[key];
-            jp_header.push(col);
+            return col;
         })
         return jp_header;
     }
@@ -80,15 +86,10 @@ class CreateCSV extends React.Component {
     render() {
         return (
             <Row>
-                <Col className="text-left">
-                    <p>データ更新日：{this.props.query.datetime}</p>
-                </Col>
-                <Col></Col>
-                <Col></Col>
                 <Col>
                     <button className="csv_button"
                         onClick={(e) => this.onExportCSV(e)} >
-                        CSV出力 < i className="fas fa-download" ></i >
+                        <i className="fas fa-download" ></i> CSV出力 
                     </button >
                 </Col>
             </Row>

@@ -1,7 +1,6 @@
-import ItemList from './ItemList';
 import AWS from 'aws-sdk';
 import {PERMISSION_LABELS,OWNER_LABELS,USER_LABELS,OWNER_LABELS_CSV,USER_LABELS_CSV} from './config'
-import { CognitoUserPool } from 'amazon-cognito-identity-js';
+
 
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
 
@@ -13,7 +12,7 @@ AWS.config.credentials = new AWS.CognitoIdentityCredentials({
 });
 
 
-async function fetchData(state, csv_flag = false) {
+async function fetchData(state, client_config, csv_flag = false) {
     
     // 検索モードによってAPIを変更する
     let url = "https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/";
@@ -24,29 +23,9 @@ async function fetchData(state, csv_flag = false) {
     var localstate = {}
     for( let key in state) localstate[key] = (key === 'rows' && csv_flag === true ) ? 0 : state[key]
 
+    client_config.invokeUrl = url;
 
-    // クレデンシャルの取得
-    //【TODO】切り出し
-    AWS.config.credentials.get((err) => {
-        if(!err)
-        {
-        }
-        else
-        {
-        }
-    });
-    
-    var config = {
-        invokeUrl: url,
-        accessKey: AWS.config.credentials.accessKeyId,
-        secretKey: AWS.config.credentials.secretAccessKey,
-        sessionToken: AWS.config.credentials.sessionToken,
-        region: 'ap-northeast-1'
-    }
-    var apigClient = apigClientFactory.newClient(config);
-    // apigClient.invokeApi(params, pathTemplate, method, additionalParams, body)
-
-    // ここまで切り出し
+    var apigClient = apigClientFactory.newClient(client_config);
 
     var pathParams = {};
     var pathTemplate = '';
@@ -78,8 +57,8 @@ function modeling(data, state, csv_flag) {
 
 
     var labels = [];
-    if(csv_flag == true ) labels = state.type == 'owner' ? OWNER_LABELS_CSV : USER_LABELS_CSV
-    else labels = state.type == 'owner' ? OWNER_LABELS : USER_LABELS
+    if(csv_flag === true ) labels = state.type === 'owner' ? OWNER_LABELS_CSV : USER_LABELS_CSV
+    else labels = state.type === 'owner' ? OWNER_LABELS : USER_LABELS
     labels = labels.concat(PERMISSION_LABELS)
 
     items.forEach(item => {
