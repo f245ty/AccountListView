@@ -55,13 +55,15 @@ class App extends React.Component {
   {
     let url = "https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/";
 
-
+    // 解毒
+    if(id_token_jwt === null ){ console.log('id_token_jwt is null'); return; }
+    var id_token = jwt.decode(id_token_jwt);
+    if(id_token === null ){console.log('invalid id_token_jwt'); return;}
     // nonce が一致しなかったらトークンを破棄
     let nonce = cookies.get('nonce');
-    let id_token = jwt.decode(id_token_jwt);
-    console.log(id_token_jwt)
-    console.log(nonce)
-    if(nonce !== id_token.nonce)return;
+    if(nonce !== id_token.nonce){
+      return;
+    }
     else cookies.remove('nonce');
 
 

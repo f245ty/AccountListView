@@ -29,8 +29,11 @@ export const USER_LABELS_CSV = ['#', 'folder_path', 'owner_name']
 export const DEFAULT_ROWS_PAR_PAGE = 5
 
 
-// 認証処理後のリダイレクトURI
-const REDIRECT_URI = 'http%3A%2F%2Flocalhost%3A3000'
+// 認証処理後のリダイレクトURIを表示サイトに合わせて取得
+const HOST = window.location.host 
+const HTTP_PROTOCOL = window.location.host.indexOf('localhost') === 0 ? 'http://' : 'https://'
+const REDIRECT_URI = encodeURIComponent(HTTP_PROTOCOL + HOST)
+console.log(REDIRECT_URI)
 
 
 // Azure AD のログイン要求先
@@ -39,5 +42,7 @@ const TENANT_ID = '8a08112f-92e8-43fe-9a0a-56d393b9f042'
 const CLIENT_ID = '3a0aef16-07ab-4f88-8122-4114b7c496a1'
 const PROTOCOL = 'oauth2/v2.0'
 const SITE = 'https://' + DOMAIN + '/' + TENANT_ID + '/' + PROTOCOL + '/';
-export const LOGIN_URI = SITE + 'authorize?client_id=' + CLIENT_ID  + '&scope=openid+profile+email&response_type=id_token&response_mode=fragment&nonce='
+export const LOGIN_URI = SITE + 'authorize?client_id=' + CLIENT_ID
+    + '&redirect_uri=' + REDIRECT_URI
+    + '&scope=openid+profile+email&response_type=id_token&response_mode=fragment&nonce='
 export const LOGOUT_URI = SITE + 'logout?post_logout_redirect_uri=' + REDIRECT_URI

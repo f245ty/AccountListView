@@ -44,8 +44,11 @@ class HeaderMenu extends React.Component {
         }
 
         // id_token がクッキーに設定されていたら必要な情報を取得
-        if(typeof(this.state.id_token) == 'string')
-             login_name = jwt.decode(this.state.id_token).name;
+        if(typeof(this.state.id_token) === 'string'){
+            let id_token =  jwt.decode(this.state.id_token);
+            if(id_token === null ){ console.log('invalid id_token_jwt');}
+            else login_name = id_token.name
+        }
         
 
         return(
@@ -71,11 +74,5 @@ class HeaderMenu extends React.Component {
         );
     }
 }
-
-
-
-
-
-
 
 export default HeaderMenu
