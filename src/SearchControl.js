@@ -49,7 +49,10 @@ class SearchControl extends React.Component {
         return false;
     }
 
-    onChangeText = (e) => { this.setState({id : e.target.value}); }
+    onChangeText = (e) => {
+        let id = e.target.value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+         this.setState({id : id});
+        }
 
     onChangeRow = (e) => { this.setState({rows : e.target.value}); }
 

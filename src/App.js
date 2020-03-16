@@ -11,6 +11,7 @@ import { Route, BrowserRouter } from 'react-router-dom';
 import ItemList from './ItemList';
 import Cookies from 'universal-cookie';
 import jwt from 'jsonwebtoken';
+import { IDENTITY_POOL_ID } from './config'
 
 
 const MENU_ITEM = {
@@ -23,14 +24,16 @@ const cookies = new Cookies();
 class App extends React.Component {
   constructor(props){
     super(props);
+
     this.state = {
         is_logged_in: false,
+        id_token: jwt.decode(cookies.get('id_token')),
         client_config: {}
     }
 
-    var id_token = cookies.get('id_token');
-    if(typeof(id_token) == 'string')
-      this.getClientConfig(id_token)
+    var id_token_jwt = cookies.get('id_token');
+    if(typeof(id_token_jwt) == 'string')
+      this.getClientConfig(id_token_jwt)
   }
 
   setLogIn(config)
@@ -43,7 +46,8 @@ class App extends React.Component {
 
   setLogout()
   {
-    cookies.set('id_token', "", { path: '/' });
+    console.log('logout sequence')
+    cookies.remove('id_token');
     this.setState({
       is_logged_in: false,
       client_config: {}
@@ -53,6 +57,7 @@ class App extends React.Component {
 
   getClientConfig(id_token_jwt)
   {
+    console.log(id_token_jwt)
     let url = "https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/";
 
     // 解毒
@@ -69,7 +74,7 @@ class App extends React.Component {
 
     var params = {
         AccountId: "707439530427",
-        IdentityPoolId: "ap-northeast-1:9cd11c18-7668-4ea3-8427-40a8aed8ec94",
+        IdentityPoolId: IDENTITY_POOL_ID,
         Logins: {
             "login.microsoftonline.com/8a08112f-92e8-43fe-9a0a-56d393b9f042/v2.0": id_token_jwt
         }
@@ -80,6 +85,7 @@ class App extends React.Component {
     cognitoidentity.getId( params,
       (err, data) => {
         if (err){
+          console.log('can not get CognitIdentity')
           console.log(err, err.stack); // an error occurred
           this.setLogout()
         }else{
@@ -90,6 +96,7 @@ class App extends React.Component {
           cognitoidentity.getCredentialsForIdentity(p,
             (err, data) => {
               if (err){
+                console.log('can not get Credential')
                 console.log(err, err.stack); // an error occurred
                 this.setLogout()
               }else{
