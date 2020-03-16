@@ -22,7 +22,7 @@ class HeaderMenu extends React.Component {
     // ログイン、ログアウト制御
     onClickLogin(e){
         if(this.props.is_logged_in === true){
-            cookies.set('id_token', "", { path: '/' });
+            cookies.remove('id_token');
             document.location = LOGOUT_URI;
         }
         else{
@@ -44,7 +44,7 @@ class HeaderMenu extends React.Component {
         }
 
         // id_token がクッキーに設定されていたら必要な情報を取得
-        if(this.state.id_token !== "")
+        if(typeof(this.state.id_token) == 'string')
              login_name = jwt.decode(this.state.id_token).name;
         
 

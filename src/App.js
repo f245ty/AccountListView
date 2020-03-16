@@ -29,7 +29,7 @@ class App extends React.Component {
     }
 
     var id_token = cookies.get('id_token');
-    if(id_token !== "")
+    if(typeof(id_token) == 'string')
       this.getClientConfig(id_token)
   }
 
@@ -59,8 +59,10 @@ class App extends React.Component {
     // nonce が一致しなかったらトークンを破棄
     let nonce = cookies.get('nonce');
     let id_token = jwt.decode(id_token_jwt);
+    console.log(id_token_jwt)
+    console.log(nonce)
     if(nonce !== id_token.nonce)return;
-    else cookies.set('nonce', "", { path: '/' });
+    else cookies.remove('nonce');
 
 
     var params = {
