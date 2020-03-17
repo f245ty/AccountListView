@@ -3,26 +3,16 @@ import Button from 'react-bootstrap/Button';
 import { Navbar } from 'react-bootstrap';
 import logo from './header_img.png';
 import Cookies from 'universal-cookie';
-import { LOGIN_URI, LOGOUT_URI } from './config'
-import jwt from 'jsonwebtoken';
+import { LOGIN_URI, LOGOUT_URI, ROLE_NAME } from './config'
 
 const cookies = new Cookies();
 
 class HeaderMenu extends React.Component {
 
-    constructor(props){
-        super(props);
-        this.state = {
-            id_token: cookies.get('id_token'),
-            name: ""
-        }
-    } 
-
-
-    // ログイン、ログアウト制御
+    // ログイン、ログアウト切り替え
     onClickLogin(e){
-        if(this.props.is_logged_in === true){
-            cookies.remove('id_token');
+        if(this.props.login_state.is_logged_in === true){
+            cookies.remove('jwt');
             document.location = LOGOUT_URI;
         }
         else{
@@ -34,22 +24,12 @@ class HeaderMenu extends React.Component {
 
     
     render(){
-        var login_name = "";
-
         // id_token がハッシュに指定されていたら Cookie に退避
         if(this.props.location.hash.split('=')[0] === '#id_token'){
             let id_token = this.props.location.hash.split('=')[1].split('&')[0];
-            cookies.set('id_token', id_token, { path: '/' });
+            cookies.set('jwt', id_token, { path: '/' });
             document.location = "/"
         }
-
-        // id_token がクッキーに設定されていたら必要な情報を取得
-        if(typeof(this.state.id_token) === 'string'){
-            let id_token =  jwt.decode(this.state.id_token);
-            if(id_token === null ){ console.log('invalid id_token_jwt');}
-            else login_name = id_token.name
-        }
-        
 
         return(
             <Navbar>
@@ -61,11 +41,11 @@ class HeaderMenu extends React.Component {
                     </img>
                 </Navbar.Brand>
                 <form className="form-inline my-2 my-lg-0">
-                    {login_name}
+                    {this.props.login_state.login_user}{(this.props.login_state.user_role)&&("(" + ROLE_NAME[this.props.login_state.user_role] +")")}
                     <Button variant="outline-primary" onClick={(e) => this.onClickLogin(e) }>
                         {
                             // ログインしていなければログイン、ログインしていればログアウトを表示
-                            this.props.is_logged_in ? "ログアウト":"ログイン"
+                            this.props.login_state.is_logged_in ? "ログアウト":"ログイン"
                         }
                     </Button>
                 

@@ -58,6 +58,7 @@ class ItemList extends React.Component {
                     query={this.state}
                     header_label={this.header_label}
                     updateList={(data) => { this.updateList(data); }}
+                    login_state={this.props.login_state}
                     client_config={this.state.client_config} />
                 {// 検索してないときは何も表示しない
                     (items.length === 0) && typeof (this.state.id) !== "string" && (

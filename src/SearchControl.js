@@ -7,7 +7,7 @@ import React from 'react';
 import fetchData from './fetchData';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { Nav, Navbar } from 'react-bootstrap';
+import { Nav, Navbar, InputGroup } from 'react-bootstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { DEFAULT_ROWS_PAR_PAGE } from './config'
 
@@ -42,7 +42,11 @@ class SearchControl extends React.Component {
         // console.info("Searching...");
         // APIを叩いて、画面を更新する
         var state = this.state;
-        state.type = hash; 
+        state.type = hash;
+        if(this.props.login_state.user_role !== "administrator")
+            state.id = this.props.login_state.login_account;
+        console.log(state)
+        console.log('search state')
         fetchData( state , this.state.client_config ).then((data) => {
             this.props.updateList(data)
         } );
@@ -59,7 +63,6 @@ class SearchControl extends React.Component {
     onClick = (e, e_type) => { ; }
 
     render() {
-
         const options = [];
         for (let i = 1; i <= maxPageValue; i += 1) {
             options.push(
@@ -67,24 +70,44 @@ class SearchControl extends React.Component {
             )
         }
 
+        // システム管理者権限を持たない場合はメールアドレス固定
+
         return (
+            
             <BrowserRouter hashType="noslash">
                 <Route render={ (p) => {
                     return(
                         <Navbar bg="dark" variant="dark">
-                            <Nav className="mr-auto">
-                                <Form.Control placeholder="完全一致検索を行います。" type="text" onChange={e => { this.onChangeText(e); }} />
-                            </Nav>
-                            <Nav>
+                            {
+                                (this.props.login_state.user_role === "administrator")&&
+                                (
+                                    <InputGroup className="mr-auto">
+                                        <InputGroup.Prepend>
+                                            <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+                                        </InputGroup.Prepend>
+                                        <Form.Control placeholder="完全一致検索を行います。" type="text" onChange={e => { this.onChangeText(e); }} />
+                                    </InputGroup>
+                                )
+                            }
+                            {
+                                (this.props.login_state.user_role !== "administrator")&&
+                                (
+                                    <Navbar.Text className="mr-auto">{this.props.login_state.login_account}</Navbar.Text>
+                                )
+                            }
+                            <Nav className="mr-3"></Nav>
+                            <Nav className="mr-3">
                                 <Form.Control as="select" defaultValue={DEFAULT_ROWS_PAR_PAGE} onChange={e => { this.onChangeRow(e); }}>
                                         {options}
                                 </Form.Control>
                             </Nav>
-                            <Form inline onClick={(e) => this.onClickSearch(e, p.location.hash.replace('#',''))} >
-                                <Form.Group>
-                                    <Button type="button" value="検索"><i className="fa fa-search"></i> 検索</Button>
-                                </Form.Group>
-                            </Form>
+                            <Nav className="mr-3">
+                                <Form inline onClick={(e) => this.onClickSearch(e, p.location.hash.replace('#',''))} >
+                                    <Form.Group>
+                                        <Button type="button" value="検索"><i className="fa fa-search"></i> 検索</Button>
+                                    </Form.Group>
+                                </Form>
+                            </Nav>
                         </Navbar>
                     )
                 }} />

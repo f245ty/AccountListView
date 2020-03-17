@@ -37,7 +37,6 @@ export const IDENTITY_POOL_ID = 'ap-northeast-1:9cd11c18-7668-4ea3-8427-40a8aed8
 const HOST = window.location.host 
 const HTTP_PROTOCOL = window.location.host.indexOf('localhost') === 0 ? 'http://' : 'https://'
 const REDIRECT_URI = encodeURIComponent(HTTP_PROTOCOL + HOST)
-console.log(REDIRECT_URI)
 
 // Azure AD のログイン要求先
 const DOMAIN = 'login.microsoftonline.com'
@@ -49,3 +48,9 @@ export const LOGIN_URI = SITE + 'authorize?client_id=' + APPLICATION_ID
     + '&redirect_uri=' + REDIRECT_URI
     + '&scope=openid+profile+email&response_type=id_token&response_mode=fragment&nonce='
 export const LOGOUT_URI = SITE + 'logout?post_logout_redirect_uri=' + REDIRECT_URI
+
+// ロール設定(groupe ID : 名前)
+export const ROLE_NAME = {
+    "administrator":"システム管理者",
+    "manager":"一般管理者",
+    "user":"一般ユーザ"}
