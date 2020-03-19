@@ -1,6 +1,5 @@
 import AWS from 'aws-sdk';
-import {PERMISSION_LABELS,OWNER_LABELS,USER_LABELS,OWNER_LABELS_CSV,USER_LABELS_CSV} from './config'
-
+import {OUTPUT_LABELS} from './config'
 
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
 
@@ -41,6 +40,8 @@ async function fetchData(state, client_config, csv_flag = false) {
         return state
 
     }).catch( function(result){
+        console.log('API Gateway reply Error.')
+        console.log(result)
         state.items = [];
         return state;
     });
@@ -57,9 +58,12 @@ function modeling(data, state, csv_flag) {
 
 
     var labels = [];
-    if(csv_flag === true ) labels = state.type === 'owner' ? OWNER_LABELS_CSV : USER_LABELS_CSV
-    else labels = state.type === 'owner' ? OWNER_LABELS : USER_LABELS
-    labels = labels.concat(PERMISSION_LABELS)
+    if(csv_flag === true ) labels = state.type === 'owner' ? OUTPUT_LABELS['csv']['#owner'] : OUTPUT_LABELS['csv']['#user']
+    else labels = state.type === 'owner' ? OUTPUT_LABELS['screen']['#owner'] : OUTPUT_LABELS['screen']['#user']
+        console.log(OUTPUT_LABELS)
+    console.log(state.type)
+    console.log(OUTPUT_LABELS['screen'])
+    console.log(labels)
 
     items.forEach(item => {
         var col = {};

@@ -11,15 +11,13 @@ import { Route, BrowserRouter } from 'react-router-dom';
 import ItemList from './ItemList';
 import Cookies from 'universal-cookie';
 import jwt from 'jsonwebtoken';
-import { IDENTITY_POOL_ID } from './config'
+import { MENU_ITEMS, IDENTITY_POOL_ID } from './config'
 
-
-const MENU_ITEM = {
-  "#owner":"管理フォルダ権限一覧",
-  "#user":"権限所有フォルダ一覧"
-}
+import { Modal, Button } from 'react-bootstrap';
 
 const cookies = new Cookies();
+
+
 
 class App extends React.Component {
   constructor(props){
@@ -33,6 +31,7 @@ class App extends React.Component {
         user_role: null,
         client_config: {}
     }
+    console.log(MENU_ITEMS['administrator'][1])
 
   }
 
@@ -43,8 +42,8 @@ class App extends React.Component {
     // ロール付与グループ一覧
     // 現時点では固定
     const roles = {
-      "a746a5b4-795b-4d5a-8d2b-4559b92d9bf4":"administrator",
-      "b746a5b4-795b-4d5a-8d2b-4559b92d9bf5":"manager",
+      "86c759da-6918-4d19-8931-2cfa5f8f6ec7":"administrator",
+      "a746a5b4-795b-4d5a-8d2b-4559b92d9bf4":"manager",
       }
     var user_role = "user"
     for( let group in roles){
@@ -69,6 +68,7 @@ class App extends React.Component {
       user_role: user_role,
       client_config: config
     })
+
     console.log('login sequence')
     console.log(this.state)
   }
@@ -82,7 +82,9 @@ class App extends React.Component {
       login_user: null,
       login_account: null,
       user_role: null,
-      client_config: {}
+      client_config: {},
+
+      show: null
     })
     console.log('logout sequence')
   }
@@ -160,6 +162,12 @@ class App extends React.Component {
 
 
   render(){
+    // ダイアログ用のハンドラ
+    const handleClose = () => this.setState({show:false});
+    const handleShow = () => this.setState({show:true});
+
+    if(this.state.show === false)setTimeout(handleShow, 3000);
+
     // JWT が Cookie に設定されていたら、セッション情報を取得
     var id_token_jwt = cookies.get('jwt');
     if(typeof(id_token_jwt) === 'string' && this.state.id_token === null){
@@ -168,7 +176,29 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <BrowserRouter>
+        {/* モーダルダイアログ
+        <>
+          <Button variant="primary" onClick={handleShow}>
+            Launch demo modal
+          </Button>
+
+          <Modal show={this.state.show} onHide={handleClose} backdrop={'static'}>
+            <Modal.Header closeButton>
+              <Modal.Title>Modal heading</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={handleClose}>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </>
+         */}
+          <BrowserRouter>
             <Route newProps render={ (p) => {
               let hash = p.location.hash
               return(
@@ -178,10 +208,11 @@ class App extends React.Component {
                     (this.state.is_logged_in)&& 
                       (<Row>
                       <Nav variant="pills" className="flex-column">
-                        <Nav.Link href="#owner" active={hash==="#owner"? true:false}>{MENU_ITEM['#owner']}</Nav.Link>
-                        <Nav.Link href="#user" active={hash==="#user"? true:false}>{MENU_ITEM['#user']}</Nav.Link>
+                        {Object.keys(MENU_ITEMS[this.state.user_role]).map((key) => (
+                            <Nav.Link href={key} active={hash===key? true:false}>{MENU_ITEMS[this.state.user_role][key][1]}</Nav.Link>
+                        ))}
                       </Nav>
-                      {(hash==="#owner" || hash === "#user")&&(
+                      {(hash in MENU_ITEMS[this.state.user_role])&&(
                         <Col className="mr-auto">
                           <ItemList location={p.location} login_state={this.state} client_config={this.state.client_config}/>
                         </Col>

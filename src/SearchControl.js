@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { Nav, Navbar, InputGroup } from 'react-bootstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
-import { DEFAULT_ROWS_PAR_PAGE } from './config'
+import { DEFAULT_ROWS_PAR_PAGE,MENU_ITEMS } from './config'
 
 
 const maxPageValue = 100
@@ -18,7 +18,7 @@ class SearchControl extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            type: "owner",     // 検索ID　owner or user
+            type: null,     // 検索ID　owner or user
             id: null,   // 表示中の検索キー 
             sort: {},
             order: "asc",   // ASC or DESC 
@@ -83,9 +83,9 @@ class SearchControl extends React.Component {
                                 (
                                     <InputGroup className="mr-auto">
                                         <InputGroup.Prepend>
-                                            <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+                                            <InputGroup.Text id="basic-addon1">{MENU_ITEMS[this.props.login_state.user_role][p.location.hash][0]}</InputGroup.Text>
                                         </InputGroup.Prepend>
-                                        <Form.Control placeholder="完全一致検索を行います。" type="text" onChange={e => { this.onChangeText(e); }} />
+                                        <Form.Control placeholder="前方一致検索を行います。" type="text" onChange={e => { this.onChangeText(e); }} />
                                     </InputGroup>
                                 )
                             }

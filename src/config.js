@@ -1,3 +1,19 @@
+// メニュー定義
+export const MENU_ITEMS = {    
+    "administrator": {
+        "#owner":["@","管理フォルダ権限一覧"],
+        "#user":["@","権限所有フォルダ一覧"],
+        "#folder":["/","フォルダ権限保持者一覧"]
+    },
+    "manager":{
+        "#owner":["@","管理フォルダ権限一覧"],
+        "#user":["@","権限所有フォルダ一覧"],
+    },
+    "user":{
+    }
+}
+
+
 // 日本語ヘッダーを定義
 export const HEADER_LABEL = {
     "#": "#",
@@ -18,12 +34,27 @@ export const HEADER_LABEL = {
 
 
 // 表示ラベルの順番、ラベルの表示、非表示の設定
-export const PERMISSION_LABELS     = ['p_view', 'p_upload', 'p_download', 'p_delete', 'p_admin']
-export const PERMISSION_LABELS_CSV = ['p_view', 'p_upload', 'p_download', 'p_delete', 'p_admin']
-export const OWNER_LABELS     = ['#', 'owner_name', 'folder_path', 'user_email', 'user_name']
-export const OWNER_LABELS_CSV = ['#', 'folder_path', 'owner_name', 'user_email', 'user_name']
-export const USER_LABELS     =  ['#', 'folder_path', 'owner_name']
-export const USER_LABELS_CSV =  ['#', 'folder_path', 'owner_name']
+const PERMISSION_LABELS     = ['p_view', 'p_upload', 'p_download', 'p_delete', 'p_admin']
+const PERMISSION_LABELS_CSV = ['p_view', 'p_upload', 'p_download', 'p_delete', 'p_admin']
+const OWNER_LABELS     = ['#', 'owner_name', 'folder_path', 'user_email', 'user_name']
+const OWNER_LABELS_CSV = ['#', 'folder_path', 'owner_name', 'user_email', 'user_name']
+const USER_LABELS     =  ['#', 'folder_path', 'owner_name']
+const USER_LABELS_CSV =  ['#', 'folder_path', 'owner_name']
+const FOLDER_LABELS     =  ['#', 'folder_path', 'owner_name']
+const FOLDER_LABELS_CSV =  ['#', 'folder_path', 'owner_name']
+export const OUTPUT_LABELS = {
+    "screen":{
+        "#owner":  OWNER_LABELS.concat(PERMISSION_LABELS),
+        "#user":   USER_LABELS.concat(PERMISSION_LABELS),
+        "#folder": FOLDER_LABELS.concat(PERMISSION_LABELS)
+    },
+    "csv":{
+        "#owner":  OWNER_LABELS_CSV.concat(PERMISSION_LABELS_CSV),
+        "#user":   USER_LABELS_CSV.concat(PERMISSION_LABELS_CSV),
+        "#folder": FOLDER_LABELS_CSV.concat(PERMISSION_LABELS_CSV)
+    }
+}
+
 
 // 1ページあたりのページ数のデフォルト
 export const DEFAULT_ROWS_PAR_PAGE = 5
