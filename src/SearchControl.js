@@ -78,23 +78,17 @@ class SearchControl extends React.Component {
                 <Route render={ (p) => {
                     return(
                         <Navbar bg="dark" variant="dark">
-                            {
-                                (this.props.login_state.user_role === "administrator")&&
-                                (
-                                    <InputGroup className="mr-auto">
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text id="basic-addon1">{MENU_ITEMS[this.props.login_state.user_role][p.location.hash][0]}</InputGroup.Text>
-                                        </InputGroup.Prepend>
-                                        <Form.Control placeholder="前方一致検索を行います。" type="text" onChange={e => { this.onChangeText(e); }} />
-                                    </InputGroup>
-                                )
-                            }
-                            {
-                                (this.props.login_state.user_role !== "administrator")&&
-                                (
-                                    <Navbar.Text className="mr-auto">{this.props.login_state.login_account}</Navbar.Text>
-                                )
-                            }
+                            <InputGroup className="mr-auto">
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text id="basic-addon1">{MENU_ITEMS[this.props.login_state.user_role][p.location.hash][0]}</InputGroup.Text>
+                                </InputGroup.Prepend>
+                                {(this.props.login_state.user_role === "administrator")&&(
+                                    <Form.Control defaultValue={this.props.login_state.login_account} placeholder="前方一致検索を行います。" type="text" onChange={e => { this.onChangeText(e); }} />
+                                )}
+                                {(this.props.login_state.user_role === "manager")&&(
+                                <Form.Control value={this.props.login_state.login_account} placeholder="前方一致検索を行います。" type="text" onChange={e => { this.onChangeText(e); }} />
+                                )}
+                            </InputGroup>
                             <Nav className="mr-3"></Nav>
                             <Nav className="mr-3">
                                 <Form.Control as="select" defaultValue={DEFAULT_ROWS_PAR_PAGE} onChange={e => { this.onChangeRow(e); }}>
