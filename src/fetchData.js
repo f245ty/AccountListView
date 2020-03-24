@@ -17,6 +17,8 @@ async function fetchData(state, client_config, csv_flag = false) {
     let url = "https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/";
     if (state.type === "owner") url = url + 'owner';
     else if (state.type === "user") url = url + 'user';
+    else if (state.type === "folder") url = url + 'folder';
+    console.log(state.type)
 
     // CSV 出力指定の時は行数を 0 で指定
     var localstate = {}
