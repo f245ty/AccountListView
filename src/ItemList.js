@@ -6,68 +6,95 @@
 import React from 'react';
 import SearchControl from './SearchControl';
 import ListHeader from './ListHeader';
+import Pager from './Pager';
+import Table from 'react-bootstrap/Table';
+import CreateCSV from './CreateCSV';
+import { Row } from 'react-bootstrap';
 
 
 class ItemList extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-            search_key: null,   // 表示中の検索キー
-            sort_key: {},
-            items: []
+            type: "",     // user or folder
+            id: null,   // 表示中の検索ID 
+            sort: { "folder": "" },
+            order: "",   // ASC or DESC 
+            items: [],
+            pages: null,   // 全体ページ数
+            rows: null,   // 1ページの表示件数
+            page: null,   // 表示するページ番号
+            total: 0,    // 検索合計件数
+            input_data: null    // データ更新日
         };
-   
+
     }
 
+
     // 子コンポーネントの検索コントローラがデータをセットする
-    updateList(data, search_key, sort_key = {} ) {
+    updateList(state) {
         this.setState({
-            search_key: search_key,
-            sort_key: sort_key,
-            items: data
+            type: state.type,
+            id: state.id,
+            sort: state.sort,
+            order: state.order,
+            items: state.items,
+            pages: state.pages,
+            rows: state.rows,
+            page: state.page,
+            total: state.total,
+            input_data: state.input_data
         });
-        console.log(this.state);
+        // console.info("Set received data.");
+        // console.log(this.state);
     }
 
     render() {
-        const items = this.state.items; //[["1","JAN",'satou'],["2","FEB",'saito']];
-        return(
-        <div className="ItemList">
-            <SearchControl
-                searcdh_key = {this.state.search_key}
-                updateList={ (searchKey, data) => { this.updateList(searchKey, data); }} />
+
+        var items = this.state.items;
+
+        return (
             <div>
+                <SearchControl id="SearchControl"
+                    query={this.state}
+                    header_label={this.header_label}
+                    updateList={(data) => { this.updateList(data); }} />
                 {// 検索してないときは何も表示しない
-                    (items.length === 0 ) && typeof(this.state.search_key) !== "string" && (
+                    (items.length === 0) && typeof (this.state.id) !== "string" && (
                         <p>検索条件を入力し検索してください。</p>
                     )
                 }
                 {// 検索して結果が0件の時は 結果がないと表示する
-                    (items.length === 0 ) && typeof(this.state.search_key) == "string" && (
-                        <p>対象データはありません。</p>
+                    (items.length === 0) && typeof (this.state.id) == "string" && (
+                        <p>該当するデータが見つかりませんでした。</p>
                     )
                 }
-                {// 表示行数が0行の時は表示しない
-                 (items.length !== 0) && (
-                <table>
-                    <tbody>
-                            <ListHeader
-                                search_key = {this.state.search_key}
-                                items = {this.state.items}
-                                updateList={ (search_key, sort_key, data) => { this.updateList(search_key, sort_key, data); }} />
-                            {items.map((row,index) => (
-                            <tr key={index}>
-                                {Object.values(row).map((col,index) => {
-                                    if(index === 0 )return (<th key={index}>{col}</th>) // 1列目
-                                    else return (<td key={index}>{col}</td>)
-                                })}
-                            </tr>))}
-                    </tbody>
-                </table>)
-                }
+                <div id="List">
+                    {// 表示行数が0行の時は表示しない
+                        (items.length !== 0) && (
+                            <div>
+                                <CreateCSV query={this.state} header_label={this.header_label}></CreateCSV>
+                                <Pager className="vertical-align-middle" as={Row} query={this.state} updateList={(data) => { this.updateList(data); }}></Pager>
+                                <Table striped bordered hover id="res_table">
+                                    <tbody>
+                                        <ListHeader id="res_table"
+                                            query={this.state}
+                                            updateList={(data) => { this.updateList(data); }} />
+                                        {items.map((row, index) => (
+                                            <tr key={index}>
+                                                {Object.keys(row).map((col, index) => {
+                                                    if (index === 0) return (<th key={index}>{col}</th>) // 1列目
+                                                    else return (<td key={index}>{row[col]}</td>)
+                                                })}
+                                            </tr>))}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        )
+                    }
+                </div>
             </div>
-        </div>
         );
     }
 }
