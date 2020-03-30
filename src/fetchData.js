@@ -71,9 +71,9 @@ function modeling(data, state, csv_flag) {
         var col = {};
         col['#'] = ++count;
         for (var value in item) {
-            if (item[value] === "1") {
+            if (item[value] === "True") {
                 col[value] = "●";
-            } else if (item[value] === "0") {
+            } else if (item[value] === "False") {
                 col[value] = "";
             } else {
                 col[value] = item[value];
