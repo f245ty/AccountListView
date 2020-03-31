@@ -3,11 +3,16 @@ import fetchData from './fetchData';
 import { Parser } from 'json2csv';
 import { Row, Col } from 'react-bootstrap';
 
+import { HEADER_LABEL } from './config'
+
+
 class CreateCSV extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            client_config: props.client_config
+        };
         this.old_data = {};
     }
 
@@ -19,9 +24,11 @@ class CreateCSV extends React.Component {
 
         // 全件取得　row=0のとき
         fetchData(
-            state, true
-        ).then((data) => this.downloadCSV(data, state)
-        );
+            state,
+            this.state.client_config,
+            true
+            ).then((data) => this.downloadCSV(data, state)
+            );
         e.preventDefault();
     }
 
@@ -36,13 +43,16 @@ class CreateCSV extends React.Component {
             let link = document.createElement('a')
             link.href = window.URL.createObjectURL(blob)
 
+
             link.download = '権限情報_' + this.getDate() + '.csv'
             link.click()
 
         } catch (error) {
             console.error(error)
         } finally {
-            this.state.rows = old_data.rows;
+            this.setState( {
+                rows : old_data.rows
+            })
         }
 
     }
@@ -58,16 +68,20 @@ class CreateCSV extends React.Component {
         return y + ('0' + m).slice(-2) + ('0' + d).slice(-2);
     }
 
+    onLoding(e) {
+        window.open('/loading')
+    }
+
+    // json2csv 変換用に JSON の Key を日本語に変換
     parseColumns(items) {
 
         // ヘッダーを日本語に変換
         var jp_header = [];
-        items.map((item) => {
-            var col = [];
-            for (var value in item) {
-                col[this.props.header_label[value]] = item[value];
-            }
-            jp_header.push(col);
+        jp_header = items.map((item) => {
+            var col = {};
+            for (var key in item)
+                col[HEADER_LABEL[key]] = item[key];
+            return col;
         })
         return jp_header;
     }
@@ -75,15 +89,10 @@ class CreateCSV extends React.Component {
     render() {
         return (
             <Row>
-                <Col className="text-left">
-                    <p>データ更新日：{this.props.query.input_data}</p>
-                </Col>
-                <Col></Col>
-                <Col></Col>
                 <Col>
                     <button className="csv_button"
-                        onClick={(e) => this.onExportCSV(e)} >
-                        CSV出力 < i className="fas fa-download" ></i >
+                        onClick={(e) => this.onLoding(e)} >
+                        <i className="fas fa-download" ></i> CSV出力 
                     </button >
                 </Col>
             </Row>

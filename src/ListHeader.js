@@ -7,65 +7,42 @@
 import React from 'react';
 import fetchData from './fetchData';
 
+import { HEADER_LABEL } from './config'
 
-// 日本語ヘッダーを定義
-const HEADER_LABEL = {
-    "#": "#",
-    "user_email": "メールアドレス",
-    "user_name": "ユーザ名",
-    "path": "フォルダパス",
-    "folder": "フォルダ",
-    "permission": "権限",
-    "owner": "管理者",
-    "p_read": "閲覧権限",
-    "p_download": "ダウンロード権限",
-    "p_upload": "アップロード権限",
-    "p_admin": "管理権限",
-    "p_delete": "削除権限",
-    "p_notify_ul": "アップロード通知",
-    "p_notify_dl": "ダウンロード通知",
-    "p_owner": "フォルダ所有権"
-}
 
 
 class ListHeader extends React.Component {
-
-    constructor(props) {
+    constructor(props){
         super(props);
-        this.sort_key = {};
-        this.order = "";
-        this.state = {};
+        this.state={
+            client_config: props.client_config
+        }
     }
 
     onClick = (col, e) => {
-        // クリックされた列がソートキーでなければ、入れ替える
-        var sort_key = {};
-        var order = null;
-        if (!this.sort_key[col]) {
-            sort_key[col] = '▲';
-            order = 'asc';
-        } else {
-            sort_key[col] = (this.sort_key[col] === "▲") ? "▼" : "▲";
-            order = (this.order === "asc") ? "desc" : "asc";
-        }
-        this.sort_key = sort_key;
-        this.order = order;
-        this.state = this.props.query;
-        this.state.sort = this.sort_key;
-        this.state.order = this.order;
+
+        var sort = this.props.query.sort; // 表示中のソートキー
+        var order =  this.props.query.order; // 表示中のオーダー
+
+        // クリックされた列のキーが同じならソート順序を変える
+        order = col === sort ? ((order === "asc") ? "desc" : "asc" ) : "asc";
+
+        var state = this.props.query;
+        state.sort = col;
+        state.order = order;
 
         // console.info("Sort. ");
-        fetchData(
-            this.state, this.props.header_label).then((data) => { this.props.updateList(data) }
-            );
-        e.preventDefault();
 
+        fetchData(
+            state, this.state.client_config, this.props.header_label).then((data) => { this.props.updateList(data) }
+            );
     }
 
     render() {
 
         var row = this.props.query.items[0];
-        this.sort_key = this.props.query.sort;
+        var sort_key = this.props.query.sort;
+        var order = this.props.query.order;
 
         return (
             <tr>
@@ -74,7 +51,8 @@ class ListHeader extends React.Component {
                     key={index}
                     onClick={e => { if (col !== "#") this.onClick(col, e); }} >
                     {HEADER_LABEL[col]}
-                    {(this.sort_key[col]) && (<span>{this.sort_key[col]}</span>)}
+                    {sort_key === col && order === "asc" ? " ▲":""}
+                    {sort_key === col && order === "desc" ? " ▼":""}
                 </th>
                 ))}
             </tr>

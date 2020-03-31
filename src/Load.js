@@ -13,17 +13,21 @@ import Row from 'react-bootstrap/Row';
 class Load extends React.Component {
     constructor(props) {
         super(props);
-        this.load_state = active;
+        this.load_state = 'active';
     }
 
     render() {
         console.log("aaa");
         //loadingプロパティにより処理分け
-        if(this.load_state === active){
+        if(this.load_state === 'active'){
             return (
                 <Load>
                     {/* //ローディングアイコン */}
                     <i className="fa fa-refresh fa-spin fa-5x"></i>loading
+                        <br />                    
+                        CSVファイルを出力中です
+                        <br />
+                        しばらく時間がかかることがあります
                 </Load>
             );
         } else{

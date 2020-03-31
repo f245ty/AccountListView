@@ -1,6 +1,8 @@
-import ItemList from './ItemList';
 import AWS from 'aws-sdk';
+import {OUTPUT_LABELS} from './config'
+
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
+
 
 AWS.config.region = 'ap-northeast-1';
 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
@@ -9,40 +11,22 @@ AWS.config.credentials = new AWS.CognitoIdentityCredentials({
 });
 
 
-async function fetchData(state, csv_flag = false) {
+async function fetchData(state, client_config, csv_flag = false) {
     
     // 検索モードによってAPIを変更する
     let url = "https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/";
     if (state.type === "owner") url = url + 'owner';
     else if (state.type === "user") url = url + 'user';
+    else if (state.type === "folder") url = url + 'folder';
+    console.log(state.type)
 
     // CSV 出力指定の時は行数を 0 で指定
     var localstate = {}
     for( let key in state) localstate[key] = (key === 'rows' && csv_flag === true ) ? 0 : state[key]
 
+    client_config.invokeUrl = url;
 
-    // クレデンシャルの取得
-    //【TODO】切り出し
-    AWS.config.credentials.get((err) => {
-        if(!err)
-        {
-        }
-        else
-        {
-        }
-    });
-    
-    var config = {
-        invokeUrl: url,
-        accessKey: AWS.config.credentials.accessKeyId,
-        secretKey: AWS.config.credentials.secretAccessKey,
-        sessionToken: AWS.config.credentials.sessionToken,
-        region: 'ap-northeast-1'
-    }
-    var apigClient = apigClientFactory.newClient(config);
-    // apigClient.invokeApi(params, pathTemplate, method, additionalParams, body)
-
-    // ここまで切り出し
+    var apigClient = apigClientFactory.newClient(client_config);
 
     var pathParams = {};
     var pathTemplate = '';
@@ -54,10 +38,12 @@ async function fetchData(state, csv_flag = false) {
     
     return apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
     .then(function(result){
-        state = modeling(result.data, state)
+        state = modeling(result.data, state, csv_flag)
         return state
 
     }).catch( function(result){
+        console.log('API Gateway reply Error.')
+        console.log(result)
         state.items = [];
         return state;
     });
@@ -65,31 +51,29 @@ async function fetchData(state, csv_flag = false) {
 
 
 
-
-// 表示ラベルの順番、ラベルの表示、非表示の設定
-const PERMISSION_LABELS = ['p_read', 'p_upload', 'p_download', 'p_delete', 'p_admin']
-const OWNER_LABELS = ['owner', 'path', 'folder', 'user_email', 'user_name']
-const USER_LABELS = ['path', 'owner', 'folder']
-
-
 // Dynamo の JSON から内部用 JSON リストに成形
-function modeling(data, state) {
+function modeling(data, state, csv_flag) {
     var items = data.items;
 
     var rows = [];
     var count = 0;
 
-    var labels = state.type == 'owner' ? OWNER_LABELS : USER_LABELS
-    labels = labels.concat(PERMISSION_LABELS)
+
+    var labels = [];
+    if(csv_flag === true ) labels = state.type === 'owner' ? OUTPUT_LABELS['csv']['#owner'] : OUTPUT_LABELS['csv']['#user']
+    else labels = state.type === 'owner' ? OUTPUT_LABELS['screen']['#owner'] : OUTPUT_LABELS['screen']['#user']
+        console.log(OUTPUT_LABELS)
+    console.log(state.type)
+    console.log(OUTPUT_LABELS['screen'])
+    console.log(labels)
 
     items.forEach(item => {
-        
         var col = {};
         col['#'] = ++count;
         for (var value in item) {
-            if (item[value] === "1") {
+            if (item[value] === "True") {
                 col[value] = "●";
-            } else if (item[value] === "0") {
+            } else if (item[value] === "False") {
                 col[value] = "";
             } else {
                 col[value] = item[value];
@@ -101,16 +85,14 @@ function modeling(data, state) {
         rows.push(col);
     });
 
-    console.log(rows)
-
     // 検索時のqueryと返ってきたqueryをマージ
+    // 【TODO】リファクタリング
     let result = data.query;
     result.type = state.type;
     result.id = data.query.id;
     result.sort = state.sort;
     result.order = state.order;
     result.items = rows;
-    // console.log(result);
     return result;
 }
 
