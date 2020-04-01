@@ -26,7 +26,8 @@ class ItemList extends React.Component {
             page: null,   // 表示するページ番号
             total: 0,    // 検索合計件数
             datetime: "",
-            client_config: props.client_config
+            client_config: props.client_config,
+            loading: false
         };
     }
     

@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import { Navbar } from 'react-bootstrap';
 import logo from './header_img.png';
 import Cookies from 'universal-cookie';
-import { LOGIN_URI, LOGOUT_URI, ROLE_NAME } from './config'
+import { LOGIN_URI, ROLE_NAME } from './config'
 
 const cookies = new Cookies();
 

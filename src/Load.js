@@ -6,35 +6,31 @@
 import React from 'react';
 import fetchData from './fetchData';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
+
 class Load extends React.Component {
-    constructor(props) {
-        super(props);
-        this.load_state = 'active';
-    }
 
     render() {
-        console.log("aaa");
         //loadingプロパティにより処理分け
-        if(this.load_state === 'active'){
+        if(this.props.loading){
             return (
                 <Load>
                     {/* //ローディングアイコン */}
                     <i className="fa fa-refresh fa-spin fa-5x"></i>loading
                         <br />                    
-                        CSVファイルを出力中です
+                        <span>CSVファイルをダウンロード中です。</span>
+                        <span>米しばらく時間がかかることがあります。</span>
                         <br />
-                        しばらく時間がかかることがあります
+                        <span>ページを閉じると、ダウンロードができません。</span>
                 </Load>
             );
         } else{
             return (
                 <Load>
-                    {/* //ローディングアイコン */}
-                    <i className="fa fa-refresh fa-spin fa-5x"></i>loading
+                    <span>ダウンロードが終了しました。</span>
+                    <Button onClick="window.close();">ウィンドウを閉じる</Button>
                 </Load>
             );
         }
@@ -43,4 +39,3 @@ class Load extends React.Component {
 }
 
 export default Load;
-

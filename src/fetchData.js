@@ -93,6 +93,7 @@ function modeling(data, state, csv_flag) {
     result.sort = state.sort;
     result.order = state.order;
     result.items = rows;
+    result.loading = false;
     return result;
 }
 

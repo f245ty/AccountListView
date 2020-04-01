@@ -69,7 +69,9 @@ class CreateCSV extends React.Component {
     }
 
     onLoding(e) {
-        window.open('/loading')
+
+        window.open('/loading', null, 'top=100,left=100,width=600,height=400')
+
     }
 
     // json2csv 変換用に JSON の Key を日本語に変換

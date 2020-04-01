@@ -32,7 +32,7 @@ class App extends React.Component {
       user_role: null,
       client_config: {}
     }
-    console.log(MENU_ITEMS['administrator'][1])
+    // console.log(MENU_ITEMS['administrator'][1])
 
   }
 
@@ -174,7 +174,7 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        {/* モーダルダイアログ
+        {/* モーダルダイアログ */}
         <>
           <Button variant="primary" onClick={handleShow}>
             Launch demo modal
@@ -195,9 +195,9 @@ class App extends React.Component {
             </Modal.Footer>
           </Modal>
         </>
-         */}
+
         <BrowserRouter>
-          <Route newProps render={(p) => {
+          <Route path="/" newProps render={(p) => {
             let hash = p.location.hash
             return (
               <Container fluid>
@@ -220,7 +220,29 @@ class App extends React.Component {
               </Container>
             )
           }} />
-          <Route exact path="/loding" component={Load}></Route>
+          <Route exact path="/loding" newProps render={(p) => {
+            let hash = p.location.hash
+            return (
+              (this.state.is_logged_in) &&
+              (
+                <div>
+                  <Load></Load>
+                  <Row>
+                    <Nav variant="pills" className="flex-column">
+                      {Object.keys(MENU_ITEMS[this.state.user_role]).map((key) => (
+                        <Nav.Link href={key} active={hash === key ? true : false}>{MENU_ITEMS[this.state.user_role][key][1]}</Nav.Link>
+                      ))}
+                    </Nav>
+                    {(hash in MENU_ITEMS[this.state.user_role]) && (
+                      <Col className="mr-auto">
+                        <ItemList location={p.location} login_state={this.state} client_config={this.state.client_config} />
+                      </Col>
+                    )}
+                  </Row>
+                </div>
+              )
+            )
+          }}></Route>
         </BrowserRouter>
       </div>
     );
