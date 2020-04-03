@@ -125,6 +125,7 @@ class Pager extends React.Component {
                 </Navbar.Text>
                 <CreateCSV query={this.props.query} header_label={this.header_label}
                     client_config={this.state.client_config}
+                    updateList={(data) => { this.props.updateList(data);}}
                 />
             </Navbar>
         );

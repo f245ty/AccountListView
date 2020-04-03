@@ -3,12 +3,13 @@
 //  JSON の配列に行番号を付与して表示する コンポーネント
 //
 
-import React from 'react';
+import React, { Redirect } from 'react';
 import SearchControl from './SearchControl';
 import ListHeader from './ListHeader';
 import Pager from './Pager';
 import Table from 'react-bootstrap/Table';
 import { Row } from 'react-bootstrap';
+import Load from './Load';
 
 
 class ItemList extends React.Component {
@@ -30,7 +31,7 @@ class ItemList extends React.Component {
             loading: false
         };
     }
-    
+
 
     // 子コンポーネントの検索コントローラがデータをセットする
     updateList(state) {
@@ -48,10 +49,17 @@ class ItemList extends React.Component {
         });
     }
 
-    
+
     render() {
 
         var items = this.state.items;
+        console.log(items.url)
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', items.url);
+
+        // ローディング表示用のハンドラ
+        const handleNotLoading = () => this.setState({ loading: false });
+        const handleLoading = () => this.setState({ loading: true });
 
         return (
             <div>
@@ -60,7 +68,10 @@ class ItemList extends React.Component {
                     header_label={this.header_label}
                     updateList={(data) => { this.updateList(data); }}
                     login_state={this.props.login_state}
-                    client_config={this.state.client_config} />
+                    client_config={this.state.client_config}
+                // handleLoading={handleLoading}
+                // handleNotLoading={handleNotLoading} 
+                />
                 {// 検索してないときは何も表示しない
                     (items.length === 0) && typeof (this.state.id) !== "string" && (
                         <p>検索条件を入力し検索してください。</p>
@@ -71,36 +82,43 @@ class ItemList extends React.Component {
                         <p>該当するデータが見つかりませんでした。</p>
                     )
                 }
+                {/* {this.state.loading ? <Load loading={this.state.loading} /> : null} */}
                 <div id="List">
+                    {console.log(items.url)}
                     {// 表示行数が0行の時は表示しない
-                        (items.length !== 0) && (
-                            <div>
-                                <Pager
-                                    className="vertical-align-middle"
-                                    as={Row}
-                                    query={this.state}
-                                    updateList={(data) => { this.updateList(data);}}
-                                    client_config={this.state.client_config} />
-                                <Table striped bordered hover id="res_table">
-                                    <tbody>
-                                        <ListHeader id="res_table"
-                                            query={this.state}
-                                            updateList={(data) => { this.updateList(data); }}
-                                            client_config={this.state.client_config}
+                        items.url ?
+                            (
+                                xhr.send()
+                            )
+                            :
+                            (items.length !== 0) && (
+                                <div>
+                                    <Pager
+                                        className="vertical-align-middle"
+                                        as={Row}
+                                        query={this.state}
+                                        updateList={(data) => { this.updateList(data); }}
+                                        client_config={this.state.client_config} />
+                                    <Table striped bordered hover id="res_table">
+                                        <tbody>
+                                            <ListHeader id="res_table"
+                                                query={this.state}
+                                                updateList={(data) => { this.updateList(data); }}
+                                                client_config={this.state.client_config}
                                             />
-                                        
-                                        {items.map((row, index) => (
-                                            <tr key={index}>
-                                                {Object.keys(row).map((col, index) => {
-                                                    return (
-                                                            <td key={index} className={col.indexOf('p_') === 0 || col === '#' ?"text-center":"text-left"}>{row[col]}</td>
+
+                                            {items.map((row, index) => (
+                                                <tr key={index}>
+                                                    {Object.keys(row).map((col, index) => {
+                                                        return (
+                                                            <td key={index} className={col.indexOf('p_') === 0 || col === '#' ? "text-center" : "text-left"}>{row[col]}</td>
                                                         )
-                                                })}
-                                            </tr>))}
-                                    </tbody>
-                                </Table>
-                            </div>
-                        )
+                                                    })}
+                                                </tr>))}
+                                        </tbody>
+                                    </Table>
+                                </div>
+                            )
                     }
                 </div>
             </div>

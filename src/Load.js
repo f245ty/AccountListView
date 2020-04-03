@@ -4,34 +4,41 @@
 //  結果を ItemList へセットする コンポーネント
 //
 import React from 'react';
-import fetchData from './fetchData';
+import Cookies from 'universal-cookie';
+import { CSV_LOADING, DOWNLOAD } from './message';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import fetchData from './fetchData';
+
+
+const cookies = new Cookies();
 
 
 class Load extends React.Component {
 
     render() {
+
+        console.log('Load')
+
         //loadingプロパティにより処理分け
-        if(this.props.loading){
+        if (this.props.loading) {
             return (
-                <Load>
+                <div className="text-center">
+                    <br /><br /><br /><br />
                     {/* //ローディングアイコン */}
-                    <i className="fa fa-refresh fa-spin fa-5x"></i>loading
-                        <br />                    
-                        <span>CSVファイルをダウンロード中です。</span>
-                        <span>米しばらく時間がかかることがあります。</span>
-                        <br />
-                        <span>ページを閉じると、ダウンロードができません。</span>
-                </Load>
+                    <p><i className="fa fa-refresh fa-spin fa-5x"></i></p>
+                    <p>Loading...</p>
+
+                    {this.props.search ? null : <div>{CSV_LOADING}</div>}
+                </div>
             );
-        } else{
+        } else {
             return (
-                <Load>
-                    <span>ダウンロードが終了しました。</span>
-                    <Button onClick="window.close();">ウィンドウを閉じる</Button>
-                </Load>
+                <div>
+                    <span>{DOWNLOAD}</span>
+                    <Button onClick="window.close();">✕ 閉じる</Button>
+                </div>
             );
         }
     }

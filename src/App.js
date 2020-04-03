@@ -14,10 +14,7 @@ import Cookies from 'universal-cookie';
 import jwt from 'jsonwebtoken';
 import { MENU_ITEMS, IDENTITY_POOL_ID } from './config'
 
-import { Modal, Button } from 'react-bootstrap';
-
 const cookies = new Cookies();
-
 
 
 class App extends React.Component {
@@ -160,11 +157,6 @@ class App extends React.Component {
 
 
   render() {
-    // ダイアログ用のハンドラ
-    const handleClose = () => this.setState({ show: false });
-    const handleShow = () => this.setState({ show: true });
-
-    if (this.state.show === false) setTimeout(handleShow, 3000);
 
     // JWT が Cookie に設定されていたら、セッション情報を取得
     var id_token_jwt = cookies.get('jwt');
@@ -174,27 +166,6 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        {/* モーダルダイアログ */}
-        <>
-          <Button variant="primary" onClick={handleShow}>
-            Launch demo modal
-          </Button>
-
-          <Modal show={this.state.show} onHide={handleClose} backdrop={'static'}>
-            <Modal.Header closeButton>
-              <Modal.Title>Modal heading</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Close
-              </Button>
-              <Button variant="primary" onClick={handleClose}>
-                Save Changes
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        </>
 
         <BrowserRouter>
           <Route path="/" newProps render={(p) => {
@@ -220,29 +191,13 @@ class App extends React.Component {
               </Container>
             )
           }} />
-          <Route exact path="/loding" newProps render={(p) => {
+          <Route exact path="/loding" render={(p) => {
             let hash = p.location.hash
             return (
               (this.state.is_logged_in) &&
-              (
-                <div>
-                  <Load></Load>
-                  <Row>
-                    <Nav variant="pills" className="flex-column">
-                      {Object.keys(MENU_ITEMS[this.state.user_role]).map((key) => (
-                        <Nav.Link href={key} active={hash === key ? true : false}>{MENU_ITEMS[this.state.user_role][key][1]}</Nav.Link>
-                      ))}
-                    </Nav>
-                    {(hash in MENU_ITEMS[this.state.user_role]) && (
-                      <Col className="mr-auto">
-                        <ItemList location={p.location} login_state={this.state} client_config={this.state.client_config} />
-                      </Col>
-                    )}
-                  </Row>
-                </div>
-              )
+              (<Load></Load>)
             )
-          }}></Route>
+          }}/>
         </BrowserRouter>
       </div>
     );

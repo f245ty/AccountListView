@@ -13,7 +13,7 @@ import { DEFAULT_ROWS_PAR_PAGE, MENU_ITEMS } from './config'
 import Load from './Load';
 import isAccessTokenEnable from './isAccessTokenEnable';
 import Cookies from 'universal-cookie';
-import Dialog from './Dialog';
+import Logout from './Logout';
 import { ID_TOKEN_ERR } from './message';
 
 const cookies = new Cookies();
@@ -35,7 +35,8 @@ class SearchControl extends React.Component {
             total: null,   // 検索合計件数
             datetime: "",
             client_config: props.client_config,
-            showDialog: false     // ポップアップ表示フラグ
+            showDialog: false,     // ポップアップ表示フラグ
+            loading: false
         };
         this.onChangeText = this.onChangeText.bind(this);
         this.onClick = this.onClick.bind(this);
@@ -46,26 +47,31 @@ class SearchControl extends React.Component {
 
     onClickSearch = (e, hash) => {
 
-        if (!isAccessTokenEnable(this.props.login_state)) {
+        if (isAccessTokenEnable(this.props.login_state)) {
 
             // console.info("Submit");
             // console.log(this.state);
             // console.info("Searching...");
             // APIを叩いて、画面を更新する
-            this.setState({ loading: true });
+
             var state = this.state;
             state.type = hash;
             if (this.props.login_state.user_role !== "administrator" || state.id === null)
                 state.id = this.props.login_state.login_account;
             console.log(state)
             console.log('search state')
+            // this.props.handleLoading()
+            this.setState({ loading: true })
             fetchData(state, this.state.client_config).then((data) => {
                 this.props.updateList(data)
+                // this.props.handleNotLoading()
+                this.setState({ loading: false })
             });
 
         } else {
             console.log("id_token error.")
-            this.setState({ showDialog: !this.showDialog });
+            this.setState({ showDialog: !this.state.showDialog });
+            console.log(this.state.showDialog)
             cookies.remove('jwt');
         }
 
@@ -73,10 +79,6 @@ class SearchControl extends React.Component {
         return false;
     }
 
-    closeDialog() {
-        this.setState({ showDialog: !this.state.showDialog });
-        document.location = '/';
-    }
 
     onChangeText = (e) => {
         let id = e.target.value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -95,6 +97,7 @@ class SearchControl extends React.Component {
                 <option key={i}>{i}</option>
             )
         }
+
 
         // システム管理者権限を持たない場合はメールアドレス固定
         return (
@@ -134,13 +137,21 @@ class SearchControl extends React.Component {
                                     </Form>
                                 </Nav>
                             </Navbar>
+    
+                            {this.state.loading ? <Load loading={this.state.loading} search={true} /> : null}
                         </div>
                     )
                 }
                 } />
 
                 {/* ログアウト用ダイアログ表示 */}
-                <Dialog show={this.state.showDialog} text={ID_TOKEN_ERR} login_flag={true} handleClose={this.closeDialog()} />
+                <Logout
+                    show={this.state.showDialog}
+                    text={ID_TOKEN_ERR}
+                    login_flag={true}
+                    err_flag={true}
+                // handleClose={handleClose} 
+                />
             </BrowserRouter>
         );
     }
