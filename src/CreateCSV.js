@@ -1,6 +1,5 @@
 import React from 'react';
 import fetchData from './fetchData';
-import { Parser } from 'json2csv';
 import { Row, Col } from 'react-bootstrap';
 import Load from './Load';
 import { HEADER_LABEL } from './config'
@@ -17,6 +16,36 @@ class CreateCSV extends React.Component {
         this.old_data = {};
     }
 
+    onReceiveUrl = (data) => {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', data.items.url);
+        xhr.responseType = "text"
+        xhr.onload = (oEvent) => {
+            console.log(oEvent)
+            // ダウンロード完了後の処理を定義する
+            let bom  = new Uint8Array([0xEF, 0xBB, 0xBF]); // UTF-8
+            let blob = new Blob([bom, xhr.response], {type: 'text/csv'});
+            if (window.navigator.msSaveBlob) {
+              // IEとEdge
+              window.navigator.msSaveBlob(blob, 'download.csv');
+            }
+            else {
+              // それ以外のブラウザ
+              // Blobオブジェクトを指すURLオブジェクトを作る
+              let objectURL = window.URL.createObjectURL(blob);
+              // リンク（<a>要素）を生成し、JavaScriptからクリックする
+              let link = document.createElement("a");
+              document.body.appendChild(link);
+              link.href = objectURL;
+              link.download = 'download.csv';
+              link.click();
+              document.body.removeChild(link);
+            }
+            this.setState({ loading: false })
+        }
+        xhr.send();
+    }
+    
 
     onLoding(e) {
 
@@ -31,17 +60,10 @@ class CreateCSV extends React.Component {
             state,
             this.state.client_config,
             true
-            ).then((data) => {
-                console.log(data)
-                this.props.updateList(data)
-                // this.props.handleNotLoading()
-                this.setState({ loading: false })
-            }
-            );
+            ).then(this.onReceiveUrl);
         e.preventDefault();
 
     }
-    
 
     // json2csv 変換用に JSON の Key を日本語に変換
     parseColumns(items) {
@@ -61,12 +83,17 @@ class CreateCSV extends React.Component {
         return (
             <Row>
                 <Col>
-                    <button className="csv_button"
-                        onClick={(e) => this.onLoding(e)} >
-                        <i className="fas fa-download" ></i> CSV出力 
-                    </button >
+                    {this.state.loading ?
+                        (<Load loading={this.state.loading} search={true} />)
+                        :
+                        (
+                            <button className="csv_button"
+                            onClick={(e) => this.onLoding(e)} >
+                            <i className="fas fa-download" ></i> CSV出力 
+                        </button >
+                        )
+                    }
                 </Col>
-                {this.state.loading ? <Load loading={this.state.loading} search={true} /> : null}
             </Row>
             
         );

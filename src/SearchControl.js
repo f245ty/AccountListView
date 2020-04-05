@@ -58,8 +58,6 @@ class SearchControl extends React.Component {
             state.type = hash;
             if (this.props.login_state.user_role !== "administrator" || state.id === null)
                 state.id = this.props.login_state.login_account;
-            console.log(state)
-            console.log('search state')
             // this.props.handleLoading()
             this.setState({ loading: true })
             fetchData(state, this.state.client_config).then((data) => {

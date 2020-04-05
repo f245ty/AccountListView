@@ -19,7 +19,6 @@ async function fetchData(state, client_config, csv_flag = false) {
     else if (state.type === "owner") url = url + 'owner';
     else if (state.type === "user") url = url + 'user';
     else if (state.type === "folder") url = url + 'folder';
-    console.log(state.type)
 
     // CSV 出力指定の時は行数を 0 で指定
     var localstate = {}
@@ -39,7 +38,6 @@ async function fetchData(state, client_config, csv_flag = false) {
 
     return apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
         .then(function (result) {
-            console.log(result)
             state = modeling(result.data, state, csv_flag)
             return state
 
@@ -68,10 +66,6 @@ function modeling(data, state, csv_flag) {
     }
     else {
         labels = state.type === 'owner' ? OUTPUT_LABELS['screen']['#owner'] : OUTPUT_LABELS['screen']['#user']
-        console.log(OUTPUT_LABELS)
-        // console.log(state.type)
-        // console.log(OUTPUT_LABELS['screen'])
-        // console.log(labels)
         items.forEach(item => {
             var col = {};
             col['#'] = ++count;

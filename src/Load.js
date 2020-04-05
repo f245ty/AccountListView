@@ -4,23 +4,12 @@
 //  結果を ItemList へセットする コンポーネント
 //
 import React from 'react';
-import Cookies from 'universal-cookie';
 import { CSV_LOADING, DOWNLOAD } from './message';
 import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import fetchData from './fetchData';
-
-
-const cookies = new Cookies();
-
 
 class Load extends React.Component {
 
     render() {
-
-        console.log('Load')
-
         //loadingプロパティにより処理分け
         if (this.props.loading) {
             return (

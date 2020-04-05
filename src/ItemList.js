@@ -3,13 +3,12 @@
 //  JSON の配列に行番号を付与して表示する コンポーネント
 //
 
-import React, { Redirect } from 'react';
+import React from 'react';
 import SearchControl from './SearchControl';
 import ListHeader from './ListHeader';
 import Pager from './Pager';
 import Table from 'react-bootstrap/Table';
 import { Row } from 'react-bootstrap';
-import Load from './Load';
 
 
 class ItemList extends React.Component {
@@ -53,13 +52,6 @@ class ItemList extends React.Component {
     render() {
 
         var items = this.state.items;
-        console.log(items.url)
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', items.url);
-
-        // ローディング表示用のハンドラ
-        const handleNotLoading = () => this.setState({ loading: false });
-        const handleLoading = () => this.setState({ loading: true });
 
         return (
             <div>
@@ -84,41 +76,35 @@ class ItemList extends React.Component {
                 }
                 {/* {this.state.loading ? <Load loading={this.state.loading} /> : null} */}
                 <div id="List">
-                    {console.log(items.url)}
                     {// 表示行数が0行の時は表示しない
-                        items.url ?
-                            (
-                                xhr.send()
-                            )
-                            :
-                            (items.length !== 0) && (
-                                <div>
-                                    <Pager
-                                        className="vertical-align-middle"
-                                        as={Row}
-                                        query={this.state}
-                                        updateList={(data) => { this.updateList(data); }}
-                                        client_config={this.state.client_config} />
-                                    <Table striped bordered hover id="res_table">
-                                        <tbody>
-                                            <ListHeader id="res_table"
-                                                query={this.state}
-                                                updateList={(data) => { this.updateList(data); }}
-                                                client_config={this.state.client_config}
-                                            />
+                        (items.length !== 0) && (
+                            <div>
+                                <Pager
+                                    className="vertical-align-middle"
+                                    as={Row}
+                                    query={this.state}
+                                    updateList={(data) => { this.updateList(data); }}
+                                    client_config={this.state.client_config} />
+                                <Table striped bordered hover id="res_table">
+                                    <tbody>
+                                        <ListHeader id="res_table"
+                                            query={this.state}
+                                            updateList={(data) => { this.updateList(data); }}
+                                            client_config={this.state.client_config}
+                                        />
 
-                                            {items.map((row, index) => (
-                                                <tr key={index}>
-                                                    {Object.keys(row).map((col, index) => {
-                                                        return (
-                                                            <td key={index} className={col.indexOf('p_') === 0 || col === '#' ? "text-center" : "text-left"}>{row[col]}</td>
-                                                        )
-                                                    })}
-                                                </tr>))}
-                                        </tbody>
-                                    </Table>
-                                </div>
-                            )
+                                        {items.map((row, index) => (
+                                            <tr key={index}>
+                                                {Object.keys(row).map((col, index) => {
+                                                    return (
+                                                        <td key={index} className={col.indexOf('p_') === 0 || col === '#' ? "text-center" : "text-left"}>{row[col]}</td>
+                                                    )
+                                                })}
+                                            </tr>))}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        )
                     }
                 </div>
             </div>

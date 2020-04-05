@@ -20,7 +20,6 @@ const cookies = new Cookies();
 class App extends React.Component {
   constructor(props) {
     super(props);
-    console.log('page loaded')
     this.state = {
       is_logged_in: false,
       id_token: null,
@@ -66,8 +65,6 @@ class App extends React.Component {
       client_config: config
     })
 
-    console.log('login sequence')
-    console.log(this.state)
   }
 
   setLogout() {
@@ -82,11 +79,9 @@ class App extends React.Component {
 
       show: null
     })
-    console.log('logout sequence')
   }
 
   getClientConfig(id_token_jwt) {
-    console.log(id_token_jwt)
     let url = "https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/";
 
     // 解毒
@@ -177,9 +172,13 @@ class App extends React.Component {
                   (this.state.is_logged_in) &&
                   (<Row>
                     <Nav variant="pills" className="flex-column">
-                      {Object.keys(MENU_ITEMS[this.state.user_role]).map((key) => (
-                        <Nav.Link href={key} active={hash === key ? true : false}>{MENU_ITEMS[this.state.user_role][key][1]}</Nav.Link>
+                      {Object.keys(MENU_ITEMS[this.state.user_role]).map(
+                        (key) => (
+                        <Nav.Link key={key} href={key} active={hash === key ? true : false}>
+                          {MENU_ITEMS[this.state.user_role][key][1]}
+                        </Nav.Link>
                       ))}
+                      {}
                     </Nav>
                     {(hash in MENU_ITEMS[this.state.user_role]) && (
                       <Col className="mr-auto">
@@ -192,7 +191,6 @@ class App extends React.Component {
             )
           }} />
           <Route exact path="/loding" render={(p) => {
-            let hash = p.location.hash
             return (
               (this.state.is_logged_in) &&
               (<Load></Load>)
