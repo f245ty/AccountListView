@@ -10,11 +10,10 @@ const cookies = new Cookies();
 class HeaderMenu extends React.Component {
 
     // ログイン、ログアウト切り替え
-    // 【TODO:リーダブルではない】
     onClickLogin(e){
         if(this.props.login_state.is_logged_in === true){
             cookies.remove('jwt');
-            document.location = '/';
+            document.location = LOGOUT_URI;
         }
         else{
             let nonce = Math.random().toString(36).slice(-8);
