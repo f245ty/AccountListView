@@ -10,11 +10,10 @@ import Form from 'react-bootstrap/Form';
 import { Nav, Navbar, InputGroup } from 'react-bootstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { DEFAULT_ROWS_PAR_PAGE, MENU_ITEMS } from './config'
-import Load from './Load';
 import isAccessTokenEnable from './isAccessTokenEnable';
 import Cookies from 'universal-cookie';
-import Logout from './Logout';
-import { ID_TOKEN_ERR } from './message';
+import { ID_TOKEN_ERR, LOGIN } from './message';
+import Dialog from './Dialog';
 
 const cookies = new Cookies();
 const maxPageValue = 100
@@ -35,8 +34,9 @@ class SearchControl extends React.Component {
             total: null,   // 検索合計件数
             datetime: "",
             client_config: props.client_config,
-            showDialog: false,     // ポップアップ表示フラグ
-            loading: false
+            show_dialog: false,     // ポップアップ表示フラグ
+            loading: false,
+            error: null
         };
         this.onChangeText = this.onChangeText.bind(this);
         this.onClick = this.onClick.bind(this);
@@ -58,6 +58,8 @@ class SearchControl extends React.Component {
             state.type = hash;
             if (this.props.login_state.user_role !== "administrator" || state.id === null)
                 state.id = this.props.login_state.login_account;
+            console.log(state)
+            console.log('search state')
             // this.props.handleLoading()
             this.setState({ loading: true })
             fetchData(state, this.state.client_config).then((data) => {
@@ -68,8 +70,8 @@ class SearchControl extends React.Component {
 
         } else {
             console.log("id_token error.")
-            this.setState({ showDialog: !this.state.showDialog });
-            console.log(this.state.showDialog)
+            this.setState({ show_dialog: !this.state.show_dialog });
+            console.log(this.state.show_dialog)
             cookies.remove('jwt');
         }
 
@@ -136,17 +138,17 @@ class SearchControl extends React.Component {
                                 </Nav>
                             </Navbar>
     
-                            {this.state.loading ? <Load loading={this.state.loading} search={true} /> : null}
+                            {this.state.loading ? <Dialog show={this.state.loading} search_flag={this.state.loading} /> : null}
                         </div>
                     )
                 }
                 } />
 
-                {/* ログアウト用ダイアログ表示 */}
-                <Logout
-                    show={this.state.showDialog}
-                    text={ID_TOKEN_ERR}
-                    login_flag={true}
+                {/* ダイアログ表示 */}
+                <Dialog
+                    show={this.state.show_dialog}
+                    text={ID_TOKEN_ERR + LOGIN}
+                    logout_flag={true}
                     err_flag={true}
                 // handleClose={handleClose} 
                 />

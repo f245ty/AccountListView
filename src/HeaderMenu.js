@@ -3,9 +3,11 @@ import Button from 'react-bootstrap/Button';
 import { Navbar } from 'react-bootstrap';
 import logo from './header_img.png';
 import Cookies from 'universal-cookie';
-import { LOGIN_URI, ROLE_NAME } from './config'
-import Logout from './Logout';
-import { SESSION_ERR } from './message';
+// 【TODO：開発環境では、config_local使用】
+// import { LOGIN_URI, ROLE_NAME } from './config';
+import { LOGIN_URI, ROLE_NAME } from './config_local'
+// import { SESSION_ERR } from './message';
+import Dialog from './Dialog';
 
 const cookies = new Cookies();
 
@@ -42,10 +44,9 @@ class HeaderMenu extends React.Component {
 
         // ダイアログ用のハンドラ
         const handleClose = () => this.setState({ show_dialog: false });
-        const handleShow = () => this.setState({ show_dialog: true, timeout: true });
-        // 一定期間操作が無ければダイアログを表示し、ログアウト
-        if (this.props.login_state.is_logged_in === true && this.state.show_dialog === false)
-            setTimeout(handleShow, 30000000);
+        // // 一定期間操作が無ければダイアログを表示し、ログアウト
+        // if (this.props.login_state.is_logged_in === true && this.state.show_dialog === false)
+        //     setTimeout(handleShow, 30000000);
 
         return (
             <Navbar>
@@ -64,11 +65,9 @@ class HeaderMenu extends React.Component {
                             this.props.login_state.is_logged_in ? "ログアウト" : "ログイン"
                         }
                     </Button>
-                    <Logout
+                    <Dialog
                         show={this.state.show_dialog}
-                        text={SESSION_ERR}
-                        login_flag={this.state.timeout}
-                        err_flag={this.state.timeout}
+                        logout_flag={this.state.show_dialog}
                         handleClose={handleClose}
                     />
 

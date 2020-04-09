@@ -7,12 +7,14 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { Nav } from 'react-bootstrap';
 import HeaderMenu from './HeaderMenu';
-import Load from './Load';
 import { Route, BrowserRouter } from 'react-router-dom';
 import ItemList from './ItemList';
 import Cookies from 'universal-cookie';
 import jwt from 'jsonwebtoken';
-import { MENU_ITEMS, IDENTITY_POOL_ID } from './config'
+// 【TODO：開発環境では、config_local使用】
+// import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID } from './config';
+import {MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID } from './config_local';
+import Dialog from './Dialog';
 
 const cookies = new Cookies();
 
@@ -20,6 +22,7 @@ const cookies = new Cookies();
 class App extends React.Component {
   constructor(props) {
     super(props);
+    console.log('page loaded')
     this.state = {
       is_logged_in: false,
       id_token: null,
@@ -39,8 +42,12 @@ class App extends React.Component {
     // ロール付与グループ一覧
     // 現時点では固定
     const roles = {
+      // 開発用AzureADグループ
       "86c759da-6918-4d19-8931-2cfa5f8f6ec7": "administrator",
       "a746a5b4-795b-4d5a-8d2b-4559b92d9bf4": "manager",
+      // 連携AzureADグループ
+      "269ec94e-7c5f-48b6-a541-1a34b08208a0": "administrator",
+      "d5b80467-c8b5-4edc-a714-45c30e86fbee": "manager", 
     }
     var user_role = "user"
     for (let group in roles) {
@@ -65,6 +72,8 @@ class App extends React.Component {
       client_config: config
     })
 
+    console.log('login sequence')
+    console.log(this.state)
   }
 
   setLogout() {
@@ -79,9 +88,11 @@ class App extends React.Component {
 
       show: null
     })
+    console.log('logout sequence')
   }
 
   getClientConfig(id_token_jwt) {
+    console.log(id_token_jwt)
     let url = "https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/";
 
     // 解毒
@@ -108,10 +119,14 @@ class App extends React.Component {
     else cookies.remove('nonce');
 
     var params = {
-      AccountId: "707439530427",
+      AccountId: ACCOUNT_ID,
       IdentityPoolId: IDENTITY_POOL_ID,
       Logins: {
-        "login.microsoftonline.com/8a08112f-92e8-43fe-9a0a-56d393b9f042/v2.0": id_token_jwt
+        // 【TODO：環境によって切替】
+        // 開発用
+        "login.microsoftonline.com/8a08112f-92e8-43fe-9a0a-56d393b9f042/v2.0" : id_token_jwt
+        // 連携AzureADグループ用
+        // "login.microsoftonline.com/dd866e13-f8b7-4585-bb47-be0efba1c006/v2.0" : id_token_jwt
       }
     };
 
@@ -172,13 +187,9 @@ class App extends React.Component {
                   (this.state.is_logged_in) &&
                   (<Row>
                     <Nav variant="pills" className="flex-column">
-                      {Object.keys(MENU_ITEMS[this.state.user_role]).map(
-                        (key) => (
-                        <Nav.Link key={key} href={key} active={hash === key ? true : false}>
-                          {MENU_ITEMS[this.state.user_role][key][1]}
-                        </Nav.Link>
+                      {Object.keys(MENU_ITEMS[this.state.user_role]).map((key) => (
+                        <Nav.Link href={key} active={hash === key ? true : false}>{MENU_ITEMS[this.state.user_role][key][1]}</Nav.Link>
                       ))}
-                      {}
                     </Nav>
                     {(hash in MENU_ITEMS[this.state.user_role]) && (
                       <Col className="mr-auto">
@@ -190,12 +201,13 @@ class App extends React.Component {
               </Container>
             )
           }} />
-          <Route exact path="/loding" render={(p) => {
-            return (
-              (this.state.is_logged_in) &&
-              (<Load></Load>)
-            )
-          }}/>
+            <Route path="/loding" render={(p) => {
+              // let hash = p.location.hash
+              return (
+                (this.state.is_logged_in) &&
+                (<Dialog></Dialog>)
+              )
+            }}/>
         </BrowserRouter>
       </div>
     );
