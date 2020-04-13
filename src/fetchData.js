@@ -71,7 +71,7 @@ function modeling(data, state, csv_flag) {
     }
     else {
         labels = state.type === 'owner' ? OUTPUT_LABELS['screen']['#owner'] : OUTPUT_LABELS['screen']['#user']
-        console.log(OUTPUT_LABELS)
+        // console.log(OUTPUT_LABELS)
         // console.log(state.type)
         // console.log(OUTPUT_LABELS['screen'])
         // console.log(labels)
@@ -103,6 +103,8 @@ function modeling(data, state, csv_flag) {
     result.sort = state.sort;
     result.order = state.order;
     result.loading = false;
+    result.error = null;
+    console.log(result);
 
     return result;
 }

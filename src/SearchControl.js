@@ -56,8 +56,16 @@ class SearchControl extends React.Component {
 
             var state = this.state;
             state.type = hash;
-            if (this.props.login_state.user_role !== "administrator" || state.id === null)
+
+            // 検索条件をデフォルトで検索するための処理
+            if (state.id === null) {
                 state.id = this.props.login_state.login_account;
+                if (state.type === "folder") {
+                    state.id = "/";
+                }
+            } else if (state.type !== "folder" && state.id.indexOf("/") > -1) {
+                state.id = this.props.login_state.login_account;
+            }
             console.log(state)
             console.log('search state')
             // this.props.handleLoading()
@@ -98,7 +106,6 @@ class SearchControl extends React.Component {
             )
         }
 
-
         // システム管理者権限を持たない場合はメールアドレス固定
         return (
 
@@ -112,16 +119,22 @@ class SearchControl extends React.Component {
                                     <InputGroup.Prepend>
                                         <InputGroup.Text id="basic-addon1">{MENU_ITEMS[this.props.login_state.user_role][p.location.hash][0]}</InputGroup.Text>
                                     </InputGroup.Prepend>
-                                    {(this.props.login_state.user_role === "administrator") && (
+                                    {(p.location.hash === '#folder') &&
                                         <Form.Control
-                                            defaultValue={this.props.login_state.login_account}
+                                            defaultValue={this.props.login_state.user_role === 'administrator' ? '/' : this.props.login_state.login_account}
                                             placeholder="前方一致検索を行います。"
                                             type="text"
                                             onChange={e => { this.onChangeText(e); }} />
-                                    )}
-                                    {(this.props.login_state.user_role === "manager") && (
-                                        <Form.Control value={this.props.login_state.login_account} placeholder="前方一致検索を行います。" type="text" onChange={e => { this.onChangeText(e); }} />
-                                    )}
+                                    }
+                                    {(p.location.hash !== '#folder') &&
+                                        (<Form.Control
+                                            defaultValue={this.props.login_state.user_role === 'administrator' ? this.props.login_state.login_account : null}
+                                            value={this.props.login_state.user_role === "manager" ? this.props.login_state.login_account : null}
+                                            placeholder="前方一致検索を行います。"
+                                            type="text"
+                                            onChange={e => { this.onChangeText(e); }} />
+                                        )
+                                    }
                                 </InputGroup>
                                 <Nav className="mr-3"></Nav>
                                 <Nav className="col-auto my-1">
@@ -137,8 +150,8 @@ class SearchControl extends React.Component {
                                     </Form>
                                 </Nav>
                             </Navbar>
-    
-                            {this.state.loading ? <Dialog show={this.state.loading} search_flag={this.state.loading} /> : null}
+
+                            <Dialog show={this.state.loading} search_flag={this.state.loading} />
                         </div>
                     )
                 }

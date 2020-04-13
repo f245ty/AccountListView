@@ -85,8 +85,9 @@ class ItemList extends React.Component {
                         <p>該当するデータが見つかりませんでした。</p>
                     )
                 }
-                {// エラーが発生した時は、エラーメッセージを表示する
-                    (items.length === 0) && (this.state.error) && (
+                {console.log(this.state.error)}
+                {// エラーが発生した時は、エラーメッセージを表示す
+                    (items.length === 0) && (this.state.error !== null) && (
                         <Dialog show={this.state.show_dialog} err_flag={true} text={ERR_WAIT_MSG} handleClose={handleClose} />
                     )
                 }
