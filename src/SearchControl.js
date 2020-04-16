@@ -24,7 +24,7 @@ class SearchControl extends React.Component {
         super(props);
         this.state = {
             type: null,     // 検索ID　owner or user
-            id: props.login_state.login_account,   // 表示中の検索キー 
+            id: null,   // 表示中の検索キー 
             sort: {},
             order: "asc",   // ASC or DESC 
             items: [],
@@ -50,10 +50,6 @@ class SearchControl extends React.Component {
 
         var state = this.state;
         state.type = hash;
-        console.log(state, this.state)
-        if (state.id === null) {
-            return false;
-        }
 
         if (isAccessTokenEnable(this.props.login_state)) {
 
@@ -63,7 +59,9 @@ class SearchControl extends React.Component {
             // APIを叩いて、画面を更新する
 
             // 検索条件をデフォルトで検索するための処理
-            if (state.type === 'folder') {
+            if (state.id === null || state.id === "")
+                state.id = this.props.login_state.login_account
+            if (state.id === null || state.type === 'folder') {
                 if (state.id === this.props.login_state.login_account) state.id = "/";
             } else if (state.type !== "folder" && state.id.indexOf("/") > -1) {
                 state.id = this.props.login_state.login_account;
@@ -126,21 +124,9 @@ class SearchControl extends React.Component {
                                             defaultValue={this.props.login_state.user_role === 'administrator' ? '/' : undefined}
                                             placeholder="前方一致検索を行います。"
                                             type="text"
-                                            required
-                                            isInvalid={!this.state.id}
                                             onChange={e => { this.onChangeText(e); }} />)
                                     }
-                                    {(p.location.hash === '#owner') &&
-                                        (<Form.Control
-                                            defaultValue={this.props.login_state.user_role === 'administrator' ? this.props.login_state.login_account : undefined}
-                                            value={this.props.login_state.user_role === "manager" ? this.props.login_state.login_account : undefined}
-                                            placeholder="前方一致検索を行います。"
-                                            type="text"
-                                            isInvalid={!this.state.id}
-                                            onChange={e => { this.onChangeText(e); }} />
-                                        )
-                                    }
-                                    {(p.location.hash === '#user') &&
+                                    {(p.location.hash !== '#folder') &&
                                         (<Form.Control
                                             defaultValue={this.props.login_state.user_role === 'administrator' ? this.props.login_state.login_account : undefined}
                                             value={this.props.login_state.user_role === "manager" ? this.props.login_state.login_account : undefined}
@@ -149,6 +135,15 @@ class SearchControl extends React.Component {
                                             onChange={e => { this.onChangeText(e); }} />
                                         )
                                     }
+                                    {/* {(p.location.hash === '#user') &&
+                                        (<Form.Control
+                                            defaultValue={this.props.login_state.user_role === 'administrator' ? this.props.login_state.login_account : undefined}
+                                            value={this.props.login_state.user_role === "manager" ? this.props.login_state.login_account : undefined}
+                                            placeholder="前方一致検索を行います。"
+                                            type="text"
+                                            onChange={e => { this.onChangeText(e); }} />
+                                        )
+                                    } */}
                                 </InputGroup>
                                 <Nav className="mr-3"></Nav>
                                 <Nav className="col-auto my-1">
