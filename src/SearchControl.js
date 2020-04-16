@@ -24,7 +24,7 @@ class SearchControl extends React.Component {
         super(props);
         this.state = {
             type: null,     // 検索ID　owner or user
-            id: null,   // 表示中の検索キー 
+            id: props.login_state.login_account,   // 表示中の検索キー 
             sort: {},
             order: "asc",   // ASC or DESC 
             items: [],
@@ -38,6 +38,7 @@ class SearchControl extends React.Component {
             loading: false,
             error: null
         };
+        this.validation = false;
         this.onChangeText = this.onChangeText.bind(this);
         this.onClick = this.onClick.bind(this);
         this.onChangeRow = this.onChangeRow.bind(this);
@@ -47,6 +48,13 @@ class SearchControl extends React.Component {
 
     onClickSearch = (e, hash) => {
 
+        var state = this.state;
+        state.type = hash;
+        console.log(state, this.state)
+        if (state.id === null) {
+            return false;
+        }
+
         if (isAccessTokenEnable(this.props.login_state)) {
 
             // console.info("Submit");
@@ -54,25 +62,20 @@ class SearchControl extends React.Component {
             // console.info("Searching...");
             // APIを叩いて、画面を更新する
 
-            var state = this.state;
-            state.type = hash;
-
             // 検索条件をデフォルトで検索するための処理
-            if (state.id === null) {
-                state.id = this.props.login_state.login_account;
-                if (state.type === "folder") {
-                    state.id = "/";
-                }
+            if (state.type === 'folder') {
+                if (state.id === this.props.login_state.login_account) state.id = "/";
             } else if (state.type !== "folder" && state.id.indexOf("/") > -1) {
                 state.id = this.props.login_state.login_account;
+            } else if (state.type === "folder" && state.id.indexOf("/") === -1) {
+                state.id = "/";
             }
+
             console.log(state)
             console.log('search state')
-            // this.props.handleLoading()
             this.setState({ loading: true })
             fetchData(state, this.state.client_config).then((data) => {
                 this.props.updateList(data)
-                // this.props.handleNotLoading()
                 this.setState({ loading: false })
             });
 
@@ -87,16 +90,15 @@ class SearchControl extends React.Component {
         return false;
     }
 
-
     onChangeText = (e) => {
         let id = e.target.value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         this.setState({ id: id });
+        console.log(this.state.id)
     }
 
     onChangeRow = (e) => { this.setState({ rows: e.target.value }); }
 
     onClick = (e, e_type) => { ; }
-
 
     render() {
         const options = [];
@@ -120,16 +122,28 @@ class SearchControl extends React.Component {
                                         <InputGroup.Text id="basic-addon1">{MENU_ITEMS[this.props.login_state.user_role][p.location.hash][0]}</InputGroup.Text>
                                     </InputGroup.Prepend>
                                     {(p.location.hash === '#folder') &&
-                                        <Form.Control
-                                            defaultValue={this.props.login_state.user_role === 'administrator' ? '/' : this.props.login_state.login_account}
+                                        (<Form.Control
+                                            defaultValue={this.props.login_state.user_role === 'administrator' ? '/' : undefined}
                                             placeholder="前方一致検索を行います。"
                                             type="text"
-                                            onChange={e => { this.onChangeText(e); }} />
+                                            required
+                                            isInvalid={!this.state.id}
+                                            onChange={e => { this.onChangeText(e); }} />)
                                     }
-                                    {(p.location.hash !== '#folder') &&
+                                    {(p.location.hash === '#owner') &&
                                         (<Form.Control
-                                            defaultValue={this.props.login_state.user_role === 'administrator' ? this.props.login_state.login_account : null}
-                                            value={this.props.login_state.user_role === "manager" ? this.props.login_state.login_account : null}
+                                            defaultValue={this.props.login_state.user_role === 'administrator' ? this.props.login_state.login_account : undefined}
+                                            value={this.props.login_state.user_role === "manager" ? this.props.login_state.login_account : undefined}
+                                            placeholder="前方一致検索を行います。"
+                                            type="text"
+                                            isInvalid={!this.state.id}
+                                            onChange={e => { this.onChangeText(e); }} />
+                                        )
+                                    }
+                                    {(p.location.hash === '#user') &&
+                                        (<Form.Control
+                                            defaultValue={this.props.login_state.user_role === 'administrator' ? this.props.login_state.login_account : undefined}
+                                            value={this.props.login_state.user_role === "manager" ? this.props.login_state.login_account : undefined}
                                             placeholder="前方一致検索を行います。"
                                             type="text"
                                             onChange={e => { this.onChangeText(e); }} />
