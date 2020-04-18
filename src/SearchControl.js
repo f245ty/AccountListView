@@ -7,13 +7,14 @@ import React from 'react';
 import fetchData from './fetchData';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { Nav, Navbar, InputGroup } from 'react-bootstrap';
+import { InputGroup } from 'react-bootstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { DEFAULT_ROWS_PAR_PAGE, MENU_ITEMS } from './config'
 import isAccessTokenEnable from './isAccessTokenEnable';
 import Cookies from 'universal-cookie';
 import { ID_TOKEN_ERR, LOGIN } from './message';
 import Dialog from './Dialog';
+
 
 const cookies = new Cookies();
 const maxPageValue = 100
@@ -24,9 +25,9 @@ class SearchControl extends React.Component {
         super(props);
         this.state = {
             type: null,     // 検索ID　owner or user
-            id: null,   // 表示中の検索キー 
+            id: null,   // 表示中の検索キー
             sort: {},
-            order: "asc",   // ASC or DESC 
+            order: "asc",   // ASC or DESC
             items: [],
             pages: null,   // 全体ページ数
             rows: DEFAULT_ROWS_PAR_PAGE,   // 1ページの表示件数
@@ -47,17 +48,13 @@ class SearchControl extends React.Component {
 
 
     onClickSearch = (e, hash) => {
-
         var state = this.state;
         state.type = hash;
 
+        console.log('search id: ' + this.state.id);
         if (isAccessTokenEnable(this.props.login_state)) {
 
-            // console.info("Submit");
-            // console.log(this.state);
-            // console.info("Searching...");
             // APIを叩いて、画面を更新する
-
             // 検索条件をデフォルトで検索するための処理
             if (state.id === null || state.id === "")
                 state.id = this.props.login_state.login_account
@@ -83,15 +80,14 @@ class SearchControl extends React.Component {
             console.log(this.state.show_dialog)
             cookies.remove('jwt');
         }
-
-
-        return false;
+        console.log('searched id: '+ this.state.id);
+        e.preventDefault();
     }
 
     onChangeText = (e) => {
         let id = e.target.value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        console.log('before id: '+this.state.id+', after id: '+id);
         this.setState({ id: id });
-        console.log(this.state.id)
     }
 
     onChangeRow = (e) => { this.setState({ rows: e.target.value }); }
@@ -101,70 +97,75 @@ class SearchControl extends React.Component {
     render() {
         const options = [];
         for (let i = 1; i <= maxPageValue; i += 1) {
-            options.push(
-                <option key={i}>{i}</option>
-            )
+            options.push(<option key={i}>{i}</option>);
         }
 
         // システム管理者権限を持たない場合はメールアドレス固定
         return (
-
             <BrowserRouter hashType="noslash">
-
                 <Route render={(p) => {
                     return (
-                        <div>
-                            <Navbar bg="dark" variant="dark">
-                                <InputGroup className="mr-auto">
+                        <div class="bg-dark p-3">
+                            <Form onSubmit={(e) => this.onClickSearch(e, p.location.hash.replace("#", ""))}>
+                                <InputGroup className="">
                                     <InputGroup.Prepend>
-                                        <InputGroup.Text id="basic-addon1">{MENU_ITEMS[this.props.login_state.user_role][p.location.hash][0]}</InputGroup.Text>
+                                        <InputGroup.Text id="basic-addon1">
+                                            {MENU_ITEMS[this.props.login_state.user_role][p.location.hash][0]}
+                                        </InputGroup.Text>
                                     </InputGroup.Prepend>
-                                    {(p.location.hash === '#folder') &&
-                                        (<Form.Control
-                                            defaultValue={this.props.login_state.user_role === 'administrator' ? '/' : undefined}
-                                            placeholder="前方一致検索を行います。"
-                                            type="text"
-                                            onChange={e => { this.onChangeText(e); }} />)
-                                    }
-                                    {(p.location.hash !== '#folder') &&
-                                        (<Form.Control
-                                            defaultValue={this.props.login_state.user_role === 'administrator' ? this.props.login_state.login_account : undefined}
-                                            value={this.props.login_state.user_role === "manager" ? this.props.login_state.login_account : undefined}
-                                            placeholder="前方一致検索を行います。"
-                                            type="text"
-                                            onChange={e => { this.onChangeText(e); }} />
-                                        )
-                                    }
-                                    {/* {(p.location.hash === '#user') &&
-                                        (<Form.Control
-                                            defaultValue={this.props.login_state.user_role === 'administrator' ? this.props.login_state.login_account : undefined}
-                                            value={this.props.login_state.user_role === "manager" ? this.props.login_state.login_account : undefined}
-                                            placeholder="前方一致検索を行います。"
-                                            type="text"
-                                            onChange={e => { this.onChangeText(e); }} />
-                                        )
-                                    } */}
+                                    {p.location.hash === "#folder" && (
+                                    <Form.Control
+                                        className="rounded-right"
+                                        defaultValue={
+                                        this.props.login_state.user_role === "administrator"
+                                            ? "/"
+                                            : undefined
+                                        }
+                                        placeholder="前方一致検索を行います。"
+                                        type="text"
+                                        required
+                                        onChange={(e) => {this.onChangeText(e);}}
+                                    />
+                                    )}
+                                    {p.location.hash !== "#folder" && (
+                                    <Form.Control
+                                        className="rounded-right"
+                                        defaultValue={
+                                        this.props.login_state.user_role === "administrator"
+                                            ? this.props.login_state.login_account
+                                            : undefined
+                                        }
+                                        value={
+                                        this.props.login_state.user_role === "manager"
+                                            ? this.props.login_state.login_account
+                                            : undefined
+                                        }
+                                        placeholder="前方一致検索を行います。"
+                                        type="text"
+                                        required
+                                        onChange={(e) => {
+                                        this.onChangeText(e);
+                                        }}
+                                    />
+                                    )}
+                                    <InputGroup.Append className="mx-3">
+                                        <Form.Control as="select" defaultValue={DEFAULT_ROWS_PAR_PAGE} onChange={e => { this.onChangeRow(e); }}>
+                                            {options}
+                                        </Form.Control>
+                                    </InputGroup.Append>
+                                    <InputGroup.Append>
+                                        <Button className="rounded-left" type="submit">
+                                            <i className="fa fa-search"></i> 検索
+                                        </Button>
+                                    </InputGroup.Append>
                                 </InputGroup>
-                                <Nav className="mr-3"></Nav>
-                                <Nav className="col-auto my-1">
-                                    <Form.Control as="select" defaultValue={DEFAULT_ROWS_PAR_PAGE} onChange={e => { this.onChangeRow(e); }}>
-                                        {options}
-                                    </Form.Control>
-                                </Nav>
-                                <Nav className="mr-3">
-                                    <Form inline onClick={(e) => this.onClickSearch(e, p.location.hash.replace('#', ''))} >
-                                        <Form.Group>
-                                            <Button type="button" value="検索"><i className="fa fa-search"></i> 検索</Button>
-                                        </Form.Group>
-                                    </Form>
-                                </Nav>
-                            </Navbar>
+                            </Form>
 
                             <Dialog show={this.state.loading} search_flag={this.state.loading} />
                         </div>
-                    )
-                }
-                } />
+                    );
+                }}
+                />
 
                 {/* ダイアログ表示 */}
                 <Dialog
@@ -172,12 +173,11 @@ class SearchControl extends React.Component {
                     text={ID_TOKEN_ERR + LOGIN}
                     logout_flag={true}
                     err_flag={true}
-                // handleClose={handleClose} 
+                // handleClose={handleClose}
                 />
             </BrowserRouter>
         );
     }
 }
-
 
 export default SearchControl;
