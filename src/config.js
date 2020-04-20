@@ -58,7 +58,7 @@ export const OUTPUT_LABELS = {
 
 // 1ページあたりのページ数のデフォルト
 export const DEFAULT_ROWS_PAR_PAGE = 5
-
+export const ACCOUNT_ID = '707439530427'
 
 // Cognito Identity Pool ID
 export const IDENTITY_POOL_ID = 'ap-northeast-1:9cd11c18-7668-4ea3-8427-40a8aed8ec94'
@@ -71,8 +71,8 @@ const REDIRECT_URI = encodeURIComponent(HTTP_PROTOCOL + HOST)
 
 // Azure AD のログイン要求先
 const DOMAIN = 'login.microsoftonline.com'
-const DIRECTORY_ID = '8a08112f-92e8-43fe-9a0a-56d393b9f042'
-const APPLICATION_ID = '3a0aef16-07ab-4f88-8122-4114b7c496a1'
+const DIRECTORY_ID = 'dd866e13-f8b7-4585-bb47-be0efba1c006'
+const APPLICATION_ID = '7adcb600-5dfd-422e-8df0-0f33363bd19c'
 const PROTOCOL = 'oauth2/v2.0'
 const SITE = 'https://' + DOMAIN + '/' + DIRECTORY_ID + '/' + PROTOCOL + '/';
 export const LOGIN_URI = SITE + 'authorize?client_id=' + APPLICATION_ID

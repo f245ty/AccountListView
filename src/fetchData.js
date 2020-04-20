@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import {OUTPUT_LABELS} from './config'
+import { OUTPUT_LABELS } from './config_local'
 
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
 
@@ -12,17 +12,18 @@ AWS.config.credentials = new AWS.CognitoIdentityCredentials({
 
 
 async function fetchData(state, client_config, csv_flag = false) {
-    
+
     // 検索モードによってAPIを変更する
     let url = "https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/";
-    if (state.type === "owner") url = url + 'owner';
+    if (csv_flag) url = url + 'csv';
+    else if (state.type === "owner") url = url + 'owner';
     else if (state.type === "user") url = url + 'user';
     else if (state.type === "folder") url = url + 'folder';
     console.log(state.type)
 
     // CSV 出力指定の時は行数を 0 で指定
     var localstate = {}
-    for( let key in state) localstate[key] = (key === 'rows' && csv_flag === true ) ? 0 : state[key]
+    for (let key in state) localstate[key] = (key === 'rows' && csv_flag === true) ? 0 : state[key]
 
     client_config.invokeUrl = url;
 
@@ -35,18 +36,22 @@ async function fetchData(state, client_config, csv_flag = false) {
         queryParams: localstate
     }
     var body = {}
-    
-    return apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-    .then(function(result){
-        state = modeling(result.data, state, csv_flag)
-        return state
 
-    }).catch( function(result){
-        console.log('API Gateway reply Error.')
-        console.log(result)
-        state.items = [];
-        return state;
-    });
+    return apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+        .then(function (result) {
+            console.log(result)
+            state = modeling(result.data, state, csv_flag)
+            return state
+
+        }).catch(function (result) {
+            console.log('API Gateway reply Error.')
+            console.log(result)
+            state.items = [];
+            state.error = result;
+            state.show_dialog = true;
+            console.log(state)
+            return state;
+        });
 }
 
 
@@ -58,41 +63,49 @@ function modeling(data, state, csv_flag) {
     var rows = [];
     var count = 0;
 
-
     var labels = [];
-    if(csv_flag === true ) labels = state.type === 'owner' ? OUTPUT_LABELS['csv']['#owner'] : OUTPUT_LABELS['csv']['#user']
-    else labels = state.type === 'owner' ? OUTPUT_LABELS['screen']['#owner'] : OUTPUT_LABELS['screen']['#user']
-        console.log(OUTPUT_LABELS)
-    console.log(state.type)
-    console.log(OUTPUT_LABELS['screen'])
-    console.log(labels)
-
-    items.forEach(item => {
-        var col = {};
-        col['#'] = ++count;
-        for (var value in item) {
-            if (item[value] === "1") {
-                col[value] = "●";
-            } else if (item[value] === "0") {
-                col[value] = "";
-            } else {
-                col[value] = item[value];
+    let result = data.query;
+    if (csv_flag === true) {
+        labels = state.type === 'owner' ? OUTPUT_LABELS['csv']['#owner'] : OUTPUT_LABELS['csv']['#user']
+        result.items = data.items
+    }
+    else {
+        labels = state.type === 'owner' ? OUTPUT_LABELS['screen']['#owner'] : OUTPUT_LABELS['screen']['#user']
+        // console.log(OUTPUT_LABELS)
+        // console.log(state.type)
+        // console.log(OUTPUT_LABELS['screen'])
+        // console.log(labels)
+        items.forEach(item => {
+            var col = {};
+            col['#'] = ++count;
+            for (var value in item) {
+                if (item[value] === "True") {
+                    col[value] = "●";
+                } else if (item[value] === "False") {
+                    col[value] = "";
+                } else {
+                    col[value] = item[value];
+                }
             }
-        }
 
-        col = swapColumns(col, labels)  // 列を指定ラベル順に変更
+            col = swapColumns(col, labels)  // 列を指定ラベル順に変更
 
-        rows.push(col);
-    });
+            rows.push(col);
+        });
+
+        result.items = rows;
+    }
 
     // 検索時のqueryと返ってきたqueryをマージ
     // 【TODO】リファクタリング
-    let result = data.query;
     result.type = state.type;
     result.id = data.query.id;
     result.sort = state.sort;
     result.order = state.order;
-    result.items = rows;
+    result.loading = false;
+    result.error = null;
+    console.log(result);
+
     return result;
 }
 
@@ -102,9 +115,9 @@ function modeling(data, state, csv_flag) {
 // labels: [] 順番の指定
 //
 // items に存在しない列があった場合は、強制的に列を追加する
-function swapColumns(item , labels){
+function swapColumns(item, labels) {
     var swapped = {}
-    for( let label of labels ) swapped[label] = label in item ? item[label] : ""
+    for (let label of labels) swapped[label] = label in item ? item[label] : ""
     return swapped
 }
 
