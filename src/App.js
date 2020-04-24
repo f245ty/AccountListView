@@ -12,8 +12,8 @@ import ItemList from './ItemList';
 import Cookies from 'universal-cookie';
 import jwt from 'jsonwebtoken';
 // 【TODO：開発環境では、config_local使用】
-// import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID } from './config';
-import {MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID } from './config_local';
+// import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER } from './config';
+import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER } from './config_local';
 import Dialog from './Dialog';
 
 const cookies = new Cookies();
@@ -39,27 +39,17 @@ class App extends React.Component {
   // ユーザが所属するグループから適切なロールを付与する
   // ロールは最も高い権限のものを有線して付与する
   getUserRole(user_groups) {
-    // ロール付与グループ一覧
-    // 現時点では固定
-    const roles = {
-      // 開発用AzureADグループ
-      "86c759da-6918-4d19-8931-2cfa5f8f6ec7": "administrator",
-      "a746a5b4-795b-4d5a-8d2b-4559b92d9bf4": "manager",
-      // 連携AzureADグループ
-      "269ec94e-7c5f-48b6-a541-1a34b08208a0": "administrator",
-      "d5b80467-c8b5-4edc-a714-45c30e86fbee": "manager", 
-    }
     var user_role = "user"
-    for (let group in roles) {
-      if (user_groups.indexOf(group) === -1) continue;
-      else { user_role = roles[group]; break; }
+    for (let order of ROLE_ORDER) {
+      if (user_groups.indexOf(ROLES[order]) === -1) continue;
+      else { user_role = order; break; }
     }
     return user_role;
   }
 
   setLogIn(config, id_token) {
     var login_user = id_token.name
-    var login_account = id_token.preferred_username
+    var login_account = id_token.email
     var user_groups = id_token['groups'] ? id_token.groups : []; //グループに所属していない場合は権限なし
     var user_role = this.getUserRole(user_groups);
 
@@ -122,11 +112,7 @@ class App extends React.Component {
       AccountId: ACCOUNT_ID,
       IdentityPoolId: IDENTITY_POOL_ID,
       Logins: {
-        // 【TODO：環境によって切替】
-        // 開発用
-        "login.microsoftonline.com/8a08112f-92e8-43fe-9a0a-56d393b9f042/v2.0" : id_token_jwt
-        // 連携AzureADグループ用
-        // "login.microsoftonline.com/dd866e13-f8b7-4585-bb47-be0efba1c006/v2.0" : id_token_jwt
+        [LOGINS_SET_ID]: id_token_jwt
       }
     };
 
@@ -163,6 +149,18 @@ class App extends React.Component {
             });
         }
       });
+
+    var get_group_url = "https://graph.microsoft.com/v1.0/users/" + id_token.oid + "/getMemberObjects"
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', get_group_url);
+    xhr.setRequestHeader('Authorization', id_token_jwt)
+    xhr.setRequestHeader('Content-Type', 'application/json')
+    xhr.responseType = "text"
+    xhr.onload = (oEvent) => {
+      console.log(oEvent)
+      console.log(xhr.response)
+    }
+    xhr.send({ securityEnabledOnly: true });
   }
 
 
@@ -173,6 +171,7 @@ class App extends React.Component {
     if (typeof (id_token_jwt) === 'string' && this.state.id_token === null) {
       this.getClientConfig(id_token_jwt)
     }
+
 
     return (
       <div className="App">
@@ -201,13 +200,13 @@ class App extends React.Component {
               </Container>
             )
           }} />
-            <Route path="/loding" render={(p) => {
-              // let hash = p.location.hash
-              return (
-                (this.state.is_logged_in) &&
-                (<Dialog></Dialog>)
-              )
-            }}/>
+          <Route path="/loding" render={(p) => {
+            // let hash = p.location.hash
+            return (
+              (this.state.is_logged_in) &&
+              (<Dialog></Dialog>)
+            )
+          }} />
         </BrowserRouter>
       </div>
     );
