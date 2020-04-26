@@ -82,7 +82,7 @@ const PROTOCOL = 'oauth2/v2.0'
 const SITE = 'https://' + DOMAIN + '/' + DIRECTORY_ID + '/' + PROTOCOL + '/';
 export const LOGIN_URI = SITE + 'authorize?client_id=' + APPLICATION_ID
     + '&redirect_uri=' + REDIRECT_URI
-    + '&scope=openid+profile+email&response_type=id_token&response_mode=fragment&nonce='
+    + '&scope=openid+profile+email&response_type=id_token+code&response_mode=fragment&nonce='
 export const LOGOUT_URI = SITE + 'logout?post_logout_redirect_uri=' + REDIRECT_URI
 export const LOGINS_SET_ID = DOMAIN + '/' + DIRECTORY_ID + '/v2.0'
 

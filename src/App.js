@@ -150,17 +150,41 @@ class App extends React.Component {
         }
       });
 
+
+    // CORS オリジンで呼べないので、Lambda から Azure AD の Token エンドポイントを呼び出して
+    // 取得したトークンを取得している
+    let get_user_profile_url = "https://stp3h4k946.execute-api.ap-northeast-1.amazonaws.com/develop/"
+    let code = cookies.get('code');
+    let request_url = get_user_profile_url + "?code=" + code;
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', request_url);
+    xhr.onload = (oEvent) => {
+      console.log(oEvent)
+      console.log(xhr.response)
+      let res = JSON.parse(xhr.response);
+      var not_implicit_id_token = jwt.decode(res.id_token);
+      console.log(not_implicit_id_token);
+    }
+    xhr.send();
+
+
+/*
     var get_group_url = "https://graph.microsoft.com/v1.0/users/" + id_token.oid + "/getMemberObjects"
     var xhr = new XMLHttpRequest();
     xhr.open('POST', get_group_url);
-    xhr.setRequestHeader('Authorization', id_token_jwt)
+    let token = id_token_jwt.split(".")[1]
+    console.log(token)
+
+    xhr.setRequestHeader('Authorization', "Bearer " + token)
     xhr.setRequestHeader('Content-Type', 'application/json')
     xhr.responseType = "text"
     xhr.onload = (oEvent) => {
+      console.log("-2-")
       console.log(oEvent)
       console.log(xhr.response)
     }
     xhr.send({ securityEnabledOnly: true });
+    */
   }
 
 
@@ -182,6 +206,9 @@ class App extends React.Component {
             return (
               <Container fluid>
                 <HeaderMenu location={p.location} login_state={this.state} />
+                <form >
+                  
+                </form>
                 {
                   (this.state.is_logged_in) &&
                   (<Row>
