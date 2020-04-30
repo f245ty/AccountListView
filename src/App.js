@@ -38,46 +38,28 @@ class App extends React.Component {
 
   }
 
-
   // ユーザが所属するグループから適切なロールを付与する
   // ロールは最も高い権限のものを有線して付与する
-  getUserRole(user_groups) {
+  applyUserGroup(user_groups) {
 
     var user_role = "user"
-    console.log(user_groups)
-    if (user_groups.groups !== undefined) {
+    if (user_groups !== undefined) {
       for (let order of ROLE_ORDER) {
         if (user_groups.indexOf(ROLES[order]) === -1) continue;
         else { user_role = order; break; }
       }
     }
+    // console.log(user_role)
     return user_role;
   }
 
-  getUserGroups(client_config) {
+  getUserRole(client_config) {
+    console.log('getUserRole')
 
     // CORS オリジンで呼べないので、Lambda から Azure AD の Token エンドポイントを呼び出して
     // 取得したトークンを取得している
     let get_user_profile_url = "https://stp3h4k946.execute-api.ap-northeast-1.amazonaws.com/develop/"
     let code = { code: cookies.get('code') };
-    // let request_url = get_user_profile_url + "?code=" + code;
-    // let xhr = new XMLHttpRequest();
-    // let user_group_list = []
-    // xhr.open('GET', request_url, false);
-    // xhr.onload = (oEvent) => {
-    //   console.log(oEvent)
-    //   console.log(xhr.response)
-    //   let res = JSON.parse(xhr.response);
-    //   if (xhr.status !== 200) {
-    //     this.setState({ show_dialog: true })
-    //   } else {
-    //     var not_implicit_id_token = jwt.decode(res.id_token);
-    //     console.log(not_implicit_id_token);
-    //     user_group_list = not_implicit_id_token.groups
-    //   }
-    // }
-    // xhr.send();
-    console.log(client_config)
 
     client_config.invokeUrl = get_user_profile_url;
 
@@ -90,25 +72,34 @@ class App extends React.Component {
     }
     var body = {}
 
+    var user_role = 'user'
     return apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-      .then(function (result) {
-        console.log(result)
-        // state = modeling(result.data, state, csv_flag)
-        return result
+      .then(result => {
+        var not_implicit_id_token = jwt.decode(result.data.id_token);
+        console.log(not_implicit_id_token)
+        var user_role = this.applyUserGroup(not_implicit_id_token.groups)
+        console.log(user_role)
+        return user_role
       }).catch(function (result) {
         console.log('API Gateway reply Error.')
         console.log(result)
-        return []
+        return user_role
       });
   }
 
-  setLogIn(config, id_token) {
+  async setLogIn(config, id_token) {
     var login_user = id_token.name
     var login_account = id_token.email ? id_token.email : id_token.preferred_username
-    var user_groups = []; //グループに所属していない場合は権限なし
-    if (id_token['groups']) user_groups = id_token.groups // 所属グループが5個以下の場合
-    else if (id_token['hasgroups']) user_groups = this.getUserGroups(config)  // 所属グループが6個以上の場合
-    var user_role = this.getUserRole(user_groups);
+    var user_role = "user"
+    // 所属グループが5個以下の場合
+    if (id_token['groups']) {
+      var user_groups = id_token.groups
+      user_role = this.applyUserGroup(user_groups)
+    }
+    // 所属グループが6個以上の場合
+    else if (id_token['hasgroups']) {
+      user_role = await this.getUserRole(config);
+    }
 
     this.setState({
       is_logged_in: true,
