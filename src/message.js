@@ -9,6 +9,7 @@ export const ERR_MSG = 'エラーが発生しました。'
 export const ID_TOKEN_ERR = 'トークン有効期限が切れました。'
 export const SESSION_ERR = 'セッションが切れました。'
 export const CSV_ERR = 'CSVファイルがダウンロードできませんでした。'
+export const GROUPS_ERR = '所属グループ情報が取得できませんでした。'
 export const ERR_WAIT_MSG = 'しばらく時間を置いてから試してください。または、システム管理者にお問い合わせください。'
 
 // CSV
