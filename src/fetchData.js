@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import { OUTPUT_LABELS } from './config_local'
+import { OUTPUT_LABELS } from './config'
 
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
 

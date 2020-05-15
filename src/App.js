@@ -12,11 +12,13 @@ import ItemList from './ItemList';
 import Cookies from 'universal-cookie';
 import jwt from 'jsonwebtoken';
 // 【TODO：開発環境では、config_local使用】
-// import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER } from './config';
-import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER } from './config_local';
+// import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER, GET_GROUPS_URL } from './config';
+import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER, GET_GROUPS_URL } from './config_local';
 import Dialog from './Dialog';
+import { GROUPS_ERR, ERR_WAIT_MSG } from './message';
 
 const cookies = new Cookies();
+var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
 
 
 class App extends React.Component {
@@ -29,40 +31,93 @@ class App extends React.Component {
       login_user: null,
       login_account: null,
       user_role: null,
-      client_config: {}
+      client_config: {},
+      show_dialog: false,
+      location_flag: false
     }
     // console.log(MENU_ITEMS['administrator'][1])
 
   }
 
-
   // ユーザが所属するグループから適切なロールを付与する
   // ロールは最も高い権限のものを有線して付与する
-  getUserRole(user_groups) {
+  applyUserGroup(user_groups) {
+
     var user_role = "user"
-    for (let order of ROLE_ORDER) {
-      if (user_groups.indexOf(ROLES[order]) === -1) continue;
-      else { user_role = order; break; }
+    if (user_groups !== undefined) {
+      for (let order of ROLE_ORDER) {
+        if (user_groups.indexOf(ROLES[order]) === -1) continue;
+        else { user_role = order; break; }
+      }
     }
+    // console.log(user_role)
     return user_role;
   }
 
-  setLogIn(config, id_token) {
+  getUserRole(client_config) {
+    console.log('getUserRole')
+
+    // CORS オリジンで呼べないので、Lambda から Azure AD の Token エンドポイントを呼び出して
+    // 取得したトークンを取得している
+    let code = { code: cookies.get('code') };
+    console.log(code)
+
+    client_config.invokeUrl = GET_GROUPS_URL;
+
+    var apigClient = apigClientFactory.newClient(client_config);
+    var pathParams = {};
+    var pathTemplate = '';
+    var method = 'GET';
+    var additionalParams = {
+      queryParams: code
+    }
+    var body = {}
+
+    return apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+      .then(result => {
+        var not_implicit_id_token = jwt.decode(result.data.id_token);
+        console.log(not_implicit_id_token)
+        var user_role = this.applyUserGroup(not_implicit_id_token.groups)
+        console.log(user_role)
+        return user_role
+      }).catch(function (result) {
+        console.log('API Gateway reply Error.')
+        console.log(result)
+        this.setLogout()
+        return result
+      });
+  }
+
+  async setLogIn(config, id_token) {
     var login_user = id_token.name
-    var login_account = id_token.email
-    var user_groups = id_token['groups'] ? id_token.groups : []; //グループに所属していない場合は権限なし
-    var user_role = this.getUserRole(user_groups);
+    var login_account = id_token.email ? id_token.email : id_token.preferred_username
+    var user_role = "user"
+    try {
+      // 所属グループが5個以下の場合
+      if (id_token['groups']) {
+        var user_groups = id_token.groups
+        user_role = this.applyUserGroup(user_groups)
+      }
+      // 所属グループが6個以上の場合
+      else if (id_token['hasgroups']) {
+        user_role = await this.getUserRole(config);
+      }
 
-    this.setState({
-      is_logged_in: true,
-      id_token: id_token,
-      login_user: login_user,
-      login_account: login_account,
-      user_role: user_role,
-      client_config: config
-    })
+      this.setState({
+        is_logged_in: true,
+        id_token: id_token,
+        login_user: login_user,
+        login_account: login_account,
+        user_role: user_role,
+        client_config: config
+      })
 
-    console.log('login sequence')
+      console.log('login sequence')
+
+    } catch{
+      this.setState({ show_dialog: true })
+    }
+
     console.log(this.state)
   }
 
@@ -98,6 +153,7 @@ class App extends React.Component {
       cookies.remove('jwt');
       return;
     }
+    console.log(id_token)
 
     // nonce が一致しなかったらトークンを破棄
     let nonce = cookies.get('nonce');
@@ -149,42 +205,6 @@ class App extends React.Component {
             });
         }
       });
-
-
-    // CORS オリジンで呼べないので、Lambda から Azure AD の Token エンドポイントを呼び出して
-    // 取得したトークンを取得している
-    let get_user_profile_url = "https://stp3h4k946.execute-api.ap-northeast-1.amazonaws.com/develop/"
-    let code = cookies.get('code');
-    let request_url = get_user_profile_url + "?code=" + code;
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', request_url);
-    xhr.onload = (oEvent) => {
-      console.log(oEvent)
-      console.log(xhr.response)
-      let res = JSON.parse(xhr.response);
-      var not_implicit_id_token = jwt.decode(res.id_token);
-      console.log(not_implicit_id_token);
-    }
-    xhr.send();
-
-
-/*
-    var get_group_url = "https://graph.microsoft.com/v1.0/users/" + id_token.oid + "/getMemberObjects"
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', get_group_url);
-    let token = id_token_jwt.split(".")[1]
-    console.log(token)
-
-    xhr.setRequestHeader('Authorization', "Bearer " + token)
-    xhr.setRequestHeader('Content-Type', 'application/json')
-    xhr.responseType = "text"
-    xhr.onload = (oEvent) => {
-      console.log("-2-")
-      console.log(oEvent)
-      console.log(xhr.response)
-    }
-    xhr.send({ securityEnabledOnly: true });
-    */
   }
 
 
@@ -196,6 +216,8 @@ class App extends React.Component {
       this.getClientConfig(id_token_jwt)
     }
 
+    const onLocationFlag = () => this.setState({location_flag: true})
+    const offLocationFlag = () => this.setState({location_flag: false})
 
     return (
       <div className="App">
@@ -207,19 +229,19 @@ class App extends React.Component {
               <Container fluid>
                 <HeaderMenu location={p.location} login_state={this.state} />
                 <form >
-                  
+
                 </form>
                 {
                   (this.state.is_logged_in) &&
                   (<Row>
                     <Nav variant="pills" className="flex-column">
                       {Object.keys(MENU_ITEMS[this.state.user_role]).map((key) => (
-                        <Nav.Link href={key} active={hash === key ? true : false}>{MENU_ITEMS[this.state.user_role][key][1]}</Nav.Link>
+                        <Nav.Link onClick={onLocationFlag} href={key} active={hash === key ? true : false}>{MENU_ITEMS[this.state.user_role][key][1]}</Nav.Link>
                       ))}
                     </Nav>
                     {(hash in MENU_ITEMS[this.state.user_role]) && (
                       <Col className="mr-auto">
-                        <ItemList location={p.location} login_state={this.state} client_config={this.state.client_config} />
+                        <ItemList location={p.location} offLocationFlag={offLocationFlag} login_state={this.state} client_config={this.state.client_config} />
                       </Col>
                     )}
                   </Row>)
@@ -227,13 +249,14 @@ class App extends React.Component {
               </Container>
             )
           }} />
-          <Route path="/loding" render={(p) => {
-            // let hash = p.location.hash
-            return (
-              (this.state.is_logged_in) &&
-              (<Dialog></Dialog>)
-            )
-          }} />
+          {/* ダイアログ表示 */}
+          <Dialog
+            show={this.state.show_dialog}
+            text={GROUPS_ERR + ERR_WAIT_MSG}
+            logout_flag={true}
+            err_flag={true}
+          // handleClose={handleClose}
+          />
         </BrowserRouter>
       </div>
     );

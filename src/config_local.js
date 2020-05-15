@@ -17,15 +17,15 @@ export const MENU_ITEMS = {
 // 日本語ヘッダーを定義
 export const HEADER_LABEL = {
     "#": "#",
-    "user_email": "メールアドレス",
+    "user_email": "ユーザメールアドレス",
     "user_name": "ユーザ名",
     "folder_path": "フォルダパス",
     "permission": "権限",
-    "owner_name": "管理者名",
+    "owner_name": "フォルダ管理者名",
     "p_view": "閲覧権限",
     "p_download": "ダウンロード権限",
     "p_upload": "アップロード権限",
-    "p_admin": "管理権限",
+    "p_admin": "フォルダ管理権限",
     "p_delete": "削除権限",
     "p_notify_ul": "アップロード通知",
     "p_notify_dl": "ダウンロード通知",
@@ -57,8 +57,7 @@ export const OUTPUT_LABELS = {
 
 
 // 1ページあたりのページ数のデフォルト
-export const DEFAULT_ROWS_PAR_PAGE = 5
-
+export const DEFAULT_ROWS_PAR_PAGE = 10
 
 // Cognito Identity Pool ID
 export const IDENTITY_POOL_ID = 'ap-northeast-1:9cd11c18-7668-4ea3-8427-40a8aed8ec94'
@@ -67,7 +66,6 @@ export const ACCOUNT_ID = '707439530427'
 // Group ID
 export const ADMIN_GROUP_ID = '86c759da-6918-4d19-8931-2cfa5f8f6ec7'
 export const MNG_GROUP_ID = 'a746a5b4-795b-4d5a-8d2b-4559b92d9bf4'
-
 
 // 認証処理後のリダイレクトURIを表示サイトに合わせて取得
 const HOST = window.location.host
@@ -98,3 +96,6 @@ export const ROLE_ORDER = ["administrator", "manager"]
 
 // ロール付与グループ一覧
 export const ROLES = {"administrator":ADMIN_GROUP_ID, "manager":MNG_GROUP_ID}
+
+// グループ情報取得API
+export const GET_GROUPS_URL = "https://stp3h4k946.execute-api.ap-northeast-1.amazonaws.com/develop/"
