@@ -32,12 +32,8 @@ class App extends React.Component {
       login_account: null,
       user_role: null,
       client_config: {},
-<<<<<<< HEAD
       show_dialog: false,
       location_flag: false
-=======
-      show_dialog: false
->>>>>>> origin/develop
     }
     // console.log(MENU_ITEMS['administrator'][1])
 
@@ -63,17 +59,10 @@ class App extends React.Component {
 
     // CORS オリジンで呼べないので、Lambda から Azure AD の Token エンドポイントを呼び出して
     // 取得したトークンを取得している
-<<<<<<< HEAD
     let code = { code: cookies.get('code') };
     console.log(code)
 
     client_config.invokeUrl = GET_GROUPS_URL;
-=======
-    let get_user_profile_url = "https://stp3h4k946.execute-api.ap-northeast-1.amazonaws.com/develop/"
-    let code = { code: cookies.get('code') };
-
-    client_config.invokeUrl = get_user_profile_url;
->>>>>>> origin/develop
 
     var apigClient = apigClientFactory.newClient(client_config);
     var pathParams = {};
@@ -84,10 +73,6 @@ class App extends React.Component {
     }
     var body = {}
 
-<<<<<<< HEAD
-=======
-    var user_role = 'user'
->>>>>>> origin/develop
     return apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
       .then(result => {
         var not_implicit_id_token = jwt.decode(result.data.id_token);
@@ -98,12 +83,8 @@ class App extends React.Component {
       }).catch(function (result) {
         console.log('API Gateway reply Error.')
         console.log(result)
-<<<<<<< HEAD
         this.setLogout()
         return result
-=======
-        return user_role
->>>>>>> origin/develop
       });
   }
 
@@ -111,7 +92,6 @@ class App extends React.Component {
     var login_user = id_token.name
     var login_account = id_token.email ? id_token.email : id_token.preferred_username
     var user_role = "user"
-<<<<<<< HEAD
     try {
       // 所属グループが5個以下の場合
       if (id_token['groups']) {
@@ -122,17 +102,6 @@ class App extends React.Component {
       else if (id_token['hasgroups']) {
         user_role = await this.getUserRole(config);
       }
-=======
-    // 所属グループが5個以下の場合
-    if (id_token['groups']) {
-      var user_groups = id_token.groups
-      user_role = this.applyUserGroup(user_groups)
-    }
-    // 所属グループが6個以上の場合
-    else if (id_token['hasgroups']) {
-      user_role = await this.getUserRole(config);
-    }
->>>>>>> origin/develop
 
       this.setState({
         is_logged_in: true,
