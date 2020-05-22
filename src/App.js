@@ -15,7 +15,7 @@ import jwt from 'jsonwebtoken';
 // import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER, GET_GROUPS_URL } from './config';
 import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER, GET_GROUPS_URL } from './config_local';
 import Dialog from './Dialog';
-import { GROUPS_ERR, ERR_WAIT_MSG } from './message';
+import { LOGIN_ERR, ERR_WAIT_MSG } from './message';
 
 const cookies = new Cookies();
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
@@ -179,6 +179,7 @@ class App extends React.Component {
         if (err) {
           console.log('can not get CognitIdentity')
           console.log(err, err.stack); // an error occurred
+          this.setState({ show_dialog: true })
           this.setLogout()
         } else {
           let p = {
@@ -191,6 +192,7 @@ class App extends React.Component {
                 console.log('can not get Credential')
                 console.log(err, err.stack);
                 console.log(id_token_jwt)
+                this.setState({ show_dialog: true })
                 this.setLogout()
               } else {
                 var config = {
@@ -216,8 +218,8 @@ class App extends React.Component {
       this.getClientConfig(id_token_jwt)
     }
 
-    const onLocationFlag = () => this.setState({location_flag: true})
-    const offLocationFlag = () => this.setState({location_flag: false})
+    const onLocationFlag = () => this.setState({ location_flag: true })
+    const offLocationFlag = () => this.setState({ location_flag: false })
 
     return (
       <div className="App">
@@ -252,7 +254,7 @@ class App extends React.Component {
           {/* ダイアログ表示 */}
           <Dialog
             show={this.state.show_dialog}
-            text={GROUPS_ERR + ERR_WAIT_MSG}
+            text={LOGIN_ERR + ERR_WAIT_MSG}
             logout_flag={true}
             err_flag={true}
           // handleClose={handleClose}

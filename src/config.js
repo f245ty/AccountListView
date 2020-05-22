@@ -1,13 +1,13 @@
 // メニュー定義
 export const MENU_ITEMS = {
     "administrator": {
-        "#owner": ["@", "管理フォルダ権限一覧"],
-        "#user": ["@", "権限所有フォルダ一覧"],
-        "#folder": ["/", "フォルダ権限保持者一覧"]
+        "#owner": ["@", "管理権限フォルダ一覧"],
+        "#user": ["@", "利用可能フォルダ一覧"],
+        "#folder": ["/", "指定フォルダ利用者一覧"]
     },
     "manager": {
         "#owner": ["@", "管理フォルダ権限一覧"],
-        "#user": ["@", "権限所有フォルダ一覧"],
+        "#user": ["@", "利用可能フォルダ一覧"],
     },
     "user": {
     }
@@ -60,8 +60,8 @@ export const OUTPUT_LABELS = {
 export const DEFAULT_ROWS_PAR_PAGE = 10
 
 // Cognito Identity Pool ID
-export const IDENTITY_POOL_ID = 'ap-northeast-1:d70e18c1-bcee-4d9a-8dd7-f31e9f7d0296'
-export const ACCOUNT_ID = '707439530427'
+export const IDENTITY_POOL_ID = 'ap-northeast-1:fe11ba82-e9f9-4481-b370-8eb53729fc29'
+export const ACCOUNT_ID = '498191950326'
 
 // Group ID
 export const ADMIN_GROUP_ID = '269ec94e-7c5f-48b6-a541-1a34b08208a0'
@@ -98,5 +98,5 @@ export const ROLE_ORDER = ["administrator", "manager"]
 export const ROLES = { "administrator": ADMIN_GROUP_ID, "manager": MNG_GROUP_ID }
 
 // グループ情報取得API
-export const GET_GROUPS_URL = "https://stp3h4k946.execute-api.ap-northeast-1.amazonaws.com/prod/"
+export const GET_GROUPS_URL = "https://g37zf38yj5.execute-api.ap-northeast-1.amazonaws.com/prod/"
 

@@ -1,12 +1,14 @@
 import AWS from 'aws-sdk';
-import { OUTPUT_LABELS } from './config'
+// import { OUTPUT_LABELS, IDENTITY_POOL_ID } from './config'
+// 開発環境では、config_localを読み込む
+import { OUTPUT_LABELS, IDENTITY_POOL_ID } from './config_local'
 
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
 
 
 AWS.config.region = 'ap-northeast-1';
 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: 'ap-northeast-1:9cd11c18-7668-4ea3-8427-40a8aed8ec94',
+    IdentityPoolId: IDENTITY_POOL_ID,
     // IdentityId: ''
 });
 
