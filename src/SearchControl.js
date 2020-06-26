@@ -73,6 +73,7 @@ class SearchControl extends React.Component {
                 this.props.updateList(data)
                 this.setState({ loading: false })
             });
+            this.props.offLocationFlag()
 
         } else {
             console.log("id_token error.")
@@ -80,13 +81,13 @@ class SearchControl extends React.Component {
             console.log(this.state.show_dialog)
             cookies.remove('jwt');
         }
-        console.log('searched id: '+ this.state.id);
+        console.log('searched id: ' + this.state.id);
         e.preventDefault();
     }
 
     onChangeText = (e) => {
         let id = e.target.value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-        console.log('before id: '+this.state.id+', after id: '+id);
+        console.log('before id: ' + this.state.id + ', after id: ' + id);
         this.setState({ id: id });
     }
 
@@ -99,13 +100,15 @@ class SearchControl extends React.Component {
         for (let i = 1; i <= maxPageValue; i += 1) {
             options.push(<option key={i}>{i}</option>);
         }
+        // メニュー切り替え時、検索窓をリセットしデフォルト表示
+        if (this.props.login_state.location_flag) this.state.id = this.props.login_state.login_account
 
         // システム管理者権限を持たない場合はメールアドレス固定
         return (
             <BrowserRouter hashType="noslash">
                 <Route render={(p) => {
                     return (
-                        <div class="bg-dark p-3">
+                        <div className="bg-dark p-3">
                             <Form onSubmit={(e) => this.onClickSearch(e, p.location.hash.replace("#", ""))}>
                                 <InputGroup className="">
                                     <InputGroup.Prepend>
@@ -114,39 +117,60 @@ class SearchControl extends React.Component {
                                         </InputGroup.Text>
                                     </InputGroup.Prepend>
                                     {p.location.hash === "#folder" && (
-                                    <Form.Control
-                                        className="rounded-right"
-                                        defaultValue={
-                                        this.props.login_state.user_role === "administrator"
-                                            ? "/"
-                                            : undefined
-                                        }
-                                        placeholder="前方一致検索を行います。"
-                                        type="text"
-                                        required
-                                        onChange={(e) => {this.onChangeText(e);}}
-                                    />
+                                        <Form.Control
+                                            className="rounded-right"
+                                            defaultValue={
+                                                this.props.login_state.user_role === "administrator"
+                                                    ? "/"
+                                                    : undefined
+                                            }
+                                            placeholder="前方一致検索を行います。"
+                                            type="text"
+                                            required
+                                            onChange={(e) => { this.onChangeText(e); }}
+                                        />
                                     )}
-                                    {p.location.hash !== "#folder" && (
-                                    <Form.Control
-                                        className="rounded-right"
-                                        defaultValue={
-                                        this.props.login_state.user_role === "administrator"
-                                            ? this.props.login_state.login_account
-                                            : undefined
-                                        }
-                                        value={
-                                        this.props.login_state.user_role === "manager"
-                                            ? this.props.login_state.login_account
-                                            : undefined
-                                        }
-                                        placeholder="前方一致検索を行います。"
-                                        type="text"
-                                        required
-                                        onChange={(e) => {
-                                        this.onChangeText(e);
-                                        }}
-                                    />
+                                    {p.location.hash === "#owner" && (
+                                        <Form.Control
+                                            className="rounded-right"
+                                            defaultValue={
+                                                this.props.login_state.user_role === "administrator"
+                                                    ? this.state.id
+                                                    : undefined
+                                            }
+                                            value={
+                                                this.props.login_state.user_role === "manager"
+                                                    ? this.state.id
+                                                    : undefined
+                                            }
+                                            placeholder="前方一致検索を行います。"
+                                            type="text"
+                                            required
+                                            onChange={(e) => {
+                                                this.onChangeText(e);
+                                            }}
+                                        />
+                                    )}
+                                    {p.location.hash === "#user" && (
+                                        <Form.Control
+                                            className="rounded-right"
+                                            defaultValue={
+                                                this.props.login_state.user_role === "administrator"
+                                                    ? this.state.id
+                                                    : undefined
+                                            }
+                                            value={
+                                                this.props.login_state.user_role === "manager"
+                                                    ? this.state.id
+                                                    : undefined
+                                            }
+                                            placeholder="前方一致検索を行います。"
+                                            type="text"
+                                            required
+                                            onChange={(e) => {
+                                                this.onChangeText(e);
+                                            }}
+                                        />
                                     )}
                                     <InputGroup.Append className="mx-3">
                                         <Form.Control as="select" defaultValue={DEFAULT_ROWS_PAR_PAGE} onChange={e => { this.onChangeRow(e); }}>

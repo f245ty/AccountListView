@@ -123,7 +123,7 @@ class Pager extends React.Component {
                 <Navbar.Text >
                     データ更新日:{this.props.query.datetime} 検索結果:{this.props.query.total} 件
                 </Navbar.Text>
-                <CreateCSV query={this.props.query} header_label={this.header_label}
+                <CreateCSV query={this.props.query} user_role={this.props.user_role}
                     client_config={this.state.client_config}
                     updateList={(data) => { this.props.updateList(data);}}
                 />

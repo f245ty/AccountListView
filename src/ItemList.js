@@ -10,7 +10,7 @@ import Pager from './Pager';
 import Table from 'react-bootstrap/Table';
 import { Row } from 'react-bootstrap';
 import Dialog from './Dialog';
-import { ERR_WAIT_MSG } from './message';
+import { ERR_WAIT_MSG, EXPLANATION, SEARCH_CONDITION, SEARCH_CONDITION_FOLDER, NO_DATA_MSG } from './message';
 
 
 class ItemList extends React.Component {
@@ -30,7 +30,7 @@ class ItemList extends React.Component {
             datetime: "",
             client_config: props.client_config,
             show_dialog: false,
-            error: null
+            error: null,
         };
     }
 
@@ -49,7 +49,7 @@ class ItemList extends React.Component {
             total: state.total,
             datetime: state.datetime,
             show_dialog: state.show_dialog,
-            error: state.error
+            error: state.error,
         });
     }
 
@@ -57,44 +57,55 @@ class ItemList extends React.Component {
     render() {
 
         var items = this.state.items;
-        console.log(this.state)
+
+        // メニュー切り替え時、結果表示リセット
+        if (this.props.login_state.location_flag) {
+            items = []
+            this.state.id = null;
+        }
+        // console.log(this.props.login_state.location_flag)
+
         var xhr = new XMLHttpRequest();
         xhr.open('GET', items.url);
         // ダイアログ用のハンドラ
         const handleClose = () => this.setState({ show_dialog: false });
-        
+        // console.log(this.state)
 
         return (
             <div>
                 <SearchControl id="SearchControl"
                     query={this.state}
-                    header_label={this.header_label}
                     updateList={(data) => { this.updateList(data); }}
                     login_state={this.props.login_state}
                     client_config={this.state.client_config}
-                // handleLoading={handleLoading}
-                // handleNotLoading={handleNotLoading} 
+                    offLocationFlag={this.props.offLocationFlag}
                 />
                 {// 検索してないときは何も表示しない
-                    (items.length === 0) && typeof (this.state.id) !== "string" && (
-                        <p>検索条件を入力し検索してください。</p>
+                    // (items.length === 0) && typeof (this.state.id) !== "string" &&
+                    (this.props.login_state.location_flag) && (
+                        <p>
+                            {(this.props.location.hash === "#owner") && (EXPLANATION["owner"])}
+                            {(this.props.location.hash === "#user") && (EXPLANATION["user"])}
+                            {(this.props.location.hash === "#folder") && (EXPLANATION["folder"])}
+                            <br />
+                            {this.props.location.hash === "#folder" ? SEARCH_CONDITION_FOLDER : SEARCH_CONDITION}
+                        </p>
                     )
                 }
                 {// 検索して結果が0件の時は 結果がないと表示する
-                    (items.length === 0) && typeof (this.state.id) === "string" && (
-                        <p>該当するデータが見つかりませんでした。</p>
+                    (items.length === 0) && (!this.props.login_state.location_flag) && (
+                        <p>{NO_DATA_MSG}</p>
                     )
                 }
-                {console.log(this.state.error)}
-                {// エラーが発生した時は、エラーメッセージを表示す
+                {// エラーが発生した時は、エラーメッセージを表示する
                     (items.length === 0) && (this.state.error !== null) && (
                         <Dialog show={this.state.show_dialog} err_flag={true} text={ERR_WAIT_MSG} handleClose={handleClose} />
                     )
                 }
                 <div id="List">
-                    {console.log(items.url)}
+                    {/* {console.log(items.url)} */}
                     {// 表示行数が0行の時は表示しない
-                        items.url ?(xhr.send())
+                        items.url ? (xhr.send())
                             :
                             (items.length !== 0) && (
                                 <div>
@@ -103,7 +114,8 @@ class ItemList extends React.Component {
                                         as={Row}
                                         query={this.state}
                                         updateList={(data) => { this.updateList(data); }}
-                                        client_config={this.state.client_config} />
+                                        client_config={this.state.client_config}
+                                        user_role={this.props.login_state.user_role} />
                                     <Table striped bordered hover id="res_table">
                                         <tbody>
                                             <ListHeader id="res_table"

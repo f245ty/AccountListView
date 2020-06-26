@@ -2,7 +2,7 @@
 import React from 'react';
 import fetchData from './fetchData';
 import { Row, Col } from 'react-bootstrap';
-import { HEADER_LABEL } from './config'
+import { HEADER_LABEL, MENU_ITEMS } from './config'
 import Dialog from './Dialog';
 
 
@@ -26,9 +26,10 @@ class CreateCSV extends React.Component {
             // ダウンロード完了後の処理を定義する
             let bom = new Uint8Array([0xEF, 0xBB, 0xBF]); // UTF-8
             let blob = new Blob([bom, xhr.response], { type: 'text/csv' });
+            let f_name = MENU_ITEMS[this.props.user_role]['#' + data.type][1] + "_" + this.getDate() + '.csv';
             if (window.navigator.msSaveBlob) {
                 // IEとEdge
-                window.navigator.msSaveBlob(blob, 'download.csv');
+                window.navigator.msSaveBlob(blob, f_name);
             }
             else {
                 // それ以外のブラウザ
@@ -38,7 +39,7 @@ class CreateCSV extends React.Component {
                 let link = document.createElement("a");
                 document.body.appendChild(link);
                 link.href = objectURL;
-                link.download = 'download.csv';
+                link.download = f_name;
                 link.click();
                 document.body.removeChild(link);
             }
@@ -59,16 +60,6 @@ class CreateCSV extends React.Component {
     }
 
     onLoding(e) {
-
-        // window.open('/loading', null, 'top=100,left=100,width=600,height=400');
-        // document.input_form.target = '/loading';
-        // document.input_form.method = 'post';
-        // document.input_form.action = '/loading';
-        // document.input_form.submit();
-        // var form = document.createElement('form');
-        // form.action = '/loading';
-        // form.method = 'get';
-        // document.body.appendChild(form).submit();
 
         // csv出力
         var state = this.props.query;

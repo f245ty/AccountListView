@@ -35,10 +35,26 @@ class HeaderMenu extends React.Component {
 
 
     render() {
+
+        // hash を各要素に分割
+        let hashs = this.props.location.hash.slice(1).split('&');
+        let hash = {};
+        for(let item of hashs){
+            let kv = item.split('=');
+            hash[kv[0]]=kv[1];
+        }
+
         // id_token がハッシュに指定されていたら Cookie に退避
-        if (this.props.location.hash.split('=')[0] === '#id_token') {
-            let id_token = this.props.location.hash.split('=')[1].split('&')[0];
+        if (hash['id_token']) {
+            let id_token = hash['id_token']
             cookies.set('jwt', id_token, { path: '/' });
+            document.location = "/"
+        }
+
+        // code がハッシュに指定されていたら Cookie に退避
+        if (hash['code']) {
+            let code = hash['code']
+            cookies.set('code', code, { path: '/' });
             document.location = "/"
         }
 
