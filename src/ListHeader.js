@@ -49,7 +49,7 @@ class ListHeader extends React.Component {
                 {Object.keys(row).map((col, index) => (
                     <th className="res_header"
                     key={index}
-                    onClick={e => { if (col !== "#") this.onClick(col, e); }} >
+                    onClick={e => { if (this.props.location_hash !== "#file" && col !== "#") this.onClick(col, e); }} >
                     {HEADER_LABEL[col]}
                     {sort_key === col && order === "asc" ? " ▲":""}
                     {sort_key === col && order === "desc" ? " ▼":""}

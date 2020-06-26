@@ -10,7 +10,10 @@ import Pager from './Pager';
 import Table from 'react-bootstrap/Table';
 import { Row } from 'react-bootstrap';
 import Dialog from './Dialog';
-import { ERR_WAIT_MSG, EXPLANATION, SEARCH_CONDITION, SEARCH_CONDITION_FOLDER, NO_DATA_MSG } from './message';
+import { ERR_WAIT_MSG, EXPLANATION, SEARCH_CONDITION, SEARCH_CONDITION_FOLDER, NO_DATA_MSG, CSV_TTL } from './message';
+import getCSVTasks from './getCSVTasks';
+import isAccessTokenEnable from './isAccessTokenEnable';
+import { OUTPUT_LABELS } from './config';
 
 
 class ItemList extends React.Component {
@@ -31,6 +34,7 @@ class ItemList extends React.Component {
             client_config: props.client_config,
             show_dialog: false,
             error: null,
+            is_process: false,
         };
     }
 
@@ -50,9 +54,21 @@ class ItemList extends React.Component {
             datetime: state.datetime,
             show_dialog: state.show_dialog,
             error: state.error,
+            is_process: state.is_process,
         });
     }
 
+    onGetCSVTasks() {
+        if (isAccessTokenEnable(this.props.login_state)) {
+            getCSVTasks(this.state, this.props.client_config).then((data) => {
+                // console.log(data)
+                this.updateList(data)
+                this.props.offLocationFlag()
+            })
+            // console.log(this.props.login_state)
+        }
+        console.log("get csv_tasks.")
+    }
 
     render() {
 
@@ -69,7 +85,14 @@ class ItemList extends React.Component {
         xhr.open('GET', items.url);
         // ダイアログ用のハンドラ
         const handleClose = () => this.setState({ show_dialog: false });
-        // console.log(this.state)
+
+        console.log(this.state.items)
+        // // ファイル情報集計メニューを選択したときは、APIをGETで叩く
+        // if (this.props.login_state.location_flag && this.props.location.hash === "#file") {
+        //     console.log("#file ?  " + this.props.location.hash)
+        //     this.onGetCSVTasks()
+        // }
+
 
         return (
             <div>
@@ -78,6 +101,7 @@ class ItemList extends React.Component {
                     updateList={(data) => { this.updateList(data); }}
                     login_state={this.props.login_state}
                     client_config={this.state.client_config}
+                    location_hash={this.props.location.hash}
                     offLocationFlag={this.props.offLocationFlag}
                 />
                 {// 検索してないときは何も表示しない
@@ -87,8 +111,12 @@ class ItemList extends React.Component {
                             {(this.props.location.hash === "#owner") && (EXPLANATION["owner"])}
                             {(this.props.location.hash === "#user") && (EXPLANATION["user"])}
                             {(this.props.location.hash === "#folder") && (EXPLANATION["folder"])}
+                            {(this.props.location.hash === "#file") && (EXPLANATION["file"])}
                             <br />
-                            {this.props.location.hash === "#folder" ? SEARCH_CONDITION_FOLDER : SEARCH_CONDITION}
+                            {this.props.location.hash === "#folder" ? SEARCH_CONDITION_FOLDER
+                                :
+                                this.props.location.hash === "#file" ? CSV_TTL
+                                    : SEARCH_CONDITION}
                         </p>
                     )
                 }
@@ -109,26 +137,39 @@ class ItemList extends React.Component {
                             :
                             (items.length !== 0) && (
                                 <div>
-                                    <Pager
-                                        className="vertical-align-middle"
-                                        as={Row}
-                                        query={this.state}
-                                        updateList={(data) => { this.updateList(data); }}
-                                        client_config={this.state.client_config}
-                                        user_role={this.props.login_state.user_role} />
+                                    {this.props.location.hash === "#file"
+                                        ? <p className="text-left">
+                                            {EXPLANATION["file"]}
+                                            <br />
+                                            {CSV_TTL}
+                                        </p>
+                                        : <Pager
+                                            className="vertical-align-middle"
+                                            as={Row}
+                                            query={this.state}
+                                            updateList={(data) => { this.updateList(data); }}
+                                            client_config={this.state.client_config}
+                                            user_role={this.props.login_state.user_role} />
+                                    }
                                     <Table striped bordered hover id="res_table">
                                         <tbody>
                                             <ListHeader id="res_table"
                                                 query={this.state}
                                                 updateList={(data) => { this.updateList(data); }}
                                                 client_config={this.state.client_config}
+                                                location_hash={this.props.location.hash}
                                             />
 
                                             {items.map((row, index) => (
                                                 <tr key={index}>
                                                     {Object.keys(row).map((col, index) => {
                                                         return (
-                                                            <td key={index} className={col.indexOf('p_') === 0 || col === '#' ? "text-center" : "text-left"}>{row[col]}</td>
+                                                            <td key={index} 
+                                                                className={col.indexOf('p_') === 0 || col === '#' || col === 'create_at' || col === 'csv_ttl' || col === 'process_state' || col === 'download_ln' 
+                                                                ? "text-center" 
+                                                                : "text-left"}>
+                                                                {col === 'download_ln' ? <a href={row[col]} role="button">{row[col]}</a> : row[col]}
+                                                            </td>
                                                         )
                                                     })}
                                                 </tr>))}

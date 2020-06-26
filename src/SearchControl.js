@@ -14,6 +14,7 @@ import isAccessTokenEnable from './isAccessTokenEnable';
 import Cookies from 'universal-cookie';
 import { ID_TOKEN_ERR, LOGIN } from './message';
 import Dialog from './Dialog';
+import getCSVTasks from './getCSVTasks';
 
 
 const cookies = new Cookies();
@@ -95,6 +96,18 @@ class SearchControl extends React.Component {
 
     onClick = (e, e_type) => { ; }
 
+    onGetCSVTasks() {
+        if (isAccessTokenEnable(this.props.login_state)) {
+            getCSVTasks(this.state, this.props.client_config).then((data) => {
+                // console.log(data)
+                this.props.updateList(data)
+            })
+            this.props.offLocationFlag()
+            console.log(this.props.login_state)
+            console.log("get csv_tasks.")
+        }
+    }
+
     render() {
         const options = [];
         for (let i = 1; i <= maxPageValue; i += 1) {
@@ -107,6 +120,13 @@ class SearchControl extends React.Component {
         return (
             <BrowserRouter hashType="noslash">
                 <Route render={(p) => {
+                    console.log(this.props.location_hash ,p.location.hash)
+                    // ファイル情報集計メニューを選択したときは、APIをGETで叩く
+                    if (this.props.login_state.location_flag && this.props.location_hash === p.location.hash && p.location.hash === "#file") {
+                        console.log("#file ?  " + p.location.hash)
+                        this.onGetCSVTasks()
+                    }
+
                     return (
                         <div className="bg-dark p-3">
                             <Form onSubmit={(e) => this.onClickSearch(e, p.location.hash.replace("#", ""))}>
@@ -116,6 +136,20 @@ class SearchControl extends React.Component {
                                             {MENU_ITEMS[this.props.login_state.user_role][p.location.hash][0]}
                                         </InputGroup.Text>
                                     </InputGroup.Prepend>
+                                    {p.location.hash === "#file" && (
+                                        <Form.Control
+                                            className="rounded-right"
+                                            defaultValue={
+                                                this.props.login_state.user_role === "administrator"
+                                                    ? "/"
+                                                    : undefined
+                                            }
+                                            placeholder="前方一致検索を行います。"
+                                            type="text"
+                                            required
+                                            onChange={(e) => { this.onChangeText(e); }}
+                                        />
+                                    )}
                                     {p.location.hash === "#folder" && (
                                         <Form.Control
                                             className="rounded-right"
@@ -172,14 +206,16 @@ class SearchControl extends React.Component {
                                             }}
                                         />
                                     )}
-                                    <InputGroup.Append className="mx-3">
-                                        <Form.Control as="select" defaultValue={DEFAULT_ROWS_PAR_PAGE} onChange={e => { this.onChangeRow(e); }}>
-                                            {options}
-                                        </Form.Control>
-                                    </InputGroup.Append>
+                                    {p.location.hash !== "#file" ?
+                                        (<InputGroup.Append className="mx-3">
+                                            <Form.Control as="select" defaultValue={DEFAULT_ROWS_PAR_PAGE} onChange={e => { this.onChangeRow(e); }}>
+                                                {options}
+                                            </Form.Control>
+                                        </InputGroup.Append>)
+                                        : null}
                                     <InputGroup.Append>
-                                        <Button className="rounded-left" type="submit">
-                                            <i className="fa fa-search"></i> 検索
+                                        <Button className="rounded-left" type="submit" disabled={p.location.hash === "#file" && this.props.query.is_process}>
+                                            <i className="fa fa-search"></i> {p.location.hash === "#file" ? "ダウンロード" : "検索"}
                                         </Button>
                                     </InputGroup.Append>
                                 </InputGroup>

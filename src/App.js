@@ -218,12 +218,13 @@ class App extends React.Component {
       this.getClientConfig(id_token_jwt)
     }
 
+    // メニューがクリックされ、renderのタイミングのフラグ
     const onLocationFlag = () => this.setState({ location_flag: true })
     const offLocationFlag = () => this.setState({ location_flag: false })
 
     return (
       <div className="App">
-
+      
         <BrowserRouter>
           <Route path="/" newProps render={(p) => {
             let hash = p.location.hash
@@ -238,7 +239,12 @@ class App extends React.Component {
                   (<Row>
                     <Nav variant="pills" className="flex-column">
                       {Object.keys(MENU_ITEMS[this.state.user_role]).map((key) => (
-                        <Nav.Link onClick={onLocationFlag} href={key} active={hash === key ? true : false}>{MENU_ITEMS[this.state.user_role][key][1]}</Nav.Link>
+                        <Nav.Link onClick={onLocationFlag} 
+                                  href={key} 
+                                  active={hash === key ? true : false}
+                                  className={key === "#file" ? "mt-4" : null}>
+                          {MENU_ITEMS[this.state.user_role][key][1]}
+                        </Nav.Link>
                       ))}
                     </Nav>
                     {(hash in MENU_ITEMS[this.state.user_role]) && (

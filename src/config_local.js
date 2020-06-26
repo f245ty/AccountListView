@@ -3,7 +3,8 @@ export const MENU_ITEMS = {
     "administrator": {
         "#owner": ["@", "管理権限フォルダ一覧"],
         "#user": ["@", "利用可能フォルダ一覧"],
-        "#folder": ["/", "指定フォルダ利用者一覧"]
+        "#folder": ["/", "指定フォルダ利用者一覧"],
+        "#file": ["/", "指定フォルダ内ファイル情報集計"],
     },
     "manager": {
         "#owner": ["@", "管理権限フォルダ一覧"],
@@ -29,7 +30,11 @@ export const HEADER_LABEL = {
     "p_delete": "削除権限",
     "p_notify_ul": "アップロード通知",
     "p_notify_dl": "ダウンロード通知",
-    "p_owner": "フォルダ所有権"
+    "p_owner": "フォルダ所有権",
+    "create_at": "ダウンロード実行日時",
+    "csv_ttl": "CSV保管期間",
+    "download_ln": "ダウンロードリンク",
+    "process_state": "実行ステータス",
 }
 
 
@@ -42,11 +47,13 @@ const USER_LABELS = ['#', 'folder_path', 'owner_name']
 const USER_LABELS_CSV = ['#', 'folder_path', 'owner_name']
 const FOLDER_LABELS = ['#', 'folder_path', 'owner_name']
 const FOLDER_LABELS_CSV = ['#', 'folder_path', 'owner_name']
+const FILE_LABELS = ['#', 'folder_path', 'user_email', 'create_at', 'csv_ttl', 'process_state', 'download_ln']
 export const OUTPUT_LABELS = {
     "screen": {
         "#owner": OWNER_LABELS.concat(PERMISSION_LABELS),
         "#user": USER_LABELS.concat(PERMISSION_LABELS),
-        "#folder": FOLDER_LABELS.concat(PERMISSION_LABELS)
+        "#folder": FOLDER_LABELS.concat(PERMISSION_LABELS),
+        "#file": FILE_LABELS
     },
     "csv": {
         "#owner": OWNER_LABELS_CSV.concat(PERMISSION_LABELS_CSV),
@@ -55,6 +62,12 @@ export const OUTPUT_LABELS = {
     }
 }
 
+// 実行ステータスラベル
+export const STATUS_LABEL = {
+    0 : "待ち",
+    1 : "処理中",
+    2 : "完了"
+}
 
 // 1ページあたりのページ数のデフォルト
 export const DEFAULT_ROWS_PAR_PAGE = 10
@@ -99,3 +112,6 @@ export const ROLES = {"administrator":ADMIN_GROUP_ID, "manager":MNG_GROUP_ID}
 
 // グループ情報取得API
 export const GET_GROUPS_URL = "https://stp3h4k946.execute-api.ap-northeast-1.amazonaws.com/develop/"
+
+// CSVダウンロード実行タスク確認API
+export const GET_CSV_TASKS = "https://fj0y0qtqe2.execute-api.ap-northeast-1.amazonaws.com/prod"
