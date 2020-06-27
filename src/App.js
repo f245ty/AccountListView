@@ -18,14 +18,12 @@ import {
   LOGINS_SET_ID,
   MENU_ITEMS,
   ROLES,
-  ROLE_ORDER,
-  ENV_CHECK_TEST
+  ROLE_ORDER
 } from './config/config';
 import { ERR_WAIT_MSG, LOGIN_ERR } from './config/message';
 import './static/css/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-console.log('ENV_CHECK_TEST: ' + ENV_CHECK_TEST);
 const cookies = new Cookies();
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
 
