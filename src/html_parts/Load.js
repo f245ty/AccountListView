@@ -4,7 +4,7 @@
 //  結果を ItemList へセットする コンポーネント
 //
 import React from 'react';
-import { CSV_LOADING, DOWNLOAD } from './message';
+import { CSV_LOADING, DOWNLOAD } from '../config/message';
 import Button from 'react-bootstrap/Button';
 
 class Load extends React.Component {

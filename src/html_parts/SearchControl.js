@@ -4,15 +4,15 @@
 //  結果を ItemList へセットする コンポーネント
 //
 import React from 'react';
-import fetchData from './fetchData';
+import fetchData from '../function/fetchData';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { InputGroup } from 'react-bootstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
-import { DEFAULT_ROWS_PAR_PAGE, MENU_ITEMS } from './config/config'
-import isAccessTokenEnable from './isAccessTokenEnable';
+import { DEFAULT_ROWS_PAR_PAGE, MENU_ITEMS } from '../config/config'
+import isAccessTokenEnable from '../function/isAccessTokenEnable';
 import Cookies from 'universal-cookie';
-import { ID_TOKEN_ERR, LOGIN } from './config/message';
+import { ID_TOKEN_ERR, LOGIN } from '../config/message';
 import Dialog from './Dialog';
 // import getCSVTasks from './getCSVTasks';
 

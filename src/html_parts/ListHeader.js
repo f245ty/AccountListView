@@ -5,9 +5,9 @@
 //
 
 import React from 'react';
-import fetchData from './fetchData';
+import fetchData from '../function/fetchData';
 
-import { HEADER_LABEL } from './config/config'
+import { HEADER_LABEL } from '../config/config'
 
 
 

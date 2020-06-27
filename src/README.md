@@ -14,6 +14,9 @@
 | config | configやmessageなどの定数ファイル格納 |
 | static/css | CSSファイル格納 |
 | static/image | pngファイル等格納 |
+| function | 純粋なNode.jsコードのみを含むファイルを格納する。 |
+| html_parts | 返却値としてHTML要素をレンダリング要素を含むファイルを格納する。 |
+| loading.js | 用途不明 |
 
 ## 外部パッケージ郡説明
 
@@ -28,12 +31,11 @@
 | lib/url-template | AWS API Gateway SDKの生成 |  |
 | apigClient.js | AWS API Gateway SDKの生成 |  |
 | API_GATEWAY_README.md | AWS API Gateway SDKの生成 | ◯ |
-| App.css | `npm init react-app project名`による生成 | ◯ |
+| static/css/App.css | `npm init react-app project名`による生成 | ◯ |
 | App.js | `npm init react-app project名`による生成 | ◯ |
 | App.test.js | `npm init react-app project名`による生成 |  |
-| index.css | `npm init react-app project名`による生成 | ◯ |
+| static/css/index.css | `npm init react-app project名`による生成 | ◯ |
 | index.js | `npm init react-app project名`による生成 |  |
-| logo.svg | `npm init react-app project名`による生成 |  |
 | serviceWorker.js | `npm init react-app project名`による生成 |  |
 | setupTests.js | `npm init react-app project名`による生成 |  |
 
@@ -42,3 +44,21 @@
 `AWS API Gateway SDKの生成`による生成では、`README.md`で出力される。  
 名前が競合することから、当タイトルの用に編集する。  
 また、理解不能なmarkdown書式を利用しているため、一部編集しているが内容の編集はないため、明記しない。
+
+### static/css/App.css
+
+コマンド実行で出力された場合、`./App.css`となるが、管理体制を統一するために`./static/css`へ移動させている。  
+本プロジェクトでは、`App.js`にだけコールされる。
+
+### App.js
+
+`index.js`からコールされ、`index.html`の`id=root`に要素を出力する。  
+コールされる順番は、`index.html`→`index.js`→`App.js`となる。  
+要素の伝搬順序は上記の逆順となる。  
+従って、App.jsはページを構成するUI部品⇒`コンポーネント`を定義する場所。  
+この`App.js`から子コンポーネントを呼び出し、本プロジェクトのページを作成している。
+
+### static/css/index.css
+
+コマンド実行で出力された場合、`./index.css`となるが、管理体制を統一するために`./static/css`へ移動させている。  
+本プロジェクトでは、コールされない。

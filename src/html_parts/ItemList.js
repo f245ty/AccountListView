@@ -10,7 +10,7 @@ import Pager from './Pager';
 import Table from 'react-bootstrap/Table';
 import { Row } from 'react-bootstrap';
 import Dialog from './Dialog';
-import { ERR_WAIT_MSG, EXPLANATION, SEARCH_CONDITION, SEARCH_CONDITION_FOLDER, NO_DATA_MSG, CSV_TTL } from './config/message';
+import { ERR_WAIT_MSG, EXPLANATION, SEARCH_CONDITION, SEARCH_CONDITION_FOLDER, NO_DATA_MSG, CSV_TTL } from '../config/message';
 // import getCSVTasks from './getCSVTasks';
 // import isAccessTokenEnable from './isAccessTokenEnable';
 // import { OUTPUT_LABELS } from './config/config_local  ';

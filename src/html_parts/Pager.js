@@ -4,7 +4,7 @@
 //
 
 import React from 'react';
-import fetchData from './fetchData';
+import fetchData from '../function/fetchData';
 import Pagination from 'react-bootstrap/Pagination';
 import { Navbar } from 'react-bootstrap';
 import CreateCSV from './CreateCSV';

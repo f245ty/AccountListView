@@ -1,11 +1,11 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import { Navbar } from 'react-bootstrap';
-import logo from './static/image/header_img.png';
+import logo from '../static/image/header_img.png';
 import Cookies from 'universal-cookie';
 // 【TODO：開発環境では、config_local使用】
 // import { LOGIN_URI, ROLE_NAME } from './config';
-import { LOGIN_URI, ROLE_NAME } from './config/config_local'
+import { LOGIN_URI, ROLE_NAME } from '../config/config_local'
 // import { SESSION_ERR } from './message';
 import Dialog from './Dialog';
 
@@ -70,8 +70,7 @@ class HeaderMenu extends React.Component {
                     <img
                         src={logo}
                         className="d-inline-block align-top"
-                        alt="Company Logo.">
-                    </img>
+                        alt="Company Logo." />
                 </Navbar.Brand>
                 <form className="form-inline my-2 my-lg-0">
                     {this.props.login_state.login_user}{(this.props.login_state.user_role) && ("(" + ROLE_NAME[this.props.login_state.user_role] + ")")}

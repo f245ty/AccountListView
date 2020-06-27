@@ -1,9 +1,9 @@
 import AWS from 'aws-sdk';
 // import { OUTPUT_LABELS, IDENTITY_POOL_ID } from './config'
 // 開発環境では、config_localを読み込む
-import { OUTPUT_LABELS, IDENTITY_POOL_ID } from './config/config_local'
+import { OUTPUT_LABELS, IDENTITY_POOL_ID } from '../config/config_local'
 
-var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
+var apigClientFactory = require('../../node_modules/aws-api-gateway-client').default;
 
 
 AWS.config.region = 'ap-northeast-1';

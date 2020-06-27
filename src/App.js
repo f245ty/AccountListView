@@ -6,15 +6,15 @@ import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { Nav } from 'react-bootstrap';
-import HeaderMenu from './HeaderMenu';
+import HeaderMenu from './html_parts/HeaderMenu';
 import { Route, BrowserRouter } from 'react-router-dom';
-import ItemList from './ItemList';
+import ItemList from './html_parts/ItemList';
 import Cookies from 'universal-cookie';
 import jwt from 'jsonwebtoken';
 // 【TODO：開発環境では、config_local使用】
 // import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER, GET_GROUPS_URL } from './config';
 import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER, GET_GROUPS_URL } from './config/config_local';
-import Dialog from './Dialog';
+import Dialog from './html_parts/Dialog';
 import { LOGIN_ERR, ERR_WAIT_MSG } from './config/message';
 
 const cookies = new Cookies();
