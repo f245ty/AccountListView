@@ -9,12 +9,12 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { InputGroup } from 'react-bootstrap';
 import { BrowserRouter, Route } from 'react-router-dom';
-import { DEFAULT_ROWS_PAR_PAGE, MENU_ITEMS } from './config'
+import { DEFAULT_ROWS_PAR_PAGE, MENU_ITEMS } from './config/config'
 import isAccessTokenEnable from './isAccessTokenEnable';
 import Cookies from 'universal-cookie';
-import { ID_TOKEN_ERR, LOGIN } from './message';
+import { ID_TOKEN_ERR, LOGIN } from './config/message';
 import Dialog from './Dialog';
-import getCSVTasks from './getCSVTasks';
+// import getCSVTasks from './getCSVTasks';
 
 
 const cookies = new Cookies();
@@ -96,17 +96,17 @@ class SearchControl extends React.Component {
 
     onClick = (e, e_type) => { ; }
 
-    onGetCSVTasks() {
-        if (isAccessTokenEnable(this.props.login_state)) {
-            getCSVTasks(this.state, this.props.client_config).then((data) => {
-                // console.log(data)
-                this.props.updateList(data)
-            })
-            this.props.offLocationFlag()
-            console.log(this.props.login_state)
-            console.log("get csv_tasks.")
-        }
-    }
+    // onGetCSVTasks() {
+    //     if (isAccessTokenEnable(this.props.login_state)) {
+    //         getCSVTasks(this.state, this.props.client_config).then((data) => {
+    //             // console.log(data)
+    //             this.props.updateList(data)
+    //         })
+    //         this.props.offLocationFlag()
+    //         console.log(this.props.login_state)
+    //         console.log("get csv_tasks.")
+    //     }
+    // }
 
     render() {
         const options = [];

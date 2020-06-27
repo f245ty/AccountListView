@@ -2,7 +2,7 @@
 import React from 'react';
 import fetchData from './fetchData';
 import { Row, Col } from 'react-bootstrap';
-import { HEADER_LABEL, MENU_ITEMS } from './config'
+import { HEADER_LABEL, MENU_ITEMS } from './config/config'
 import Dialog from './Dialog';
 
 

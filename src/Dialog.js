@@ -3,7 +3,7 @@
 //  ダイアログを表示し、ログアウトする コンポーネント
 //
 import React from 'react';
-import * as M from './message';
+import * as M from './config/message';
 import { Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Cookies from 'universal-cookie';

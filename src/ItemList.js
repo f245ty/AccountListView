@@ -10,10 +10,10 @@ import Pager from './Pager';
 import Table from 'react-bootstrap/Table';
 import { Row } from 'react-bootstrap';
 import Dialog from './Dialog';
-import { ERR_WAIT_MSG, EXPLANATION, SEARCH_CONDITION, SEARCH_CONDITION_FOLDER, NO_DATA_MSG, CSV_TTL } from './message';
-import getCSVTasks from './getCSVTasks';
-import isAccessTokenEnable from './isAccessTokenEnable';
-import { OUTPUT_LABELS } from './config';
+import { ERR_WAIT_MSG, EXPLANATION, SEARCH_CONDITION, SEARCH_CONDITION_FOLDER, NO_DATA_MSG, CSV_TTL } from './config/message';
+// import getCSVTasks from './getCSVTasks';
+// import isAccessTokenEnable from './isAccessTokenEnable';
+// import { OUTPUT_LABELS } from './config/config_local  ';
 
 
 class ItemList extends React.Component {
@@ -58,17 +58,17 @@ class ItemList extends React.Component {
         });
     }
 
-    onGetCSVTasks() {
-        if (isAccessTokenEnable(this.props.login_state)) {
-            getCSVTasks(this.state, this.props.client_config).then((data) => {
-                // console.log(data)
-                this.updateList(data)
-                this.props.offLocationFlag()
-            })
-            // console.log(this.props.login_state)
-        }
-        console.log("get csv_tasks.")
-    }
+    // onGetCSVTasks() {
+    //     if (isAccessTokenEnable(this.props.login_state)) {
+    //         getCSVTasks(this.state, this.props.client_config).then((data) => {
+    //             // console.log(data)
+    //             this.updateList(data)
+    //             this.props.offLocationFlag()
+    //         })
+    //         // console.log(this.props.login_state)
+    //     }
+    //     console.log("get csv_tasks.")
+    // }
 
     render() {
 

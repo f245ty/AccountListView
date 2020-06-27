@@ -1,6 +1,6 @@
 import React from 'react';
 import AWS from 'aws-sdk';
-import './App.css';
+import './static/css/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
@@ -13,9 +13,9 @@ import Cookies from 'universal-cookie';
 import jwt from 'jsonwebtoken';
 // 【TODO：開発環境では、config_local使用】
 // import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER, GET_GROUPS_URL } from './config';
-import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER, GET_GROUPS_URL } from './config_local';
+import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER, GET_GROUPS_URL } from './config/config_local';
 import Dialog from './Dialog';
-import { LOGIN_ERR, ERR_WAIT_MSG } from './message';
+import { LOGIN_ERR, ERR_WAIT_MSG } from './config/message';
 
 const cookies = new Cookies();
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;

@@ -7,7 +7,7 @@
 import React from 'react';
 import fetchData from './fetchData';
 
-import { HEADER_LABEL } from './config'
+import { HEADER_LABEL } from './config/config'
 
 
 
