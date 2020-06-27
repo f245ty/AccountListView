@@ -1,8 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  コントロールに入力された条件で API を呼び出し
-//  結果を ItemList へセットする コンポーネント
-//
 import React from 'react';
 import fetchData from '../function/fetchData';
 import Button from 'react-bootstrap/Button';
@@ -20,7 +15,11 @@ import Dialog from './Dialog';
 const cookies = new Cookies();
 const maxPageValue = 100
 
-
+/**
+ * コントロールに入力された条件で API を呼び出し
+ * 結果を ItemList へセットする コンポーネント
+ * @module SearchControl
+ */
 class SearchControl extends React.Component {
     constructor(props) {
         super(props);
@@ -47,7 +46,11 @@ class SearchControl extends React.Component {
         this.onClickSearch = this.onClickSearch.bind(this);
     }
 
-
+    /**
+     * 
+     * @param {XXX} e XXX
+     * @param {XXX} hash XXX
+     */
     onClickSearch = (e, hash) => {
         var state = this.state;
         state.type = hash;
@@ -75,7 +78,6 @@ class SearchControl extends React.Component {
                 this.setState({ loading: false })
             });
             this.props.offLocationFlag()
-
         } else {
             console.log("id_token error.")
             this.setState({ show_dialog: !this.state.show_dialog });
@@ -86,16 +88,32 @@ class SearchControl extends React.Component {
         e.preventDefault();
     }
 
+    /**
+     * 
+     * @param {XXX} e XXX
+     */
     onChangeText = (e) => {
         let id = e.target.value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         console.log('before id: ' + this.state.id + ', after id: ' + id);
         this.setState({ id: id });
     }
 
+    /**
+     * 
+     * @param {XXX} e XXX
+     */
     onChangeRow = (e) => { this.setState({ rows: e.target.value }); }
 
+    /**
+     * 
+     * @param {XXX} e XXX
+     * @param {XXX} e_type XXX
+     */
     onClick = (e, e_type) => { ; }
 
+    /**
+     * 
+     */
     // onGetCSVTasks() {
     //     if (isAccessTokenEnable(this.props.login_state)) {
     //         getCSVTasks(this.state, this.props.client_config).then((data) => {
@@ -108,6 +126,10 @@ class SearchControl extends React.Component {
     //     }
     // }
 
+    /**
+     * 
+     * @return {XXX} XXX
+     */
     render() {
         const options = [];
         for (let i = 1; i <= maxPageValue; i += 1) {

@@ -1,30 +1,35 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  JSON の配列に行番号を付与して表示する コンポーネント
-//
-
 import React from 'react';
-import SearchControl from './SearchControl';
+import Row from 'react-bootstrap/Row';
+import Table from 'react-bootstrap/Table';
+import Dialog from './Dialog';
+// import getCSVTasks from './getCSVTasks';
 import ListHeader from './ListHeader';
 import Pager from './Pager';
-import Table from 'react-bootstrap/Table';
-import { Row } from 'react-bootstrap';
-import Dialog from './Dialog';
-import { ERR_WAIT_MSG, EXPLANATION, SEARCH_CONDITION, SEARCH_CONDITION_FOLDER, NO_DATA_MSG, CSV_TTL } from '../config/message';
-// import getCSVTasks from './getCSVTasks';
-// import isAccessTokenEnable from './isAccessTokenEnable';
-// import { OUTPUT_LABELS } from './config/config_local  ';
+import SearchControl from './SearchControl';
+// import isAccessTokenEnable from '../function/isAccessTokenEnable';
+// import { OUTPUT_LABELS } from './config/config_local';
+import {
+    CSV_TTL,
+    ERR_WAIT_MSG,
+    EXPLANATION,
+    NO_DATA_MSG,
+    SEARCH_CONDITION,
+    SEARCH_CONDITION_FOLDER
+} from '../config/message';
 
-
+/**
+ * JSON の配列に行番号を付与して表示する コンポーネント
+ * @module ItemList
+ */
 class ItemList extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             type: "",     // user or folder
-            id: null,   // 表示中の検索ID 
+            id: null,   // 表示中の検索ID
             sort: { "folder": "" },
-            order: "",   // ASC or DESC 
+            order: "",   // ASC or DESC
             items: [],
             pages: null,   // 全体ページ数
             rows: null,   // 1ページの表示件数
@@ -38,8 +43,10 @@ class ItemList extends React.Component {
         };
     }
 
-
-    // 子コンポーネントの検索コントローラがデータをセットする
+    /**
+     * 子コンポーネントの検索コントローラがデータをセットする
+     * @param {XXX} state XXX
+     */
     updateList(state) {
         this.setState({
             type: state.type,
@@ -58,6 +65,9 @@ class ItemList extends React.Component {
         });
     }
 
+    /**
+     * 
+     */
     // onGetCSVTasks() {
     //     if (isAccessTokenEnable(this.props.login_state)) {
     //         getCSVTasks(this.state, this.props.client_config).then((data) => {
@@ -70,8 +80,11 @@ class ItemList extends React.Component {
     //     console.log("get csv_tasks.")
     // }
 
+    /**
+     * 
+     * @return {XXX} XXX
+     */
     render() {
-
         var items = this.state.items;
 
         // メニュー切り替え時、結果表示リセット
@@ -92,7 +105,6 @@ class ItemList extends React.Component {
         //     console.log("#file ?  " + this.props.location.hash)
         //     this.onGetCSVTasks()
         // }
-
 
         return (
             <div>
@@ -134,55 +146,54 @@ class ItemList extends React.Component {
                     {/* {console.log(items.url)} */}
                     {// 表示行数が0行の時は表示しない
                         items.url ? (xhr.send())
-                            :
-                            (items.length !== 0) && (
-                                <div>
-                                    {this.props.location.hash === "#file"
-                                        ? <p className="text-left">
-                                            {EXPLANATION["file"]}
-                                            <br />
-                                            {CSV_TTL}
-                                        </p>
-                                        : <Pager
-                                            className="vertical-align-middle"
-                                            as={Row}
+                        :
+                        (items.length !== 0) && (
+                            <div>
+                                {this.props.location.hash === "#file"
+                                    ? <p className="text-left">
+                                        {EXPLANATION["file"]}
+                                        <br />
+                                        {CSV_TTL}
+                                    </p>
+                                    : <Pager
+                                        className="vertical-align-middle"
+                                        as={Row}
+                                        query={this.state}
+                                        updateList={(data) => { this.updateList(data); }}
+                                        client_config={this.state.client_config}
+                                        user_role={this.props.login_state.user_role} />
+                                }
+                                <Table striped bordered hover id="res_table">
+                                    <tbody>
+                                        <ListHeader id="res_table"
                                             query={this.state}
                                             updateList={(data) => { this.updateList(data); }}
                                             client_config={this.state.client_config}
-                                            user_role={this.props.login_state.user_role} />
-                                    }
-                                    <Table striped bordered hover id="res_table">
-                                        <tbody>
-                                            <ListHeader id="res_table"
-                                                query={this.state}
-                                                updateList={(data) => { this.updateList(data); }}
-                                                client_config={this.state.client_config}
-                                                location_hash={this.props.location.hash}
-                                            />
+                                            location_hash={this.props.location.hash}
+                                        />
 
-                                            {items.map((row, index) => (
-                                                <tr key={index}>
-                                                    {Object.keys(row).map((col, index) => {
-                                                        return (
-                                                            <td key={index} 
-                                                                className={col.indexOf('p_') === 0 || col === '#' || col === 'create_at' || col === 'csv_ttl' || col === 'process_state' || col === 'download_ln' 
-                                                                ? "text-center" 
-                                                                : "text-left"}>
-                                                                {col === 'download_ln' ? <a href={row[col]} role="button">{row[col]}</a> : row[col]}
-                                                            </td>
-                                                        )
-                                                    })}
-                                                </tr>))}
-                                        </tbody>
-                                    </Table>
-                                </div>
-                            )
+                                        {items.map((row, index) => (
+                                            <tr key={index}>
+                                                {Object.keys(row).map((col, index) => {
+                                                    return (
+                                                        <td key={index} 
+                                                            className={col.indexOf('p_') === 0 || col === '#' || col === 'create_at' || col === 'csv_ttl' || col === 'process_state' || col === 'download_ln' 
+                                                            ? "text-center" 
+                                                            : "text-left"}>
+                                                            {col === 'download_ln' ? <a href={row[col]} role="button">{row[col]}</a> : row[col]}
+                                                        </td>
+                                                    )
+                                                })}
+                                            </tr>))}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        )
                     }
                 </div>
             </div>
         );
     }
 }
-
 
 export default ItemList;

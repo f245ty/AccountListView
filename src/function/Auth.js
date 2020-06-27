@@ -2,7 +2,11 @@
 const UserPoolId = '『ユーザプールID』';
 const IdPoolId = '『IDプールID』';
 
-//・・・/hogemypage.html#id_token=xxxxx&access_token=xxxxx&・・・の形で来るので分解する関数
+/**
+ * ・・・/hogemypage.html#id_token=xxxxx&access_token=xxxxx&・・・の形で来るので分解する関数
+ * @param {XXX} name XXX
+ * @return {XXX} XXX
+ */
 getParameterByHash = function (name) {
     var wHash = window.location.hash;   //ハッシュ(#)以降をとる
     wHash = wHash.replace('#', '&');     //↓の処理を使いたいがために#を&に変換するorzorz
@@ -14,7 +18,9 @@ getParameterByHash = function (name) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-//URL中のパラメータからトークンを取り出し、AWS.config.credentials を設定する
+/**
+ * URL中のパラメータからトークンを取り出し、AWS.config.credentials を設定する
+ */
 checkSession = function () {
     var widToken = getParameterByHash('id_token');
     $('#message').text(widToken);

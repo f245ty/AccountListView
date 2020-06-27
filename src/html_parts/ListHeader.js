@@ -1,16 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  コントロールに入力された条件で API を呼び出し
-//  結果を ItemList へセットする コンポーネント
-//
-
 import React from 'react';
 import fetchData from '../function/fetchData';
-
 import { HEADER_LABEL } from '../config/config'
 
-
-
+/**
+ * コントロールに入力された条件で API を呼び出し
+ * 結果を ItemList へセットする コンポーネント
+ * @module ListHeader
+ */
 class ListHeader extends React.Component {
     constructor(props){
         super(props);
@@ -19,8 +15,12 @@ class ListHeader extends React.Component {
         }
     }
 
+    /**
+     * 
+     * @param {XXX} col XXX
+     * @param {XXX} e XXX
+     */
     onClick = (col, e) => {
-
         var sort = this.props.query.sort; // 表示中のソートキー
         var order =  this.props.query.order; // 表示中のオーダー
 
@@ -35,11 +35,14 @@ class ListHeader extends React.Component {
 
         fetchData(
             state, this.state.client_config, this.props.header_label).then((data) => { this.props.updateList(data) }
-            );
+        );
     }
 
+    /**
+     * 
+     * @return {XXX} XXX
+     */
     render() {
-
         var row = this.props.query.items[0];
         var sort_key = this.props.query.sort;
         var order = this.props.query.order;
@@ -48,17 +51,16 @@ class ListHeader extends React.Component {
             <tr>
                 {Object.keys(row).map((col, index) => (
                     <th className="res_header"
-                    key={index}
-                    onClick={e => { if (this.props.location_hash !== "#file" && col !== "#") this.onClick(col, e); }} >
-                    {HEADER_LABEL[col]}
-                    {sort_key === col && order === "asc" ? " ▲":""}
-                    {sort_key === col && order === "desc" ? " ▼":""}
-                </th>
+                        key={index}
+                        onClick={e => { if (this.props.location_hash !== "#file" && col !== "#") this.onClick(col, e); }} >
+                        {HEADER_LABEL[col]}
+                        {sort_key === col && order === "asc" ? " ▲":""}
+                        {sort_key === col && order === "desc" ? " ▼":""}
+                    </th>
                 ))}
             </tr>
         );
     }
 }
-
 
 export default ListHeader;

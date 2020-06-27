@@ -1,18 +1,21 @@
 import AWS from 'aws-sdk';
-// import { OUTPUT_LABELS, IDENTITY_POOL_ID } from './config'
+// import { OUTPUT_LABELS, IDENTITY_POOL_ID } from '../config/config'
 // 開発環境では、config_localを読み込む
 import { OUTPUT_LABELS, IDENTITY_POOL_ID } from '../config/config_local'
 
 var apigClientFactory = require('../../node_modules/aws-api-gateway-client').default;
-
-
 AWS.config.region = 'ap-northeast-1';
 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
     IdentityPoolId: IDENTITY_POOL_ID,
     // IdentityId: ''
 });
 
-
+/**
+ * 
+ * @param {XXX} state XXX
+ * @param {XXX} client_config XXX
+ * @param {XXX} csv_flag XXX
+ */
 async function fetchData(state, client_config, csv_flag = false) {
 
     // 検索モードによってAPIを変更する
@@ -122,7 +125,5 @@ function swapColumns(item, labels) {
     for (let label of labels) swapped[label] = label in item ? item[label] : ""
     return swapped
 }
-
-
 
 export default fetchData;

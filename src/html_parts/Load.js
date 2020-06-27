@@ -1,12 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  コントロールに入力された条件で API を呼び出し
-//  結果を ItemList へセットする コンポーネント
-//
 import React from 'react';
-import { CSV_LOADING, DOWNLOAD } from '../config/message';
 import Button from 'react-bootstrap/Button';
+import { CSV_LOADING, DOWNLOAD } from '../config/message';
 
+/**
+ * コントロールに入力された条件で API を呼び出し
+ * 結果を ItemList へセットする コンポーネント
+ * @module Load
+ */
 class Load extends React.Component {
 
     render() {
@@ -31,7 +31,6 @@ class Load extends React.Component {
             );
         }
     }
-
 }
 
 export default Load;

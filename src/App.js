@@ -1,26 +1,37 @@
-import React from 'react';
 import AWS from 'aws-sdk';
-import './static/css/App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Container from 'react-bootstrap/Container';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import { Nav } from 'react-bootstrap';
-import HeaderMenu from './html_parts/HeaderMenu';
-import { Route, BrowserRouter } from 'react-router-dom';
-import ItemList from './html_parts/ItemList';
-import Cookies from 'universal-cookie';
 import jwt from 'jsonwebtoken';
+import Cookies from 'universal-cookie';
+import React from 'react';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Nav from 'react-bootstrap/Nav';
+import { Route, BrowserRouter } from 'react-router-dom';
+import Dialog from './html_parts/Dialog';
+import HeaderMenu from './html_parts/HeaderMenu';
+import ItemList from './html_parts/ItemList';
 // 【TODO：開発環境では、config_local使用】
 // import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER, GET_GROUPS_URL } from './config';
-import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER, GET_GROUPS_URL } from './config/config_local';
-import Dialog from './html_parts/Dialog';
-import { LOGIN_ERR, ERR_WAIT_MSG } from './config/message';
+import {
+  ACCOUNT_ID,
+  GET_GROUPS_URL,
+  IDENTITY_POOL_ID,
+  LOGINS_SET_ID,
+  MENU_ITEMS,
+  ROLES,
+  ROLE_ORDER,
+} from './config/config_local';
+import { ERR_WAIT_MSG, LOGIN_ERR } from './config/message';
+import './static/css/App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const cookies = new Cookies();
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
 
-
+/**
+ * 
+ * @module App
+ */
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -36,11 +47,14 @@ class App extends React.Component {
       location_flag: false
     }
     // console.log(MENU_ITEMS['administrator'][1])
-
   }
 
-  // ユーザが所属するグループから適切なロールを付与する
-  // ロールは最も高い権限のものを有線して付与する
+  /**
+   * ユーザが所属するグループから適切なロールを付与する
+   * ロールは最も高い権限のものを有線して付与する
+   * @param {XXX} user_groups XXX
+   * @return {XXX} XXX
+   */
   applyUserGroup(user_groups) {
 
     var user_role = "user"
@@ -54,6 +68,11 @@ class App extends React.Component {
     return user_role;
   }
 
+  /**
+   * 
+   * @param {XXX} client_config XXX
+   * @return {XXX} XXX
+   */
   getUserRole(client_config) {
     console.log('getUserRole')
 
@@ -80,7 +99,8 @@ class App extends React.Component {
         var user_role = this.applyUserGroup(not_implicit_id_token.groups)
         console.log(user_role)
         return user_role
-      }).catch(function (result) {
+      })
+      .catch(function (result) {
         console.log('API Gateway reply Error.')
         console.log(result)
         this.setLogout()
@@ -88,6 +108,11 @@ class App extends React.Component {
       });
   }
 
+  /**
+   * 
+   * @param {XXX} config XXX
+   * @param {XXX} id_token XXX
+   */
   async setLogIn(config, id_token) {
     var login_user = id_token.name
     var login_account = id_token.email ? id_token.email : id_token.preferred_username
@@ -136,11 +161,15 @@ class App extends React.Component {
     console.log('logout sequence')
   }
 
+  /**
+   * 
+   * @param {XXX} id_token_jwt XXX
+   */
   getClientConfig(id_token_jwt) {
     console.log(id_token_jwt)
     let url = "https://k8bto0c6d5.execute-api.ap-northeast-1.amazonaws.com/prototype/";
 
-    // 解毒
+    // 解読
     if (id_token_jwt === null) {
       console.log('JWT is null');
       return;
@@ -209,9 +238,7 @@ class App extends React.Component {
       });
   }
 
-
   render() {
-
     // JWT が Cookie に設定されていたら、セッション情報を取得
     var id_token_jwt = cookies.get('jwt');
     if (typeof (id_token_jwt) === 'string' && this.state.id_token === null) {
@@ -224,7 +251,6 @@ class App extends React.Component {
 
     return (
       <div className="App">
-      
         <BrowserRouter>
           <Route path="/" newProps render={(p) => {
             let hash = p.location.hash
