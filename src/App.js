@@ -1,3 +1,4 @@
+/* eslint-disable import/first */
 import AWS from 'aws-sdk';
 import jwt from 'jsonwebtoken';
 import Cookies from 'universal-cookie';
@@ -10,8 +11,6 @@ import { Route, BrowserRouter } from 'react-router-dom';
 import Dialog from './html_parts/Dialog';
 import HeaderMenu from './html_parts/HeaderMenu';
 import ItemList from './html_parts/ItemList';
-// 【TODO：開発環境では、config_local使用】
-// import { MENU_ITEMS, IDENTITY_POOL_ID, ACCOUNT_ID, LOGINS_SET_ID, ROLES, ROLE_ORDER, GET_GROUPS_URL } from './config';
 import {
   ACCOUNT_ID,
   GET_GROUPS_URL,
@@ -20,11 +19,13 @@ import {
   MENU_ITEMS,
   ROLES,
   ROLE_ORDER,
-} from './config/config_local';
+  ENV_CHECK_TEST
+} from './config/config';
 import { ERR_WAIT_MSG, LOGIN_ERR } from './config/message';
 import './static/css/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+console.log('ENV_CHECK_TEST: ' + ENV_CHECK_TEST);
 const cookies = new Cookies();
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
 

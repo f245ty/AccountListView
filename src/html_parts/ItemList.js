@@ -7,7 +7,7 @@ import ListHeader from './ListHeader';
 import Pager from './Pager';
 import SearchControl from './SearchControl';
 // import isAccessTokenEnable from '../function/isAccessTokenEnable';
-// import { OUTPUT_LABELS } from './config/config_local';
+// import { OUTPUT_LABELS } from './config/config';
 import {
     CSV_TTL,
     ERR_WAIT_MSG,

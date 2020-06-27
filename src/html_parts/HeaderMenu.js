@@ -3,9 +3,7 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import Dialog from './Dialog';
-// 【TODO：開発環境では、config_local使用】
-// import { LOGIN_URI, ROLE_NAME } from './config';
-import { LOGIN_URI, ROLE_NAME } from '../config/config_local'
+import { LOGIN_URI, ROLE_NAME } from '../config/config'
 import logo from '../static/image/header_img.png';
 
 const cookies = new Cookies();
