@@ -1,11 +1,14 @@
-
 import React from 'react';
-import fetchData from './fetchData';
-import { Row, Col } from 'react-bootstrap';
-import { HEADER_LABEL, MENU_ITEMS } from './config'
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import Dialog from './Dialog';
+import { HEADER_LABEL, MENU_ITEMS } from '../config/config'
+import fetchData from '../function/fetchData';
 
-
+/**
+ * 
+ * @module CreateCSV
+ */
 class CreateCSV extends React.Component {
 
     constructor(props) {
@@ -17,6 +20,10 @@ class CreateCSV extends React.Component {
         this.old_data = {};
     }
 
+    /**
+     * 
+     * @param {XXX} data XXX
+     */
     onReceiveUrl = (data) => {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', data.items.url);
@@ -48,6 +55,10 @@ class CreateCSV extends React.Component {
         xhr.send();
     }
 
+    /**
+     * 
+     * @return {XXX} XXX
+     */
     getDate() {
 
         // 現在の日付を取得
@@ -59,6 +70,10 @@ class CreateCSV extends React.Component {
         return y + ('0' + m).slice(-2) + ('0' + d).slice(-2);
     }
 
+    /**
+     * 
+     * @param {XXX} e XXX
+     */
     onLoding(e) {
 
         // csv出力
@@ -73,10 +88,13 @@ class CreateCSV extends React.Component {
             true
         ).then(this.onReceiveUrl);
         e.preventDefault();
-
     }
 
-    // json2csv 変換用に JSON の Key を日本語に変換
+    /**
+     * json2csv 変換用に JSON の Key を日本語に変換
+     * @param {XXX} items XXX
+     * @returns {XXX} XXX
+     */
     parseColumns(items) {
 
         // ヘッダーを日本語に変換
@@ -90,6 +108,10 @@ class CreateCSV extends React.Component {
         return jp_header;
     }
 
+    /**
+     * 
+     * @return {XXX} XXX
+     */
     render() {
         return (
             <Row>
@@ -106,10 +128,8 @@ class CreateCSV extends React.Component {
                     }
                 </Col>
             </Row>
-
         );
     }
-
 }
 
 export default CreateCSV;

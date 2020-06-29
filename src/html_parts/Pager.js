@@ -1,15 +1,13 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  ページングを行う コンポーネント
-//
-
 import React from 'react';
-import fetchData from './fetchData';
+import Navbar from 'react-bootstrap/Navbar';
 import Pagination from 'react-bootstrap/Pagination';
-import { Navbar } from 'react-bootstrap';
 import CreateCSV from './CreateCSV';
+import fetchData from '../function/fetchData';
 
-
+/**
+ * ページングを行う コンポーネント
+ * @module Pager
+ */
 class Pager extends React.Component {
 
     constructor(props){
@@ -19,6 +17,11 @@ class Pager extends React.Component {
         }
     }
 
+    /**
+     * 
+     * @param {XXX} e XXX
+     * @param {XXX} num XXX
+     */
     handlePage(e, num) {
         // console.info("Go to #" + num + " page. ");
 
@@ -29,16 +32,16 @@ class Pager extends React.Component {
         fetchData(state, this.state.client_config ).then((data) => { this.props.updateList(data) } );
     }
 
+    /**
+     * 
+     * @return {XXX} XXX
+     */
     render() {
-
         // -2:前後2ページ表示
         var items = [];
-
         var state = this.props.query;
-
         var active = state.page;
         var end = state.pages;
-
 
         // 最初のページ
         if (this.props.query.page !== 1) {

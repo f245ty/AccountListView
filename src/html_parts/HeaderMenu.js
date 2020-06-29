@@ -1,16 +1,17 @@
+import Cookies from 'universal-cookie';
 import React from 'react';
 import Button from 'react-bootstrap/Button';
-import { Navbar } from 'react-bootstrap';
-import logo from './header_img.png';
-import Cookies from 'universal-cookie';
-// 【TODO：開発環境では、config_local使用】
-// import { LOGIN_URI, ROLE_NAME } from './config';
-import { LOGIN_URI, ROLE_NAME } from './config_local'
-// import { SESSION_ERR } from './message';
+import Navbar from 'react-bootstrap/Navbar';
 import Dialog from './Dialog';
+import { LOGIN_URI, ROLE_NAME } from '../config/config'
+import logo from '../static/image/header_img.png';
 
 const cookies = new Cookies();
 
+/**
+ * 
+ * @module HeaderMenu
+ */
 class HeaderMenu extends React.Component {
 
     constructor(props) {
@@ -20,8 +21,11 @@ class HeaderMenu extends React.Component {
             timeout: false
         }
     }
-    // ログイン、ログアウト切り替え
-    // 【TODO:リーダブルではない】
+
+    // TODO: リーダブルではない
+    /**
+     * ログイン、ログアウト切り替え
+     */
     onClickLogin(e) {
         if (this.props.login_state.is_logged_in === true) {
             this.setState({ show_dialog: !this.state.show_dialog })
@@ -33,9 +37,11 @@ class HeaderMenu extends React.Component {
         }
     }
 
-
+    /**
+     * 
+     * @return {XXX} XXX
+     */
     render() {
-
         // hash を各要素に分割
         let hashs = this.props.location.hash.slice(1).split('&');
         let hash = {};
@@ -70,8 +76,7 @@ class HeaderMenu extends React.Component {
                     <img
                         src={logo}
                         className="d-inline-block align-top"
-                        alt="Company Logo.">
-                    </img>
+                        alt="Company Logo." />
                 </Navbar.Brand>
                 <form className="form-inline my-2 my-lg-0">
                     {this.props.login_state.login_user}{(this.props.login_state.user_role) && ("(" + ROLE_NAME[this.props.login_state.user_role] + ")")}

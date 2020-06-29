@@ -1,7 +1,9 @@
-// id_tokenの生存確認
-
+/**
+ * id_tokenの生存確認
+ * @param {XXX} state XXX
+ * @return {Boolean} XXX
+ */
 function isAccessTokenEnable(state) {
-
     if (state.id_token && state.id_token.exp) {
         var time = Math.round((new Date()).getTime() / 1000);
         // console.log(state.id_token.exp, time)
@@ -15,4 +17,3 @@ function isAccessTokenEnable(state) {
 }
 
 export default isAccessTokenEnable;
-

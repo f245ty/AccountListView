@@ -1,5 +1,10 @@
-
-function getQeryString(state, csv_flag) {
+/**
+ * 
+ * @param {XXX} state XXX
+ * @param {XXX} csv_flag XXX
+ * @return {XXX} XXX
+ */
+function getQueryString(state, csv_flag) {
 
     var sort_string;
     // リストの中のソートキーを取得
@@ -20,10 +25,16 @@ function getQeryString(state, csv_flag) {
     return query_string;
 }
 
+/**
+ * 
+ * @param {XXX} state XXX
+ * @param {XXX} csv_flag XXX
+ * @return {XXX} XXX
+ */
 async function fetchData(state, csv_flag = false) {
-    
-    var query_string = getQeryString(state, csv_flag)
-    
+
+    var query_string = getQueryString(state, csv_flag)
+
     // 検索モードによってAPIを変更する
     let url = "";
     if (state.type === "owner") {
@@ -56,7 +67,12 @@ async function fetchData(state, csv_flag = false) {
 }
 
 
-// Dynamo の JSON から内部用 JSON リストに成形
+/**
+ * Dynamo の JSON から内部用 JSON リストに成形
+ * @param {XXX} data XXX
+ * @param {XXX} state XXX
+ * @return {XXX} XXX
+ */
 function modeling(data, state) {
     if (!data.items.message) {
         var items = data.items;
@@ -88,7 +104,6 @@ function modeling(data, state) {
         result.items = rows;
         // console.log(result);
         return result;
-
     } else {
         data.items = [];
         // console.log("rows = 0 : "+data);
