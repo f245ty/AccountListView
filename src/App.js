@@ -43,9 +43,9 @@ class App extends React.Component {
       user_role: null,
       client_config: {},
       show_dialog: false,
-      location_flag: false
+      location_flag: false,
+      permit_get_API_flag: false,
     }
-    // console.log(MENU_ITEMS['administrator'][1])
   }
 
   /**
@@ -78,7 +78,7 @@ class App extends React.Component {
     // CORS オリジンで呼べないので、Lambda から Azure AD の Token エンドポイントを呼び出して
     // 取得したトークンを取得している
     let code = { code: cookies.get('code') };
-    console.log(code)
+    // console.log(code)
 
     client_config.invokeUrl = GET_GROUPS_URL;
 
@@ -237,16 +237,30 @@ class App extends React.Component {
       });
   }
 
+  /**
+   * メニュー押下時に、メニュー切り替えフラグをtrueにする
+   * また、ファイル情報集計メニューの場合、ファイル情報集計実行タスク検索API実施フラグをtrueにする
+   * @param {xxx} location 押下したメニュー
+   */
+  onClickLocation(location) {
+    this.onLocationFlag()
+    if (location === "#file") this.onGetCSVTasksFlag() 
+  }
+
+  // メニューがクリックされ、renderのタイミングのフラグ
+  onLocationFlag = () => this.setState({ location_flag: true })
+  offLocationFlag = () => this.setState({ location_flag: false })
+
+  // ファイル情報集計実行タスク検索をするフラグ
+  onGetCSVTasksFlag = () => this.setState({ permit_get_API_flag: true })
+  offGetCSVTasksFlag = () => this.setState({ permit_get_API_flag: false })
+
   render() {
     // JWT が Cookie に設定されていたら、セッション情報を取得
     var id_token_jwt = cookies.get('jwt');
     if (typeof (id_token_jwt) === 'string' && this.state.id_token === null) {
       this.getClientConfig(id_token_jwt)
     }
-
-    // メニューがクリックされ、renderのタイミングのフラグ
-    const onLocationFlag = () => this.setState({ location_flag: true })
-    const offLocationFlag = () => this.setState({ location_flag: false })
 
     return (
       <div className="App">
@@ -264,17 +278,25 @@ class App extends React.Component {
                   (<Row>
                     <Nav variant="pills" className="flex-column">
                       {Object.keys(MENU_ITEMS[this.state.user_role]).map((key) => (
-                        <Nav.Link onClick={onLocationFlag} 
-                                  href={key} 
-                                  active={hash === key ? true : false}
-                                  className={key === "#file" ? "mt-4" : null}>
+                        <Nav.Link onClick={(e) => this.onClickLocation(key)}
+                          key={key}
+                          href={key}
+                          active={hash === key ? true : false}
+                          className={key === "#file" ? "mt-4" : null}>
                           {MENU_ITEMS[this.state.user_role][key][1]}
                         </Nav.Link>
                       ))}
                     </Nav>
                     {(hash in MENU_ITEMS[this.state.user_role]) && (
                       <Col className="mr-auto">
-                        <ItemList location={p.location} offLocationFlag={offLocationFlag} login_state={this.state} client_config={this.state.client_config} />
+                        <ItemList
+                          location={p.location}
+                          offLocationFlag={this.offLocationFlag}
+                          login_state={this.state}
+                          client_config={this.state.client_config}
+                          onGetCSVTasksFlag={this.onGetCSVTasksFlag}
+                          offGetCSVTasksFlag={this.offGetCSVTasksFlag}
+                        />
                       </Col>
                     )}
                   </Row>)

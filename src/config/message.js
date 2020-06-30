@@ -29,3 +29,4 @@ export const SEARCH_CONDITION = "指定できるメールアドレスは、１�
 export const SEARCH_CONDITION_FOLDER = "先頭に「/」を含むフォルダパスを指定してください。"
 export const CSV_TTL = "CSV保管期間は１０日間です。"
 export const NO_DATA_MSG = "該当するデータが見つかりませんでした。"
+export const NOT_FIND_FOLDER_PATH = "該当するフォルダパスが見つかりませんでした。"

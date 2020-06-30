@@ -17,7 +17,7 @@ var PROTOCOL = ''
 var GET_GROUPS_URL = ''
 
 // CSVダウンロード実行タスク確認API
-var GET_CSV_TASKS = ''
+var GET_CSV_TASKS_URL = ''
 
 if (react_app_env === "prod") {
     IDENTITY_POOL_ID = 'ap-northeast-1:fe11ba82-e9f9-4481-b370-8eb53729fc29'
@@ -29,7 +29,7 @@ if (react_app_env === "prod") {
     APPLICATION_ID = '7adcb600-5dfd-422e-8df0-0f33363bd19c'
     PROTOCOL = 'oauth2/v2.0'
     GET_GROUPS_URL = "https://g37zf38yj5.execute-api.ap-northeast-1.amazonaws.com/prod/"
-    GET_CSV_TASKS = "https://fj0y0qtqe2.execute-api.ap-northeast-1.amazonaws.com/prod"
+    GET_CSV_TASKS_URL = "https://fj0y0qtqe2.execute-api.ap-northeast-1.amazonaws.com/prod"
 
 } else if (react_app_env === "dev") {
     IDENTITY_POOL_ID = 'ap-northeast-1:9cd11c18-7668-4ea3-8427-40a8aed8ec94'
@@ -41,7 +41,7 @@ if (react_app_env === "prod") {
     APPLICATION_ID = '3a0aef16-07ab-4f88-8122-4114b7c496a1'
     PROTOCOL = 'oauth2/v2.0'
     GET_GROUPS_URL = "https://stp3h4k946.execute-api.ap-northeast-1.amazonaws.com/develop/"
-    GET_CSV_TASKS = "https://fj0y0qtqe2.execute-api.ap-northeast-1.amazonaws.com/prod"
+    GET_CSV_TASKS_URL = "https://fj0y0qtqe2.execute-api.ap-northeast-1.amazonaws.com/prod"
 }
 
 export {
@@ -50,7 +50,7 @@ export {
     ADMIN_GROUP_ID,
     MNG_GROUP_ID,
     GET_GROUPS_URL,
-    GET_CSV_TASKS
+    GET_CSV_TASKS_URL
 }
 
 // common

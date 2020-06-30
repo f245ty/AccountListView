@@ -9,7 +9,7 @@ import isAccessTokenEnable from '../function/isAccessTokenEnable';
 import Cookies from 'universal-cookie';
 import { ID_TOKEN_ERR, LOGIN } from '../config/message';
 import Dialog from './Dialog';
-// import getCSVTasks from './getCSVTasks';
+import getCSVTasks from '../function/getCSVTasks';
 
 
 const cookies = new Cookies();
@@ -62,7 +62,7 @@ class SearchControl extends React.Component {
             // 検索条件をデフォルトで検索するための処理
             if (state.id === null || state.id === "")
                 state.id = this.props.login_state.login_account
-            if (state.id === null || state.type === 'folder') {
+            if (state.id === null || state.type === 'folder' || state.type === 'file') {
                 if (state.id === this.props.login_state.login_account) state.id = "/";
             } else if (state.type !== "folder" && state.id.indexOf("/") > -1) {
                 state.id = this.props.login_state.login_account;
@@ -73,10 +73,18 @@ class SearchControl extends React.Component {
             console.log(state)
             console.log('search state')
             this.setState({ loading: true })
-            fetchData(state, this.state.client_config).then((data) => {
-                this.props.updateList(data)
-                this.setState({ loading: false })
-            });
+            if (this.props.location_hash === "#file") {
+                getCSVTasks(this.state, this.props.client_config, this.props.login_state.login_account, true).then((data) => {
+                    // console.log(data)
+                    this.props.updateList(data)
+                    this.setState({ loading: false })
+                })
+            } else {
+                fetchData(state, this.state.client_config).then((data) => {
+                    this.props.updateList(data)
+                    this.setState({ loading: false })
+                });
+            }
             this.props.offLocationFlag()
         } else {
             console.log("id_token error.")
@@ -112,19 +120,22 @@ class SearchControl extends React.Component {
     onClick = (e, e_type) => { ; }
 
     /**
-     * 
+     * ファイル情報集計タスクを取得する
+     * ファイル情報集計メニューボタン押下時のみ
      */
-    // onGetCSVTasks() {
-    //     if (isAccessTokenEnable(this.props.login_state)) {
-    //         getCSVTasks(this.state, this.props.client_config).then((data) => {
-    //             // console.log(data)
-    //             this.props.updateList(data)
-    //         })
-    //         this.props.offLocationFlag()
-    //         console.log(this.props.login_state)
-    //         console.log("get csv_tasks.")
-    //     }
-    // }
+    onGetCSVTasks() {
+        console.log("will get csv tasks.")
+        if (isAccessTokenEnable(this.props.login_state)) {
+            getCSVTasks(this.state, this.props.client_config).then((data) => {
+                // console.log(data)
+                this.props.updateList(data)
+            })
+            this.props.offLocationFlag()
+            this.props.offGetCSVTasksFlag()
+            console.log(this.props.login_state)
+            console.log("get csv_tasks.")
+        }
+    }
 
     /**
      * 
@@ -135,19 +146,21 @@ class SearchControl extends React.Component {
         for (let i = 1; i <= maxPageValue; i += 1) {
             options.push(<option key={i}>{i}</option>);
         }
+
         // メニュー切り替え時、検索窓をリセットしデフォルト表示
         if (this.props.login_state.location_flag) this.state.id = this.props.login_state.login_account
+
 
         // システム管理者権限を持たない場合はメールアドレス固定
         return (
             <BrowserRouter hashType="noslash">
                 <Route render={(p) => {
-                    console.log(this.props.location_hash ,p.location.hash)
+                    // console.log("App.js location: " + this.props.location_hash)
+                    // console.log("SearchControl.js location: " + p.location.hash)
+                    // console.log("location_flag: " + this.props.login_state.location_flag)
+
                     // ファイル情報集計メニューを選択したときは、APIをGETで叩く
-                    if (this.props.login_state.location_flag && this.props.location_hash === p.location.hash && p.location.hash === "#file") {
-                        console.log("#file ?  " + p.location.hash)
-                        this.onGetCSVTasks()
-                    }
+                    if (this.props.login_state.permit_get_API_flag) this.onGetCSVTasks()
 
                     return (
                         <div className="bg-dark p-3">
@@ -237,7 +250,7 @@ class SearchControl extends React.Component {
                                         : null}
                                     <InputGroup.Append>
                                         <Button className="rounded-left" type="submit" disabled={p.location.hash === "#file" && this.props.query.is_process}>
-                                            <i className="fa fa-search"></i> {p.location.hash === "#file" ? "ダウンロード" : "検索"}
+                                            <i className={p.location.hash === "#file" ? "fas fa-download" : "fa fa-search"}></i> {p.location.hash === "#file" ? "ダウンロード" : "検索"}
                                         </Button>
                                     </InputGroup.Append>
                                 </InputGroup>
@@ -255,7 +268,6 @@ class SearchControl extends React.Component {
                     text={ID_TOKEN_ERR + LOGIN}
                     logout_flag={true}
                     err_flag={true}
-                // handleClose={handleClose}
                 />
             </BrowserRouter>
         );
