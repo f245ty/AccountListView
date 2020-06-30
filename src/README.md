@@ -16,7 +16,6 @@
 | static/image | pngファイル等格納 |
 | function | 純粋なNode.jsコードのみを含むファイルを格納する。 |
 | html_parts | 返却値としてHTML要素をレンダリング要素を含むファイルを格納する。 |
-| loading.js | 用途不明 |
 
 ## 外部パッケージ郡説明
 
