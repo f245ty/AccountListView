@@ -67,6 +67,27 @@ class ItemList extends React.Component {
     }
 
     /**
+     * render前に特定条件を満たす時、setStateを実行する
+     */
+    componentDidMount() {
+        // メニュー切り替え時、検索窓をリセットしデフォルト表示
+        if (this.props.login_state.location_flag) {
+            this.setState({ id: null })
+        }
+    }
+
+    /**
+     * render前に、現stateと以前のstateを比較し、条件を満たす時、setStateで更新する
+     * @param {Object} prevProp 以前のprops
+     * @param {Object} prevState 以前のstate
+     */
+    componentDidUpdate(prevProp, prevState) {
+        if (this.state.id !== prevState.id) {
+            this.setState({ id: null })
+        }
+    }
+
+    /**
      * 
      * @return {XXX} XXX
      */
@@ -76,7 +97,6 @@ class ItemList extends React.Component {
         // メニュー切り替え時、結果表示リセット
         if (this.props.login_state.location_flag) {
             items = [];
-            this.state.id = null;
         }
 
         var xhr = new XMLHttpRequest();
@@ -87,7 +107,7 @@ class ItemList extends React.Component {
         // console.log("App.js location: " + this.props.location.hash)
         // console.log("App.js location_flag: " + this.props.login_state.location_flag)
         // console.log(this.props.login_state)
-        
+
         return (
             <div>
                 <SearchControl id="SearchControl"

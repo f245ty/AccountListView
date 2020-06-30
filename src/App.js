@@ -244,7 +244,7 @@ class App extends React.Component {
    */
   onClickLocation(location) {
     this.onLocationFlag()
-    if (location === "#file") this.onGetCSVTasksFlag() 
+    if (location === "#file") this.onGetCSVTasksFlag()
   }
 
   // メニューがクリックされ、renderのタイミングのフラグ
@@ -265,14 +265,11 @@ class App extends React.Component {
     return (
       <div className="App">
         <BrowserRouter>
-          <Route path="/" newProps render={(p) => {
+          <Route path="/" render={(p) => {
             let hash = p.location.hash
             return (
               <Container fluid>
                 <HeaderMenu location={p.location} login_state={this.state} />
-                <form >
-
-                </form>
                 {
                   (this.state.is_logged_in) &&
                   (<Row>

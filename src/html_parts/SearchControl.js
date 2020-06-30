@@ -74,7 +74,7 @@ class SearchControl extends React.Component {
             console.log('search state')
             this.setState({ loading: true })
             if (this.props.location_hash === "#file") {
-                getCSVTasks(this.state, this.props.client_config, this.props.login_state.login_account, true).then((data) => {
+                getCSVTasks(state, this.props.client_config, this.props.login_state.login_account, true).then((data) => {
                     // console.log(data)
                     this.props.updateList(data)
                     this.setState({ loading: false })
@@ -126,7 +126,8 @@ class SearchControl extends React.Component {
     onGetCSVTasks() {
         console.log("will get csv tasks.")
         if (isAccessTokenEnable(this.props.login_state)) {
-            getCSVTasks(this.state, this.props.client_config).then((data) => {
+            let state = this.state;
+            getCSVTasks(state, this.props.client_config).then((data) => {
                 // console.log(data)
                 this.props.updateList(data)
             })
@@ -148,8 +149,8 @@ class SearchControl extends React.Component {
         }
 
         // メニュー切り替え時、検索窓をリセットしデフォルト表示
-        if (this.props.login_state.location_flag) this.state.id = this.props.login_state.login_account
-
+        let state = this.state
+        if (this.props.login_state.location_flag) state.id = this.props.login_state.login_account
 
         // システム管理者権限を持たない場合はメールアドレス固定
         return (
