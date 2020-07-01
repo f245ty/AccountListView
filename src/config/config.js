@@ -118,7 +118,7 @@ export const OUTPUT_LABELS = {
 
 // 実行ステータスラベル
 export const STATUS_LABEL = {
-    0 : "待ち",
+    0 : "処理中",
     1 : "処理中",
     2 : "完了"
 }

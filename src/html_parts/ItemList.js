@@ -110,6 +110,7 @@ class ItemList extends React.Component {
 
         return (
             <div>
+                {console.log(this.props.login_state.location_flag)}
                 <SearchControl id="SearchControl"
                     query={this.state}
                     updateList={(data) => { this.updateList(data); }}
@@ -138,8 +139,22 @@ class ItemList extends React.Component {
                     )
                 }
                 {// 検索して結果が0件の時は 結果がないと表示する
+                // ファイル情報集計機能に初期遷移時は、実行タスクが0件でも初期表示する 
                     (items.length === 0) && (!this.props.login_state.location_flag) && (
-                        <p>{NO_DATA_MSG}</p>
+                        this.props.location.hash === "#file"
+                        ? this.state.is_folder_path === undefined
+                            ? <p>
+                                {EXPLANATION["file"]}
+                                <br />
+                                {CSV_TTL}
+                                <br />
+                            </p>
+                            : <p>
+                                {NOT_FIND_FOLDER_PATH}
+                            </p>
+                        : <p>
+                            {NO_DATA_MSG}
+                        </p>
                     )
                 }
                 {// エラーが発生した時は、エラーメッセージを表示する
@@ -155,10 +170,12 @@ class ItemList extends React.Component {
                             (items.length !== 0) && (
                                 <div>
                                     {/* ファイル情報集計メニューのとき */}
+                                    {console.log("is_folder_path: " + this.state)}
                                     {this.props.location.hash === "#file"
                                         ? <div className="text-left">
                                             {this.state.is_folder_path === false
-                                                ? <p>
+                                                ?
+                                                <p>
                                                     {NOT_FIND_FOLDER_PATH}
                                                     <br />
                                                     <br />
@@ -196,7 +213,7 @@ class ItemList extends React.Component {
                                                                 className={col.indexOf('p_') === 0 || col === '#' || col === 'create_at' || col === 'csv_ttl' || col === 'process_state' || col === 'download_ln'
                                                                     ? "text-center"
                                                                     : "text-left"}>
-                                                                {col === 'download_ln' ? <a href={row[col]} role="button">{row[col]}</a> : row[col]}
+                                                                {col === 'download_ln' ? <a href={row[col]} role="button">{row[col].split(".com/")[1]}</a> : row[col]}
                                                             </td>
                                                         )
                                                     })}

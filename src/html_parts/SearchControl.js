@@ -132,10 +132,15 @@ class SearchControl extends React.Component {
                 this.props.updateList(data)
             })
             this.props.offLocationFlag()
-            this.props.offGetCSVTasksFlag()
             console.log(this.props.login_state)
             console.log("get csv_tasks.")
+        } else {
+            console.log("id_token error.")
+            this.setState({ show_dialog: !this.state.show_dialog });
+            console.log(this.state.show_dialog)
+            cookies.remove('jwt');
         }
+        this.props.offGetCSVTasksFlag()
     }
 
     /**
