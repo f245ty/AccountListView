@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import { OUTPUT_LABELS, IDENTITY_POOL_ID, STATUS_LABEL, GET_CSV_TASKS_URL } from '../config/config'
+import { OUTPUT_LABELS, IDENTITY_POOL_ID, GET_CSV_TASKS_URL } from '../config/config'
 
 
 var apigClientFactory = require('../../node_modules/aws-api-gateway-client').default;
@@ -59,11 +59,7 @@ function modeling(state, response) {
         col['#'] = ++count;
         // console.log(data)
         for (var value in data) {
-            if (value === 'process_state') {
-                col[value] = STATUS_LABEL[data[value]]
-            } else {
-                col[value] = data[value]
-            }
+            col[value] = data[value]
             // console.log(col)
         }
 

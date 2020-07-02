@@ -1,5 +1,4 @@
 // ログイン
-// export const LOGOUT = 'ログアウトしました。'
 export const LOGOUT = 'ログアウトしますか？'
 export const LOGIN = '再度、ログインしてください。'
 export const LOGIN_PAGE = 'ログインページへ行く'
@@ -28,5 +27,9 @@ export const EXPLANATION = {
 export const SEARCH_CONDITION = "指定できるメールアドレスは、１つだけです。"
 export const SEARCH_CONDITION_FOLDER = "先頭に「/」を含むフォルダパスを指定してください。"
 export const CSV_TTL = "CSV保管期間は１０日間です。"
+export const EXECUTION_MSG = "「処理中」の実行ステータスがあるため、新たに実行できません。「処理中」の実行ステータスがなくなってから、再実行してください。"
+export const ATTENTION_MSG = "※ 実行ステータスが「失敗」の場合、システムエラーが発生しています。"
+
+// 検索結果0件のメッセージ
 export const NO_DATA_MSG = "該当するデータが見つかりませんでした。"
 export const NOT_FIND_FOLDER_PATH = "該当するフォルダパスが見つかりませんでした。"

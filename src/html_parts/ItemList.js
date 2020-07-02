@@ -12,8 +12,11 @@ import {
     NO_DATA_MSG,
     SEARCH_CONDITION,
     SEARCH_CONDITION_FOLDER,
-    NOT_FIND_FOLDER_PATH
+    NOT_FIND_FOLDER_PATH,
+    EXECUTION_MSG,
+    ATTENTION_MSG
 } from '../config/message';
+import { STATUS_LABEL } from '../config/config';
 
 /**
  * JSON の配列に行番号を付与して表示する コンポーネント
@@ -87,6 +90,8 @@ class ItemList extends React.Component {
         }
     }
 
+
+
     /**
      * 
      * @return {XXX} XXX
@@ -98,7 +103,7 @@ class ItemList extends React.Component {
         if (this.props.login_state.location_flag) {
             items = [];
         }
-
+        
         var xhr = new XMLHttpRequest();
         xhr.open('GET', items.url);
         // ダイアログ用のハンドラ
@@ -110,7 +115,6 @@ class ItemList extends React.Component {
 
         return (
             <div>
-                {console.log(this.props.login_state.location_flag)}
                 <SearchControl id="SearchControl"
                     query={this.state}
                     updateList={(data) => { this.updateList(data); }}
@@ -139,22 +143,22 @@ class ItemList extends React.Component {
                     )
                 }
                 {// 検索して結果が0件の時は 結果がないと表示する
-                // ファイル情報集計機能に初期遷移時は、実行タスクが0件でも初期表示する 
+                    // ファイル情報集計機能に初期遷移時は、実行タスクが0件でも初期表示する 
                     (items.length === 0) && (!this.props.login_state.location_flag) && (
                         this.props.location.hash === "#file"
-                        ? this.state.is_folder_path === undefined
-                            ? <p>
-                                {EXPLANATION["file"]}
-                                <br />
-                                {CSV_TTL}
-                                <br />
-                            </p>
+                            ? this.state.is_folder_path === undefined
+                                ? <p>
+                                    {EXPLANATION["file"]}
+                                    <br />
+                                    {CSV_TTL}
+                                    <br />
+                                </p>
+                                : <p>
+                                    {NOT_FIND_FOLDER_PATH}
+                                </p>
                             : <p>
-                                {NOT_FIND_FOLDER_PATH}
+                                {NO_DATA_MSG}
                             </p>
-                        : <p>
-                            {NO_DATA_MSG}
-                        </p>
                     )
                 }
                 {// エラーが発生した時は、エラーメッセージを表示する
@@ -163,14 +167,12 @@ class ItemList extends React.Component {
                     )
                 }
                 <div id="List">
-                    {/* {console.log(items.url)} */}
                     {// 表示行数が0行の時は表示しない
                         items.url ? (xhr.send())
                             :
                             (items.length !== 0) && (
                                 <div>
                                     {/* ファイル情報集計メニューのとき */}
-                                    {console.log("is_folder_path: " + this.state)}
                                     {this.props.location.hash === "#file"
                                         ? <div className="text-left">
                                             {this.state.is_folder_path === false
@@ -180,11 +182,20 @@ class ItemList extends React.Component {
                                                     <br />
                                                     <br />
                                                 </p>
-                                                : <p>
+                                                :
+                                                <p>
+                                                    {console.log(items[0]["user_email"] === this.props.login_state.login_account)}
+                                                    {this.state.is_process
+                                                        ?
+                                                        <div>{EXECUTION_MSG} <br /><br /></div>
+                                                        :
+                                                        null}
                                                     {EXPLANATION["file"]}
                                                     <br />
                                                     {CSV_TTL}
                                                     <br />
+                                                    <br />
+                                                    <span className="text-danger">{ATTENTION_MSG} {ERR_WAIT_MSG}</span>
                                                 </p>
                                             }
                                         </div>
@@ -213,7 +224,15 @@ class ItemList extends React.Component {
                                                                 className={col.indexOf('p_') === 0 || col === '#' || col === 'create_at' || col === 'csv_ttl' || col === 'process_state' || col === 'download_ln'
                                                                     ? "text-center"
                                                                     : "text-left"}>
-                                                                {col === 'download_ln' ? <a href={row[col]} role="button">{row[col].split(".com/")[1]}</a> : row[col]}
+                                                                {col === 'download_ln'
+                                                                    ?
+                                                                    <a href={row[col]} role="button">{row[col].split(".com/")[1]}</a>
+                                                                    :
+                                                                    col === 'process_state'
+                                                                        ?
+                                                                        STATUS_LABEL[row[col]]
+                                                                        :
+                                                                        row[col]}
                                                             </td>
                                                         )
                                                     })}

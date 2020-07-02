@@ -120,7 +120,8 @@ export const OUTPUT_LABELS = {
 export const STATUS_LABEL = {
     0 : "処理中",
     1 : "処理中",
-    2 : "完了"
+    2 : "完了",
+    3 : "失敗"
 }
 
 // 1ページあたりのページ数のデフォルト
