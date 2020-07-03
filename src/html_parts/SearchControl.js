@@ -51,24 +51,12 @@ class SearchControl extends React.Component {
      * @param {XXX} e XXX
      * @param {XXX} hash XXX
      */
-    onClickSearch = (e, hash) => {
+    onClickSearch = (e, hash, id) => {
         var state = this.state;
         state.type = hash;
-
+        console.log("id: " + id, "this.state.id: " + this.state.id)
         console.log('search id: ' + this.state.id);
         if (isAccessTokenEnable(this.props.login_state)) {
-
-            // APIを叩いて、画面を更新する
-            // 検索条件をデフォルトで検索するための処理
-            if (state.id === null || state.id === "")
-                state.id = this.props.login_state.login_account
-            if (state.id === null || state.type === 'folder' || state.type === 'file') {
-                if (state.id === this.props.login_state.login_account) state.id = "/";
-            } else if (state.type !== "folder" && state.id.indexOf("/") > -1) {
-                state.id = this.props.login_state.login_account;
-            } else if (state.type === "folder" && state.id.indexOf("/") === -1) {
-                state.id = "/";
-            }
 
             console.log(state)
             console.log('search state')
@@ -104,6 +92,7 @@ class SearchControl extends React.Component {
         let id = e.target.value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         console.log('before id: ' + this.state.id + ', after id: ' + id);
         this.setState({ id: id });
+        console.log("SSSSSSSSSSSSSSSSSSSSSS")
     }
 
     /**
@@ -153,9 +142,7 @@ class SearchControl extends React.Component {
             options.push(<option key={i}>{i}</option>);
         }
 
-        // メニュー切り替え時、検索窓をリセットしデフォルト表示
         let state = this.state
-        if (this.props.login_state.location_flag) state.id = this.props.login_state.login_account
 
         // システム管理者権限を持たない場合はメールアドレス固定
         return (
@@ -165,24 +152,59 @@ class SearchControl extends React.Component {
                     // console.log("SearchControl.js location: " + p.location.hash)
                     // console.log("location_flag: " + this.props.login_state.location_flag)
 
+                    // メニュー切り替え時、検索窓をリセットしデフォルト表示
+                    if (this.props.login_state.location_flag) {
+                        console.log("メニュー切り替え時：" + p.location.hash)
+                        if (p.location.hash === "#file" || p.location.hash === "#folder") {
+                            state.id = "/"
+                        } else {
+                            state.id = this.props.login_state.login_account
+                        }
+                    }
+                    
                     // ファイル情報集計メニューを選択したときは、APIをGETで叩く
-                    if (this.props.login_state.permit_get_API_flag) this.onGetCSVTasks()
+                    if (this.props.login_state.permit_get_API_flag && p.location.hash === "#file") this.onGetCSVTasks()
 
                     return (
                         <div className="bg-dark p-3">
-                            <Form onSubmit={(e) => this.onClickSearch(e, p.location.hash.replace("#", ""))}>
+                            <Form onSubmit={(e) => this.onClickSearch(e, p.location.hash.replace("#", ""), state.id)}>
                                 <InputGroup className="">
                                     <InputGroup.Prepend>
                                         <InputGroup.Text id="basic-addon1">
                                             {MENU_ITEMS[this.props.login_state.user_role][p.location.hash][0]}
                                         </InputGroup.Text>
                                     </InputGroup.Prepend>
-                                    {p.location.hash === "#file" && (
+                                    {(p.location.hash === "#file") && (
+                                        <Form.Control
+                                            className="rounded-right"
+                                            defaultValue={state.id}
+                                            placeholder="完全一致検索を行います。"
+                                            type="text"
+                                            required
+                                            onChange={(e) => { this.onChangeText(e); }}
+                                        />
+                                    )}
+                                    {(p.location.hash === "#folder") && (
+                                        <Form.Control
+                                            className="rounded-right"
+                                            defaultValue={state.id}
+                                            placeholder="前方一致検索を行います。"
+                                            type="text"
+                                            required
+                                            onChange={(e) => { this.onChangeText(e); }}
+                                        />
+                                    )}
+                                    {(p.location.hash === "#owner") && (
                                         <Form.Control
                                             className="rounded-right"
                                             defaultValue={
                                                 this.props.login_state.user_role === "administrator"
-                                                    ? "/"
+                                                    ? state.id
+                                                    : undefined
+                                            }
+                                            value={
+                                                this.props.login_state.user_role === "manager"
+                                                    ? state.id = this.props.login_state.login_account
                                                     : undefined
                                             }
                                             placeholder="前方一致検索を行います。"
@@ -191,60 +213,23 @@ class SearchControl extends React.Component {
                                             onChange={(e) => { this.onChangeText(e); }}
                                         />
                                     )}
-                                    {p.location.hash === "#folder" && (
+                                    {(p.location.hash === "#user") && (
                                         <Form.Control
                                             className="rounded-right"
                                             defaultValue={
                                                 this.props.login_state.user_role === "administrator"
-                                                    ? "/"
+                                                    ? state.id
+                                                    : undefined
+                                            }
+                                            value={
+                                                this.props.login_state.user_role === "manager"
+                                                    ? state.id = this.props.login_state.login_account
                                                     : undefined
                                             }
                                             placeholder="前方一致検索を行います。"
                                             type="text"
                                             required
                                             onChange={(e) => { this.onChangeText(e); }}
-                                        />
-                                    )}
-                                    {p.location.hash === "#owner" && (
-                                        <Form.Control
-                                            className="rounded-right"
-                                            defaultValue={
-                                                this.props.login_state.user_role === "administrator"
-                                                    ? this.state.id
-                                                    : undefined
-                                            }
-                                            value={
-                                                this.props.login_state.user_role === "manager"
-                                                    ? this.state.id
-                                                    : undefined
-                                            }
-                                            placeholder="前方一致検索を行います。"
-                                            type="text"
-                                            required
-                                            onChange={(e) => {
-                                                this.onChangeText(e);
-                                            }}
-                                        />
-                                    )}
-                                    {p.location.hash === "#user" && (
-                                        <Form.Control
-                                            className="rounded-right"
-                                            defaultValue={
-                                                this.props.login_state.user_role === "administrator"
-                                                    ? this.state.id
-                                                    : undefined
-                                            }
-                                            value={
-                                                this.props.login_state.user_role === "manager"
-                                                    ? this.state.id
-                                                    : undefined
-                                            }
-                                            placeholder="前方一致検索を行います。"
-                                            type="text"
-                                            required
-                                            onChange={(e) => {
-                                                this.onChangeText(e);
-                                            }}
                                         />
                                     )}
                                     {p.location.hash !== "#file" ?

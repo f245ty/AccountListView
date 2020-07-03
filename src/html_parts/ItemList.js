@@ -69,28 +69,6 @@ class ItemList extends React.Component {
         });
     }
 
-    /**
-     * render前に特定条件を満たす時、setStateを実行する
-     */
-    componentDidMount() {
-        // メニュー切り替え時、検索窓をリセットしデフォルト表示
-        if (this.props.login_state.location_flag) {
-            this.setState({ id: null })
-        }
-    }
-
-    /**
-     * render前に、現stateと以前のstateを比較し、条件を満たす時、setStateで更新する
-     * @param {Object} prevProp 以前のprops
-     * @param {Object} prevState 以前のstate
-     */
-    componentDidUpdate(prevProp, prevState) {
-        if (this.state.id !== prevState.id) {
-            this.setState({ id: null })
-        }
-    }
-
-
 
     /**
      * 
@@ -98,6 +76,7 @@ class ItemList extends React.Component {
      */
     render() {
         var items = this.state.items;
+        let state = this.state;
 
         // メニュー切り替え時、結果表示リセット
         if (this.props.login_state.location_flag) {
@@ -121,7 +100,6 @@ class ItemList extends React.Component {
                     login_state={this.props.login_state}
                     client_config={this.state.client_config}
                     location_hash={this.props.location.hash}
-                    location_flag={this.props.location_flag}
                     offLocationFlag={this.props.offLocationFlag}
                     onGetCSVTasksFlag={this.props.onGetCSVTasksFlag}
                     offGetCSVTasksFlag={this.props.offGetCSVTasksFlag}
@@ -175,7 +153,7 @@ class ItemList extends React.Component {
                                     {/* ファイル情報集計メニューのとき */}
                                     {this.props.location.hash === "#file"
                                         ? <div className="text-left">
-                                            {this.state.is_folder_path === false
+                                            {this.state.is_folder_path === false 
                                                 ?
                                                 <p>
                                                     {NOT_FIND_FOLDER_PATH}
@@ -184,10 +162,9 @@ class ItemList extends React.Component {
                                                 </p>
                                                 :
                                                 <p>
-                                                    {console.log(items[0]["user_email"] === this.props.login_state.login_account)}
                                                     {this.state.is_process
                                                         ?
-                                                        <div>{EXECUTION_MSG} <br /><br /></div>
+                                                        <span>{EXECUTION_MSG} <br /><br /></span>
                                                         :
                                                         null}
                                                     {EXPLANATION["file"]}
