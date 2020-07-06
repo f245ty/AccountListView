@@ -12,6 +12,10 @@ const cookies = new Cookies();
  * @module Dialog
  */
 class Dialog extends React.Component {
+	constructor(props) {
+        super(props);
+        this.state = {}
+    }
 
 	/**
 	 * 

@@ -6,18 +6,17 @@ var apigClientFactory = require('../../node_modules/aws-api-gateway-client').def
 
 AWS.config.region = 'ap-northeast-1';
 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: IDENTITY_POOL_ID,
-    // IdentityId: ''
+    IdentityPoolId: IDENTITY_POOL_ID
 });
 
-async function getCSVTasks(state, client_config, login_account, post_flag = false) {
+async function getCSVTasks(searchText, login_state, post_flag=false) {
 
     var localstate = {}
-    localstate["folder_path"] = state.id
-    localstate["user_email"] = login_account
+    localstate["folder_path"] = searchText
+    localstate["user_email"] = login_state.login_account
 
-    client_config.invokeUrl = GET_CSV_TASKS_URL;
-    var apigClient = apigClientFactory.newClient(client_config);
+    login_state.client_config.invokeUrl = GET_CSV_TASKS_URL;
+    var apigClient = apigClientFactory.newClient(login_state.client_config);
     var pathParams = {};
     var pathTemplate = '';
     var method = 'GET';
@@ -31,7 +30,9 @@ async function getCSVTasks(state, client_config, login_account, post_flag = fals
     return apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
         .then(function (response) {
             console.log(response.data)
-            state = modeling(state, response.data)
+            let state = modeling(response.data)
+            console.log('API Gateway Response')
+            console.log(state)
             return state
 
         }).catch(function (response) {
@@ -44,32 +45,24 @@ async function getCSVTasks(state, client_config, login_account, post_flag = fals
 
 
 // Dynamo の JSON から内部用 JSON リストに成形
-function modeling(state, response) {
+function modeling(response) {
     var response_data = response.csv_datas;
-    // console.log(response)
 
     var result = [];
     var rows = [];
     var count = 0;
     var labels = OUTPUT_LABELS['screen']['#file']
-    // console.log(labels)
 
     response_data.forEach(data => {
         var col = {};
         col['#'] = ++count;
-        // console.log(data)
         for (var value in data) {
             col[value] = data[value]
-            // console.log(col)
         }
-
         col = swapColumns(col, labels)  // 列を指定ラベル順に変更
-
         rows.push(col);
-
     });
 
-    // console.log(rows)
     result.items = rows;
     result.is_process = response.is_process;
     result.is_folder_path = response.is_folder_path;

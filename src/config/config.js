@@ -1,4 +1,7 @@
 const react_app_env = process.env.REACT_APP_ENV || 'dev';
+// AWS 環境
+var REGION = ''
+
 // Cognito Identity Pool ID
 var IDENTITY_POOL_ID = ''
 var ACCOUNT_ID = ''
@@ -16,11 +19,15 @@ var PROTOCOL = ''
 // グループ情報取得API
 var GET_GROUPS_URL = ''
 
+// 汎用検索API
+var GET_PERMISSION_URL = ''
+
 // CSVダウンロード実行タスク確認API
 var GET_CSV_TASKS_URL = ''
 
 if (react_app_env === "prod") {
-    IDENTITY_POOL_ID = 'ap-northeast-1:fe11ba82-e9f9-4481-b370-8eb53729fc29'
+    REGION = 'ap-northeast-1'
+    IDENTITY_POOL_ID = `${REGION}:fe11ba82-e9f9-4481-b370-8eb53729fc29`
     ACCOUNT_ID = '498191950326'
     ADMIN_GROUP_ID = '269ec94e-7c5f-48b6-a541-1a34b08208a0'
     MNG_GROUP_ID = 'd5b80467-c8b5-4edc-a714-45c30e86fbee'
@@ -28,11 +35,13 @@ if (react_app_env === "prod") {
     DIRECTORY_ID = 'dd866e13-f8b7-4585-bb47-be0efba1c006'
     APPLICATION_ID = '7adcb600-5dfd-422e-8df0-0f33363bd19c'
     PROTOCOL = 'oauth2/v2.0'
-    GET_GROUPS_URL = "https://g37zf38yj5.execute-api.ap-northeast-1.amazonaws.com/prod/"
-    GET_CSV_TASKS_URL = "https://fj0y0qtqe2.execute-api.ap-northeast-1.amazonaws.com/prod"
+    GET_GROUPS_URL = `https://g37zf38yj5.execute-api.${REGION}.amazonaws.com/prod/`
+    GET_PERMISSION_URL = `https://.execute-api.${REGION}.amazonaws.com/prod`
+    GET_CSV_TASKS_URL = `https://fj0y0qtqe2.execute-api.${REGION}.amazonaws.com/prod`
 
 } else if (react_app_env === "dev") {
-    IDENTITY_POOL_ID = 'ap-northeast-1:9cd11c18-7668-4ea3-8427-40a8aed8ec94'
+    REGION = 'ap-northeast-1'
+    IDENTITY_POOL_ID = `${REGION}:9cd11c18-7668-4ea3-8427-40a8aed8ec94`
     ACCOUNT_ID = '707439530427'
     ADMIN_GROUP_ID = '86c759da-6918-4d19-8931-2cfa5f8f6ec7'
     MNG_GROUP_ID = 'a746a5b4-795b-4d5a-8d2b-4559b92d9bf4'
@@ -40,16 +49,19 @@ if (react_app_env === "prod") {
     DIRECTORY_ID = '8a08112f-92e8-43fe-9a0a-56d393b9f042'
     APPLICATION_ID = '3a0aef16-07ab-4f88-8122-4114b7c496a1'
     PROTOCOL = 'oauth2/v2.0'
-    GET_GROUPS_URL = "https://stp3h4k946.execute-api.ap-northeast-1.amazonaws.com/develop/"
-    GET_CSV_TASKS_URL = "https://fj0y0qtqe2.execute-api.ap-northeast-1.amazonaws.com/prod"
+    GET_GROUPS_URL = `https://stp3h4k946.execute-api.${REGION}.amazonaws.com/develop/`
+    GET_PERMISSION_URL = `https://k8bto0c6d5.execute-api.${REGION}.amazonaws.com/prototype/`
+    GET_CSV_TASKS_URL = `https://fj0y0qtqe2.execute-api.${REGION}.amazonaws.com/prod`
 }
 
 export {
+    REGION,
     IDENTITY_POOL_ID,
     ACCOUNT_ID,
     ADMIN_GROUP_ID,
     MNG_GROUP_ID,
     GET_GROUPS_URL,
+    GET_PERMISSION_URL,
     GET_CSV_TASKS_URL
 }
 
@@ -151,4 +163,7 @@ export const ROLE_NAME = {
 export const ROLE_ORDER = ["administrator", "manager"]
 
 // ロール付与グループ一覧
-export const ROLES = {"administrator":ADMIN_GROUP_ID, "manager":MNG_GROUP_ID}
+export const ROLES = {
+    "administrator": ADMIN_GROUP_ID,
+    "manager": MNG_GROUP_ID
+}

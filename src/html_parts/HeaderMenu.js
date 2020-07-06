@@ -9,16 +9,14 @@ import logo from '../static/image/header_img.png';
 const cookies = new Cookies();
 
 /**
- * 
+ * ヘッダーメニュを管理する。ログインに関するフラグの管理も担当し、他からのアクセス影響を受けない。
  * @module HeaderMenu
  */
 class HeaderMenu extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
-            show_dialog: false,
-            timeout: false
+            show_dialog: false
         }
     }
 
@@ -29,8 +27,7 @@ class HeaderMenu extends React.Component {
     onClickLogin(e) {
         if (this.props.login_state.is_logged_in === true) {
             this.setState({ show_dialog: !this.state.show_dialog })
-        }
-        else {
+        } else {
             let nonce = Math.random().toString(36).slice(-8);
             cookies.set('nonce', nonce, { path: '/' });
             document.location = LOGIN_URI + nonce;
@@ -38,8 +35,7 @@ class HeaderMenu extends React.Component {
     }
 
     /**
-     * 
-     * @return {XXX} XXX
+     * ヘッダーメニューを作成する。ログインフラグに応じて、ボタン内部を変更する。
      */
     render() {
         // hash を各要素に分割
@@ -66,20 +62,14 @@ class HeaderMenu extends React.Component {
 
         // ダイアログ用のハンドラ
         const handleClose = () => this.setState({ show_dialog: false });
-        // // 一定期間操作が無ければダイアログを表示し、ログアウト
-        // if (this.props.login_state.is_logged_in === true && this.state.show_dialog === false)
-        //     setTimeout(handleShow, 30000000);
 
         return (
             <Navbar>
                 <Navbar.Brand href="#home" className="mr-auto">
-                    <img
-                        src={logo}
-                        className="d-inline-block align-top"
-                        alt="Company Logo." />
+                    <img src={logo} className="d-inline-block align-top" alt="Company Logo." />
                 </Navbar.Brand>
                 <form className="form-inline my-2 my-lg-0">
-                    {this.props.login_state.login_user}{(this.props.login_state.user_role) && ("(" + ROLE_NAME[this.props.login_state.user_role] + ")")}
+                    {this.props.login_state.login_user}{(this.props.login_state.user_role) && (`(${ROLE_NAME[this.props.login_state.user_role]})`)}
                     <Button variant="outline-primary" onClick={(e) => this.onClickLogin(e)}>
                         {
                             // ログインしていなければログイン、ログインしていればログアウトを表示
@@ -91,7 +81,6 @@ class HeaderMenu extends React.Component {
                         logout_flag={this.state.show_dialog}
                         handleClose={handleClose}
                     />
-
                 </form>
             </Navbar>
         );
