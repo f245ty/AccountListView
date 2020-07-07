@@ -21,8 +21,8 @@ class SearchArea extends React.Component {
         this.props.onChangeLocationFlg();
     }
 
-    handleChangeShowDialog = () => {
-        this.props.onChangeShowDialog();
+    handleChangeShowDialog = (dialog_text) => {
+        this.props.onChangeShowDialog(dialog_text);
     }
 
     handleChangeTableItems = (tableItems) => {

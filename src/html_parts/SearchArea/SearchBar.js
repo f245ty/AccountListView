@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { MENU_ITEMS } from '../../config/config'
+import { ID_TOKEN_ERR, LOGIN  } from '../../config/message'
 import Dialog from '../Dialog';
 import isAccessTokenEnable from '../../function/isAccessTokenEnable'
 import getCSVTasks from '../../function/getCSVTasks';
@@ -26,19 +27,19 @@ class Searchbar extends React.Component {
             this.setState({ loading: true })
             if (hash === "#file") {
                 getCSVTasks(this.props.login_state.searchText, this.props.login_state, true).then((tableItems) => {
-                    this.props.handleChangeTableItems(tableItems);
+                    this.handleChangeTableItems(tableItems);
                     this.setState({ loading: false })
                 })
             } else {
                 fetchData(this.props.login_state.page, searchType, this.props.login_state).then((tableItems) => {
-                    this.props.handleChangeTableItems(tableItems)
+                    this.handleChangeTableItems(tableItems)
                     this.setState({ loading: false })
                 });
             }
             this.props.handleChangeLocationFlg();
         } else {
             console.log("id_token error.")
-            this.props.handleChangeShowDialog();
+            this.handleChangeShowDialog();
             this.cookies.remove('jwt');
         }
         event.preventDefault();
@@ -50,6 +51,10 @@ class Searchbar extends React.Component {
 
     handleChangeRows = (event) => {
         this.props.handleChangeRows(event);
+    }
+
+    handleChangeShowDialog = () => {
+        this.props.handleChangeShowDialog(ID_TOKEN_ERR + LOGIN);
     }
 
     handleChangeTableItems = (tableItems) => {
@@ -74,7 +79,7 @@ class Searchbar extends React.Component {
                         {(this.props.location.hash === "#file") && (
                             <Form.Control
                                 className="rounded-right"
-                                defaultValue={this.props.login_state.searchText}
+                                value={this.props.login_state.searchText}
                                 placeholder="完全一致検索を行います。"
                                 type="text"
                                 required
@@ -85,14 +90,14 @@ class Searchbar extends React.Component {
                             <>
                                 <Form.Control
                                     className="rounded-right"
-                                    defaultValue={this.props.login_state.searchText}
+                                    value={this.props.login_state.searchText}
                                     placeholder="前方一致検索を行います。"
                                     type="text"
                                     required
                                     onChange={(e) => { this.handleChangeText(e); }}
                                 />
                                 <InputGroup.Append className="mx-3">
-                                    <Form.Control as="select" defaultValue={this.props.login_state.rowsParPage} onChange={e => { this.handleChangeRows(e); }}>
+                                    <Form.Control as="select" value={this.props.login_state.rowsParPage} onChange={e => { this.handleChangeRows(e); }}>
                                         {options}
                                     </Form.Control>
                                 </InputGroup.Append>
@@ -102,23 +107,15 @@ class Searchbar extends React.Component {
                             <>
                                 <Form.Control
                                     className="rounded-right"
-                                    defaultValue={
-                                        this.props.login_state.user_role === "administrator"
-                                            ? this.props.login_state.searchText
-                                            : undefined
-                                    }
-                                    value={
-                                        this.props.login_state.user_role === "manager"
-                                            ? this.props.login_state.searchText
-                                            : undefined
-                                    }
+                                    value={this.props.login_state.searchText}
                                     placeholder="前方一致検索を行います。"
                                     type="text"
                                     required
+                                    readOnly={this.props.login_state.user_role === "manager"}
                                     onChange={(e) => { this.handleChangeText(e); }}
                                 />
                                 <InputGroup.Append className="mx-3">
-                                    <Form.Control as="select" defaultValue={this.props.login_state.rowsParPage} onChange={e => { this.handleChangeRows(e); }}>
+                                    <Form.Control as="select" value={this.props.login_state.rowsParPage} onChange={e => { this.handleChangeRows(e); }}>
                                         {options}
                                     </Form.Control>
                                 </InputGroup.Append>
@@ -128,23 +125,15 @@ class Searchbar extends React.Component {
                             <>
                                 <Form.Control
                                     className="rounded-right"
-                                    defaultValue={
-                                        this.props.login_state.user_role === "administrator"
-                                            ? this.props.login_state.searchText
-                                            : undefined
-                                    }
-                                    value={
-                                        this.props.login_state.user_role === "manager"
-                                            ? this.props.login_state.searchText
-                                            : undefined
-                                    }
+                                    value={this.props.login_state.searchText}
                                     placeholder="前方一致検索を行います。"
                                     type="text"
                                     required
+                                    readOnly={this.props.login_state.user_role === "manager"}
                                     onChange={(e) => { this.handleChangeText(e); }}
                                 />
                                 <InputGroup.Append className="mx-3">
-                                    <Form.Control as="select" defaultValue={this.props.login_state.rowsParPage} onChange={e => { this.handleChangeRows(e); }}>
+                                    <Form.Control as="select" value={this.props.login_state.rowsParPage} onChange={e => { this.handleChangeRows(e); }}>
                                         {options}
                                     </Form.Control>
                                 </InputGroup.Append>

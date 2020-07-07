@@ -24,7 +24,12 @@ import {
     ROLES,
     ROLE_ORDER
 } from './config/config';
-import { ERR_WAIT_MSG, LOGIN_ERR } from './config/message';
+import {
+    ERR_WAIT_MSG,
+    ID_TOKEN_ERR,
+    LOGIN,
+    LOGIN_ERR
+} from './config/message';
 import './static/css/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -39,27 +44,28 @@ class App extends React.Component {
         super(props);
         console.log('page loaded')
         this.state = {
-            client_config: {},      // AWS系の認証情報を格納
-            datetime: "",           // データ更新日を格納
-            error: null,            // エラーモーダル表示判定用
-            id_token: null,         // AD発行トークン情報格納
-            is_folder_path: "",     // #fileにおけるフォルダ検索結果可能
-            is_logged_in: false,    // ログイン判定用
-            is_process: false,      // #fileにおける実行中タスク有無判定用
-            items: [],              // tableに表示するアイテム群
-            loading: false,         // ロードモーダル表示判定用
-            location_flag: false,   // 検索実行判定用
-            login_account: null,    // ログインメールアドレス
-            login_user: null,       // ログインユーザ名
-            order: "asc",           // テーブル表示ソート条件
-            page: 1,                // テーブル表示スタート番号
-            pages: null,            // テーブル表示最終番号
-            rowsParPage: 10,        // テーブル表示行数
-            searchText: '',         // 検索値
-            show_dialog: false,     // ベースモーダル表示判定用
-            sort: {},               // テーブル表示ソートカラム名
-            total: null,            // テーブル表示合計行数
-            user_role: null,        // ログインユーザADロール
+            client_config: {},                      // AWS系の認証情報を格納
+            datetime: "",                           // データ更新日を格納
+            dialog_text: LOGIN_ERR + ERR_WAIT_MSG,  // モーダル表示メッセージ
+            error: null,                            // エラーモーダル表示判定用
+            id_token: null,                         // AD発行トークン情報格納
+            is_folder_path: "",                     // #fileにおけるフォルダ検索結果可能
+            is_logged_in: false,                    // ログイン判定用
+            is_process: false,                      // #fileにおける実行中タスク有無判定用
+            items: [],                              // tableに表示するアイテム群
+            loading: false,                         // ロードモーダル表示判定用
+            location_flag: false,                   // 検索実行判定用
+            login_account: null,                    // ログインメールアドレス
+            login_user: null,                       // ログインユーザ名
+            order: "asc",                           // テーブル表示ソート条件
+            page: 1,                                // テーブル表示スタート番号
+            pages: null,                            // テーブル表示最終番号
+            rowsParPage: 10,                        // テーブル表示行数
+            searchText: '',                         // 検索値
+            show_dialog: false,                     // ベースモーダル表示判定用
+            sort: {},                               // テーブル表示ソートカラム名
+            total: null,                            // テーブル表示合計行数
+            user_role: null,                        // ログインユーザADロール
         }
         this.cookies = new Cookies();
     }
@@ -110,7 +116,7 @@ class App extends React.Component {
                 if (err) {
                     console.log('can not get CognitIdentity')
                     console.log(err, err.stack); // an error occurred
-                    this.setState({ show_dialog: true })
+                    this.onChangeShowDialog(LOGIN_ERR + ERR_WAIT_MSG)
                     this.setLogout()
                 } else {
                     let p = {
@@ -123,7 +129,7 @@ class App extends React.Component {
                                 console.log('can not get Credential')
                                 console.log(err, err.stack);
                                 console.log(id_token_jwt)
-                                this.setState({ show_dialog: true })
+                                this.onChangeShowDialog(LOGIN_ERR + ERR_WAIT_MSG)
                                 this.setLogout()
                             } else {
                                 var config = {
@@ -171,7 +177,7 @@ class App extends React.Component {
             })
             console.log('login sequence')
         } catch {
-            this.setState({ show_dialog: true })
+            this.onChangeShowDialog(LOGIN_ERR + ERR_WAIT_MSG)
         }
         console.log(this.state)
     }
@@ -261,8 +267,11 @@ class App extends React.Component {
         this.setState({ location_flag: false })
     }
 
-    onChangeShowDialog = () => {
-        this.setState({ show_dialog: !this.state.show_dialog })
+    onChangeShowDialog = (dialog_text) => {
+        this.setState({
+            show_dialog: true,
+            dialog_text: dialog_text
+        })
     }
 
     onChangeTableItems = (tableItems) => {
@@ -281,7 +290,7 @@ class App extends React.Component {
             console.log("get csv_tasks.")
         } else {
             console.log("id_token error.")
-            this.setState({ show_dialog: !this.state.show_dialog });
+            this.onChangeShowDialog(ID_TOKEN_ERR + LOGIN)
             this.cookies.remove('jwt');
         }
     }
@@ -353,10 +362,9 @@ class App extends React.Component {
                     {/* ダイアログ表示 */}
                     <Dialog
                         show={this.state.show_dialog}
-                        text={LOGIN_ERR + ERR_WAIT_MSG}
+                        text={this.state.dialog_text}
                         logout_flag={true}
                         err_flag={true}
-                    // handleClose={handleClose}
                     />
                 </BrowserRouter>
             </div>
