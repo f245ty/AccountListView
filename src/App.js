@@ -261,6 +261,10 @@ class App extends React.Component {
         this.setState({ location_flag: false })
     }
 
+    onChangeShowDialog = () => {
+        this.setState({ show_dialog: !this.state.show_dialog })
+    }
+
     onChangeTableItems = (tableItems) => {
         Object.keys(tableItems).forEach(key => {
             this.setState({ [key]: tableItems[key] });
@@ -336,6 +340,7 @@ class App extends React.Component {
                                                     onChangeText={this.onChangeText}
                                                     onChangeRows={this.onChangeRows}
                                                     onChangeTableItems={this.onChangeTableItems}
+                                                    onChangeShowDialog={this.onChangeShowDialog}
                                                     onChangeLocationFlg={this.onChangeLocationFlg}
                                                 />
                                             </Col>

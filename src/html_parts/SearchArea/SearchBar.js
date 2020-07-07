@@ -13,8 +13,7 @@ class Searchbar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
-            show_dialog: false
+            loading: false
         }
         this.maxPageValue = 100
         this.cookies = new Cookies()
@@ -39,7 +38,7 @@ class Searchbar extends React.Component {
             this.props.handleChangeLocationFlg();
         } else {
             console.log("id_token error.")
-            this.setState({ show_dialog: !this.state.show_dialog });
+            this.props.handleChangeShowDialog();
             this.cookies.remove('jwt');
         }
         event.preventDefault();

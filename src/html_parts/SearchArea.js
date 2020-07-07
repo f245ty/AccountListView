@@ -21,6 +21,10 @@ class SearchArea extends React.Component {
         this.props.onChangeLocationFlg();
     }
 
+    handleChangeShowDialog = () => {
+        this.props.onChangeShowDialog();
+    }
+
     handleChangeTableItems = (tableItems) => {
         this.props.onChangeTableItems(tableItems);
     }
@@ -34,6 +38,7 @@ class SearchArea extends React.Component {
                     handleChangeText={this.handleChangeText}
                     handleChangeRows={this.handleChangeRows}
                     handleChangeLocationFlg={this.handleChangeLocationFlg}
+                    handleChangeShowDialog={this.handleChangeShowDialog}
                     handleChangeTableItems={this.handleChangeTableItems}
                 />
                 <SystemMessage
