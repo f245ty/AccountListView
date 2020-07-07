@@ -51,7 +51,7 @@ if (react_app_env === "prod") {
     PROTOCOL = 'oauth2/v2.0'
     GET_GROUPS_URL = `https://stp3h4k946.execute-api.${REGION}.amazonaws.com/develop/`
     GET_PERMISSION_URL = `https://k8bto0c6d5.execute-api.${REGION}.amazonaws.com/prototype/`
-    GET_CSV_TASKS_URL = `https://fj0y0qtqe2.execute-api.${REGION}.amazonaws.com/prod`
+    GET_CSV_TASKS_URL = `https://fj0y0qtqe2.execute-api.${REGION}.amazonaws.com/dev`
 }
 
 export {

@@ -19,12 +19,13 @@ async function getCSVTasks(searchText, login_state, post_flag=false) {
     var apigClient = apigClientFactory.newClient(login_state.client_config);
     var pathParams = {};
     var pathTemplate = '';
+    var additionalParams = {};
+    var body = {};
     var method = 'GET';
-    if (post_flag) method = 'POST';
-    var additionalParams = {
-        queryParams: localstate
+    if (post_flag) {
+        method = 'POST';
+        body = localstate
     }
-    var body = {}
     console.log(localstate)
 
     return apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
