@@ -14,10 +14,8 @@ class CreateCSV extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            client_config: props.client_config,
             loading: false
         };
-        this.old_data = {};
     }
 
     /**
@@ -33,7 +31,7 @@ class CreateCSV extends React.Component {
             // ダウンロード完了後の処理を定義する
             let bom = new Uint8Array([0xEF, 0xBB, 0xBF]); // UTF-8
             let blob = new Blob([bom, xhr.response], { type: 'text/csv' });
-            let f_name = MENU_ITEMS[this.props.user_role]['#' + data.type][1] + "_" + this.getDate() + '.csv';
+            let f_name = MENU_ITEMS[this.props.login_state.user_role]['#' + data.type][1] + "_" + this.getDate() + '.csv';
             if (window.navigator.msSaveBlob) {
                 // IEとEdge
                 window.navigator.msSaveBlob(blob, f_name);
@@ -75,18 +73,14 @@ class CreateCSV extends React.Component {
      * @param {XXX} e XXX
      */
     onLoding(e) {
-
+        let searchType = this.props.location.hash.replace("#", "")
         // csv出力
-        var state = this.props.query;
-        // this.props.handleLoading()
         this.setState({ loading: true })
 
         // 全件取得　row=0のとき
-        fetchData(
-            state,
-            this.state.client_config,
-            true
-        ).then(this.onReceiveUrl);
+        fetchData(this.props.login_state.page, searchType, this.props.login_state, true).then((tableItems) => {
+            this.onReceiveUrl(tableItems)
+        });
         e.preventDefault();
     }
 
