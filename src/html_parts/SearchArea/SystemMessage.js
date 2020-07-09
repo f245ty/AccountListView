@@ -2,7 +2,6 @@ import React from 'react';
 import Dialog from '../Dialog'
 import {
     ATTENTION_MSG,
-    CSV_TTL,
     ERR_WAIT_MSG,
     EXECUTION_MSG,
     EXPLANATION,
@@ -36,7 +35,7 @@ class SystemMessage extends React.Component {
                             <br />
                             {this.props.location.hash === "#folder" ? SEARCH_CONDITION_FOLDER
                                 :
-                                this.props.location.hash === "#file" ? CSV_TTL
+                                this.props.location.hash === "#file" ? null
                                     : SEARCH_CONDITION}
                         </p>
                     )
@@ -48,8 +47,6 @@ class SystemMessage extends React.Component {
                             ? this.props.login_state.is_folder_path === undefined
                                 ? <p>
                                     {EXPLANATION["file"]}
-                                    <br />
-                                    {CSV_TTL}
                                     <br />
                                 </p>
                                 : <p>
@@ -85,8 +82,6 @@ class SystemMessage extends React.Component {
                                                 :
                                                 null}
                                             {EXPLANATION["file"]}
-                                            <br />
-                                            {CSV_TTL}
                                             <br />
                                             <br />
                                             <span className="text-danger">{ATTENTION_MSG} {ERR_WAIT_MSG}</span>
