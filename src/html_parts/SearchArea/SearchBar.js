@@ -10,6 +10,8 @@ import isAccessTokenEnable from '../../function/isAccessTokenEnable'
 import getCSVTasks from '../../function/getCSVTasks';
 import fetchData from '../../function/fetchData';
 
+var cookies = new Cookies()
+
 class Searchbar extends React.Component {
     constructor(props) {
         super(props);
@@ -17,7 +19,6 @@ class Searchbar extends React.Component {
             loading: false
         }
         this.maxPageValue = 100
-        this.cookies = new Cookies()
     }
 
     onClickSearch = (event, hash, searchText) => {
@@ -40,7 +41,7 @@ class Searchbar extends React.Component {
         } else {
             console.log("id_token error.")
             this.handleChangeShowDialog();
-            this.cookies.remove('jwt');
+            cookies.remove('jwt');
         }
         event.preventDefault();
     }
