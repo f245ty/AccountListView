@@ -25,6 +25,9 @@ var GET_PERMISSION_URL = ''
 // CSVダウンロード実行タスク確認API
 var GET_CSV_TASKS_URL = ''
 
+// CSVダウンロード実行タスクのダウンロードリンクから署名付きURLを取得するAPI
+var GET_S3_URL = ''
+
 if (react_app_env === "prod") {
     REGION = 'ap-northeast-1'
     IDENTITY_POOL_ID = `${REGION}:fe11ba82-e9f9-4481-b370-8eb53729fc29`
@@ -38,7 +41,7 @@ if (react_app_env === "prod") {
     GET_GROUPS_URL = `https://g37zf38yj5.execute-api.${REGION}.amazonaws.com/prod`
     GET_PERMISSION_URL = `https://uuy7k5gfqb.execute-api.${REGION}.amazonaws.com/prod/`
     GET_CSV_TASKS_URL = `https://wxq147i7n1.execute-api.${REGION}.amazonaws.com/prod`
-
+    GET_S3_URL = ``
 } else if (react_app_env === "dev") {
     REGION = 'ap-northeast-1'
     IDENTITY_POOL_ID = `${REGION}:9cd11c18-7668-4ea3-8427-40a8aed8ec94`
@@ -52,6 +55,7 @@ if (react_app_env === "prod") {
     GET_GROUPS_URL = `https://stp3h4k946.execute-api.${REGION}.amazonaws.com/develop`
     GET_PERMISSION_URL = `https://k8bto0c6d5.execute-api.${REGION}.amazonaws.com/prototype/`
     GET_CSV_TASKS_URL = `https://fj0y0qtqe2.execute-api.${REGION}.amazonaws.com/dev`
+    GET_S3_URL = `https://bwz2s1u3kc.execute-api.${REGION}.amazonaws.com/dev`
 }
 
 export {
@@ -62,7 +66,8 @@ export {
     MNG_GROUP_ID,
     GET_GROUPS_URL,
     GET_PERMISSION_URL,
-    GET_CSV_TASKS_URL
+    GET_CSV_TASKS_URL,
+    GET_S3_URL
 }
 
 // common
