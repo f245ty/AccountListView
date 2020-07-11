@@ -3,8 +3,8 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import Dialog from './Dialog';
-import { LOGIN_URI, ROLE_NAME } from '../config/config'
-import logo from '../static/image/header_img.png';
+import { LOGIN_URI, ROLE_NAME } from '../config/config';
+import logo from '../assets/images/header_img.png';
 
 const cookies = new Cookies();
 
