@@ -3,8 +3,8 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import Dialog from './Dialog';
-import { LOGIN_URI, ROLE_NAME } from '../config/config'
-import logo from '../static/image/header_img.png';
+import { LOGIN_URI, ROLE_NAME } from '../config/config';
+import logo from '../assets/images/header_img.png';
 
 const cookies = new Cookies();
 
@@ -35,6 +35,11 @@ class HeaderMenu extends React.Component {
     }
 
     /**
+     * ダイアログ用のハンドラ
+     */
+    handleClose = () => this.setState({ show_dialog: false });
+
+    /**
      * ヘッダーメニューを作成する。ログインフラグに応じて、ボタン内部を変更する。
      */
     render() {
@@ -60,9 +65,6 @@ class HeaderMenu extends React.Component {
             document.location = "/"
         }
 
-        // ダイアログ用のハンドラ
-        const handleClose = () => this.setState({ show_dialog: false });
-
         return (
             <Navbar>
                 <Navbar.Brand href="#home" className="mr-auto">
@@ -79,7 +81,7 @@ class HeaderMenu extends React.Component {
                     <Dialog
                         show={this.state.show_dialog}
                         logout_flag={this.state.show_dialog}
-                        handleClose={handleClose}
+                        handleClose={this.handleClose}
                     />
                 </form>
             </Navbar>

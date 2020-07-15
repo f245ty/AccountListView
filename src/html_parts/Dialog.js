@@ -35,12 +35,23 @@ class Dialog extends React.Component {
 			<Modal id='dialog' show={this.props.show} backdrop={'static'}>
 				<Modal.Header>
 					{/* メッセージをflagで制御 */}
-					{this.props.err_flag ? <Modal.Title className="text-danger">{M.ERR_MSG}</Modal.Title>
-						: (this.props.logout_flag ? <Modal.Title>{M.LOGOUT}</Modal.Title> : null)}
-					{this.props.search_flag ? <Modal.Title>{M.SEARCH_MSG}</Modal.Title> : null}
+					{this.props.err_flag
+						? <Modal.Title className="text-danger">{M.ERR_MSG}</Modal.Title>
+						: this.props.logout_flag
+							? <Modal.Title>{M.LOGOUT}</Modal.Title>
+							: null
+					}
+					{this.props.search_flag
+						? <Modal.Title>{M.SEARCH_MSG}</Modal.Title>
+						: null
+					}
+					{this.props.csv_flag
+						? <Modal.Title>{M.CSV_HEADER}</Modal.Title>
+						: null
+					}
 				</Modal.Header>
-				{this.props.search_flag ?
-					(<Modal.Body>
+				{this.props.search_flag
+					? <Modal.Body>
 						<div className="text-center">
 						{/* //ローディングアイコン */}
 						<br />
@@ -48,27 +59,27 @@ class Dialog extends React.Component {
 						<p>Loading...</p>
 						{this.props.search_flag ? <div>{M.WAIT_MSG}</div> : null}
 						</div>
-					</Modal.Body>)
+					</Modal.Body>
 					: null
 				}
-				{this.props.text ?
-					(<Modal.Body>
+				{this.props.text
+					? <Modal.Body>
 						{this.props.text}
-					</Modal.Body>)
+					</Modal.Body>
 					: null
 				}
 				<Modal.Footer>
-					{this.props.search_flag ?
-						null :
-						(this.props.err_flag && this.props.logout_flag) ?
-						null :
-						<Button variant="secondary" onClick={(e) => this.props.handleClose()}>
-							✕ 閉じる
-						</Button>
+					{this.props.search_flag
+						? null
+						: (this.props.err_flag && this.props.logout_flag)
+							? null
+							:<Button variant="secondary" onClick={(e) => this.props.handleClose()}>
+								✕ 閉じる
+							</Button>
 					}
-					{this.props.logout_flag ?
-						<Button variant="primary" onClick={(e) => this.goLoginPage(e)} >
-						{M.LOGIN_PAGE}
+					{this.props.logout_flag
+						? <Button variant="primary" onClick={(e) => this.goLoginPage(e)} >
+							{M.LOGIN_PAGE}
 						</Button>
 						: null
 					}

@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 import AWS from 'aws-sdk';
 import jwt from 'jsonwebtoken';
 import Cookies from 'universal-cookie';
@@ -30,7 +29,7 @@ import {
     LOGIN,
     LOGIN_ERR
 } from './config/message';
-import './static/css/App.css';
+import './assets/styles/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;

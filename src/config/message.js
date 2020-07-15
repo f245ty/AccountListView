@@ -12,7 +12,8 @@ export const LOGIN_ERR = 'ログインに失敗しました。'
 export const ERR_WAIT_MSG = 'しばらく時間を置いてから試してください。または、システム管理者にお問い合わせください。'
 
 // CSV
-export const CSV_LOADING = 'CSVファイルをダウンロード中です。\nページを閉じると、ダウンロードができません。'
+export const CSV_HEADER = 'CSVファイルをダウンロード中'
+export const CSV_LOADING = 'ページを閉じてもダウンロードは実行し続けます。'
 export const DOWNLOAD = 'ダウンロードが終了しました。'
 
 // 検索

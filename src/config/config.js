@@ -25,6 +25,9 @@ var GET_PERMISSION_URL = ''
 // CSVダウンロード実行タスク確認API
 var GET_CSV_TASKS_URL = ''
 
+// CSVダウンロード実行タスクのダウンロードリンクから署名付きURLを取得するAPI
+var GET_S3_URL = ''
+
 if (react_app_env === "prod") {
     REGION = 'ap-northeast-1'
     IDENTITY_POOL_ID = `${REGION}:fe11ba82-e9f9-4481-b370-8eb53729fc29`
@@ -35,10 +38,10 @@ if (react_app_env === "prod") {
     DIRECTORY_ID = 'dd866e13-f8b7-4585-bb47-be0efba1c006'
     APPLICATION_ID = '7adcb600-5dfd-422e-8df0-0f33363bd19c'
     PROTOCOL = 'oauth2/v2.0'
-    GET_GROUPS_URL = `https://g37zf38yj5.execute-api.${REGION}.amazonaws.com/prod/`
+    GET_GROUPS_URL = `https://g37zf38yj5.execute-api.${REGION}.amazonaws.com/prod`
     GET_PERMISSION_URL = `https://uuy7k5gfqb.execute-api.${REGION}.amazonaws.com/prod/`
     GET_CSV_TASKS_URL = `https://wxq147i7n1.execute-api.${REGION}.amazonaws.com/prod`
-
+    GET_S3_URL = ``
 } else if (react_app_env === "dev") {
     REGION = 'ap-northeast-1'
     IDENTITY_POOL_ID = `${REGION}:9cd11c18-7668-4ea3-8427-40a8aed8ec94`
@@ -49,9 +52,10 @@ if (react_app_env === "prod") {
     DIRECTORY_ID = '8a08112f-92e8-43fe-9a0a-56d393b9f042'
     APPLICATION_ID = '3a0aef16-07ab-4f88-8122-4114b7c496a1'
     PROTOCOL = 'oauth2/v2.0'
-    GET_GROUPS_URL = `https://stp3h4k946.execute-api.${REGION}.amazonaws.com/develop/`
+    GET_GROUPS_URL = `https://stp3h4k946.execute-api.${REGION}.amazonaws.com/develop`
     GET_PERMISSION_URL = `https://k8bto0c6d5.execute-api.${REGION}.amazonaws.com/prototype/`
     GET_CSV_TASKS_URL = `https://fj0y0qtqe2.execute-api.${REGION}.amazonaws.com/dev`
+    GET_S3_URL = `https://bwz2s1u3kc.execute-api.${REGION}.amazonaws.com/dev`
 }
 
 export {
@@ -62,7 +66,8 @@ export {
     MNG_GROUP_ID,
     GET_GROUPS_URL,
     GET_PERMISSION_URL,
-    GET_CSV_TASKS_URL
+    GET_CSV_TASKS_URL,
+    GET_S3_URL
 }
 
 // common
@@ -130,10 +135,11 @@ export const OUTPUT_LABELS = {
 
 // 実行ステータスラベル
 export const STATUS_LABEL = {
-    0 : "処理中",
-    1 : "処理中",
-    2 : "完了",
-    3 : "失敗"
+    0: "処理中",
+    1: "処理中",
+    2: "完了",
+    3: "失敗",
+    4: "失敗"
 }
 
 // 1ページあたりのページ数のデフォルト
