@@ -21,12 +21,12 @@ async function getS3Url(filename, login_state) {
     };
     var body = {};
     var method = 'GET';
-    console.log(pathParams)
+    console.log(additionalParams)
 
     return apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
         .then(function (response) {
             console.log('API Gateway Response')
-            console.log(response.data.s3_url)
+            console.log(`Response S3 URL: ${response.data.s3_url}`)
             return response.data.s3_url
 
         }).catch(function (response) {
