@@ -4,13 +4,16 @@ import TableBody from './SearchResultTable/TableBody'
 import TableHeader from './SearchResultTable/TableHeader'
 import TablePagination from './SearchResultTable/TablePagination'
 import Dialog from '../Dialog';
-import { CSV_LOADING } from '../../config/message';
+import { CSV_ERR, CSV_LOADING } from '../../config/message';
 
 class SearchResultTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false
+            csv_flag: true,     // CSVダウンロード実行中判定
+            err_flag: false,    // エラーモーダル表示判定用
+            loading: false,     // ロードモーダル表示判定用
+            text: ""            // モーダルに表示する内容
         }
     }
 
@@ -19,7 +22,20 @@ class SearchResultTable extends React.Component {
     }
 
     onChangeLoading = (flag) => {
-        this.setState({ loading: flag })
+        this.setState({
+            csv_flag: true,
+            err_flag: false,
+            loading: flag,
+            text: CSV_LOADING
+        })
+    }
+
+    onChangeError = () => {
+        this.setState({
+            csv_flag: false,
+            err_flag: true,
+            text: CSV_ERR
+        })
     }
 
     /**
@@ -54,12 +70,14 @@ class SearchResultTable extends React.Component {
                                 location={this.props.location}
                                 handleChangeTableItems={this.handleChangeTableItems}
                                 onChangeLoading={this.onChangeLoading}
+                                onChangeError={this.onChangeError}
                             />
                         </Table>
                         <Dialog
                             show={this.state.loading}
-                            csv_flag={true}
-                            text={CSV_LOADING}
+                            csv_flag={this.state.csv_flag}
+                            err_flag={this.state.err_flag}
+                            text={this.state.text}
                             handleClose={this.handleClose}
                         />
                     </div>
