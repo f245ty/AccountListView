@@ -41,7 +41,7 @@ if (react_app_env === "prod") {
     GET_GROUPS_URL = `https://g37zf38yj5.execute-api.${REGION}.amazonaws.com/prod`
     GET_PERMISSION_URL = `https://uuy7k5gfqb.execute-api.${REGION}.amazonaws.com/prod/`
     GET_CSV_TASKS_URL = `https://wxq147i7n1.execute-api.${REGION}.amazonaws.com/prod`
-    GET_S3_URL = ``
+    GET_S3_URL = `https://navhbhki2d.execute-api.${REGION}.amazonaws.com/prod`
 } else if (react_app_env === "dev") {
     REGION = 'ap-northeast-1'
     IDENTITY_POOL_ID = `${REGION}:9cd11c18-7668-4ea3-8427-40a8aed8ec94`
