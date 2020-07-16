@@ -2,6 +2,7 @@ import React from 'react';
 import Cookies from 'universal-cookie';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { LOGOUT_URI } from '../config/config';
 import * as M from '../config/message';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -23,7 +24,7 @@ class Dialog extends React.Component {
 	 */
 	goLoginPage(e) {
 		cookies.remove('jwt');
-		document.location = '/';
+		document.location = LOGOUT_URI;
 	}
 
 	/**
