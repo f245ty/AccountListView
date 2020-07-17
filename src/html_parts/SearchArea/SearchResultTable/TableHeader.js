@@ -11,10 +11,10 @@ class TableHeader extends React.Component {
     onClick = (col, e) => {
         let searchType = this.props.location.hash.replace("#", "")
         var sort = this.props.login_state.sort; // 表示中のソートキー
-        var order =  this.props.login_state.order; // 表示中のオーダー
+        var order = this.props.login_state.order; // 表示中のオーダー
 
         // クリックされた列のキーが同じならソート順序を変える
-        order = col === sort ? ((order === "asc") ? "desc" : "asc" ) : "asc";
+        order = col === sort ? ((order === "asc") ? "desc" : "asc") : "asc";
 
         var state = this.props.login_state;
         state.sort = col;
@@ -24,7 +24,7 @@ class TableHeader extends React.Component {
             this.props.login_state.page, searchType, state).then((tableItems) => {
                 this.props.handleChangeTableItems(tableItems)
             }
-        );
+            );
     }
 
     render() {
@@ -36,12 +36,12 @@ class TableHeader extends React.Component {
             <thead>
                 <tr>
                     {Object.keys(row).map((col, index) => (
-                        <th className="res_header"
+                        <th className={this.props.location.hash === "#file" ? "disable" : "res_header"}
                             key={index}
-                            onClick={e => { if (this.props.location_hash !== "#file" && col !== "#") this.onClick(col, e); }} >
+                            onClick={e => { if (this.props.location.hash !== "#file" && col !== "#") this.onClick(col, e); }} >
                             {HEADER_LABEL[col]}
-                            {sort_key === col && order === "asc" ? " ▲":""}
-                            {sort_key === col && order === "desc" ? " ▼":""}
+                            {sort_key === col && order === "asc" ? " ▲" : ""}
+                            {sort_key === col && order === "desc" ? " ▼" : ""}
                         </th>
                     ))}
                 </tr>

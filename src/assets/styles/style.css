@@ -94,6 +94,13 @@ cursor: pointer;
 text-decoration: none;
 }
 
+.disable{
+  background-color: firebrick;
+  color: white;
+  font-size: 10px;
+  pointer-events: none;
+}
+
 table {
   text-align: center;
   font-size: 10px;
@@ -123,3 +130,5 @@ table {
 menuitem {
   margin-top: 25px;
 }
+
+

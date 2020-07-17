@@ -27,8 +27,9 @@ export const EXPLANATION = {
 }
 export const SEARCH_CONDITION = "指定できるメールアドレスは、１つだけです。"
 export const SEARCH_CONDITION_FOLDER = "先頭に「/」を含むフォルダパスを指定してください。"
-export const EXECUTION_MSG = "「処理中」の実行ステータスがあるため、新たに実行できません。「処理中」の実行ステータスがなくなってから、再実行してください。"
+export const EXECUTION_MSG = "の実行ステータスがあるため、ダウンロードを開始できません。実行ステータスが「完了」になるまで、しばらくお待ちください。"
 export const ATTENTION_MSG = "※ 実行ステータスが「失敗」の場合、システムエラーが発生しています。"
+export const FILE_ENDING_MSG = "正常終了中です。"
 
 // 検索結果0件のメッセージ
 export const NO_DATA_MSG = "該当するデータが見つかりませんでした。"

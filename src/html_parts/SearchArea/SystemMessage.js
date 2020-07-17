@@ -10,6 +10,7 @@ import {
     SEARCH_CONDITION_FOLDER,
     NOT_FIND_FOLDER_PATH
 } from '../../config/message';
+import {STATUS_LABEL} from '../../config/config';
 
 class SystemMessage extends React.Component {
     constructor(props) {
@@ -77,8 +78,8 @@ class SystemMessage extends React.Component {
                                         :
                                         <p>
                                             {this.props.login_state.is_process
-                                                ?
-                                                <span>{EXECUTION_MSG} <br /><br /></span>
+                                                ? 
+                                                <span>「{STATUS_LABEL[this.props.login_state.items[0]['process_state']]}」{EXECUTION_MSG} <br /><br /></span>
                                                 :
                                                 null}
                                             {EXPLANATION["file"]}

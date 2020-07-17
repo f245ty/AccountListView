@@ -263,7 +263,7 @@ class App extends React.Component {
     }
 
     onChangeLocationFlg = () => {
-        this.setState({ location_flag: false })
+        this.setState({ location_flag: false, })
     }
 
     onChangeShowDialog = (dialog_text) => {
@@ -303,7 +303,8 @@ class App extends React.Component {
             searchText: updateSearchText,
             rowsParPage: DEFAULT_ROWS_PAR_PAGE,
             items: [],
-            location_flag: true
+            location_flag: true,
+            sort: {}
         })
         if (hash === "#file") {
             this.onGetCsvTasks(updateSearchText)
