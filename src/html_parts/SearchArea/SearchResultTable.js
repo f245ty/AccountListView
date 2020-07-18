@@ -4,7 +4,7 @@ import TableBody from './SearchResultTable/TableBody'
 import TableHeader from './SearchResultTable/TableHeader'
 import TablePagination from './SearchResultTable/TablePagination'
 import Dialog from '../Dialog';
-import { CSV_ERR, CSV_LOADING } from '../../config/message';
+import { CSV_ERR, CSV_LOADING, ID_TOKEN_ERR, LOGIN } from '../../config/message';
 
 class SearchResultTable extends React.Component {
     constructor(props) {
@@ -19,6 +19,10 @@ class SearchResultTable extends React.Component {
 
     handleChangeTableItems = (tableItems) => {
         this.props.handleChangeTableItems(tableItems);
+    }
+
+    handleChangeShowDialog = () => {
+        this.props.handleChangeShowDialog(ID_TOKEN_ERR + LOGIN);
     }
 
     onChangeLoading = (flag) => {
@@ -69,6 +73,7 @@ class SearchResultTable extends React.Component {
                                 login_state={this.props.login_state}
                                 location={this.props.location}
                                 handleChangeTableItems={this.handleChangeTableItems}
+                                handleChangeShowDialog={this.handleChangeShowDialog}
                                 onChangeLoading={this.onChangeLoading}
                                 onChangeError={this.onChangeError}
                             />

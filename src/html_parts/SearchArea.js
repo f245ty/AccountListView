@@ -50,6 +50,7 @@ class SearchArea extends React.Component {
                         login_state={this.props.login_state}
                         location={this.props.location}
                         handleChangeTableItems={this.handleChangeTableItems}
+                        handleChangeShowDialog={this.handleChangeShowDialog}
                     />
                 </div>
             </>
