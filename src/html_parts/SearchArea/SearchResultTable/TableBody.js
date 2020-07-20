@@ -69,10 +69,11 @@ class TableBody extends React.Component {
                         {Object.keys(row).map((col, index) => {
                             return (
                                 <td key={index}
-                                    className={col.indexOf('p_') === 0 || col === '#' || col === 'create_at' || col === 'csv_ttl' || col === 'process_state' || col === 'download_ln'
-                                        ? "text-center"
-                                        : "text-left"}
-                                    className={STATUS_LABEL[row[col]] === "失敗" ? "text-danger" :null}>
+                                    className={col === 'process_state' && STATUS_LABEL[row[col]] === "失敗" ? "text-center text-danger"
+                                        : col.indexOf('p_') === 0 || col === '#' || col === 'create_at' || col === 'csv_ttl' || col === 'process_state' || col === 'download_ln'
+                                            ? "text-center"
+                                            : "text-left"}
+                                >
                                     {col === 'download_ln'
                                         ?
                                         <a href="#file" role="button" onClick={(event) => this.onClickDownloadLn(event, row[col].split(".com/")[1])}>
