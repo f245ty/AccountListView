@@ -50,25 +50,12 @@
 
 | 成果物（ファイル/フォルダ） | コマンド/アクション | 編集有無 |
 | :--- | :--- | :---: |
-| lib/apiGatewayCore | AWS API Gateway SDKの生成 |  |
-| lib/axios | AWS API Gateway SDKの生成 |  |
-| lib/CryptoJS | AWS API Gateway SDKの生成 |  |
-| lib/url-template | AWS API Gateway SDKの生成 |  |
-| apigClient.js | AWS API Gateway SDKの生成 |  |
-| API_GATEWAY_README.md | AWS API Gateway SDKの生成 | ◯ |
 | assets/styles/App.css | `npm init react-app project名`による生成 | ◯ |
 | App.js | `npm init react-app project名`による生成 | ◯ |
 | App.test.js | `npm init react-app project名`による生成 |  |
-| assets/styles/index.css | `npm init react-app project名`による生成 | ◯ |
-| index.js | `npm init react-app project名`による生成 |  |
+| index.js | `npm init react-app project名`による生成 | ◯ |
 | serviceWorker.js | `npm init react-app project名`による生成 |  |
 | setupTests.js | `npm init react-app project名`による生成 |  |
-
-### API_GATEWAY_README.md
-
-`AWS API Gateway SDKの生成`による生成では、`README.md`で出力される。  
-名前が競合することから、当タイトルの用に編集する。  
-また、理解不能なmarkdown書式を利用しているため、一部編集しているが内容の編集はないため、明記しない。
 
 ### assets/styles/App.css
 
@@ -83,7 +70,6 @@
 従って、App.jsはページを構成するUI部品⇒`コンポーネント`を定義する場所。  
 この`App.js`から子コンポーネントを呼び出し、本プロジェクトのページを作成している。
 
-### assets/styles/index.css
+### index.js
 
-コマンド実行で出力された場合、`./index.css`となるが、管理体制を統一するために`./assets/styles`へ移動させている。  
-本プロジェクトでは、コールされない。
+`App.css` のパスが変更されるため、合わせて修正する。
