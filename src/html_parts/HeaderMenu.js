@@ -5,6 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Dialog from './Dialog';
 import { LOGIN_URI, ROLE_NAME } from '../config/config';
 import logo from '../assets/images/header_img.png';
+import logo_dev from '../assets/images/header_img_dev.png'
 
 const cookies = new Cookies();
 
@@ -68,7 +69,10 @@ class HeaderMenu extends React.Component {
         return (
             <Navbar>
                 <Navbar.Brand href="#home" className="mr-auto">
-                    <img src={logo} className="d-inline-block align-top" alt="Company Logo." />
+                    {process.env.REACT_APP_ENV === 'dev'
+                        ? <img src={logo_dev} className="d-inline-block align-top" alt="Company Logo." />
+                        : <img src={logo} className="d-inline-block align-top" alt="Company Logo." />
+                    }
                 </Navbar.Brand>
                 <form className="form-inline my-2 my-lg-0">
                     {this.props.login_state.login_user}{(this.props.login_state.user_role) && (`(${ROLE_NAME[this.props.login_state.user_role]})`)}
