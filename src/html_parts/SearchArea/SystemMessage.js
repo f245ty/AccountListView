@@ -85,7 +85,7 @@ class SystemMessage extends React.Component {
                                             {EXPLANATION["file"]}
                                             <br />
                                             <br />
-                                            <span className="text-danger">{ATTENTION_MSG} {ERR_WAIT_MSG}</span>
+                                            <span>{ATTENTION_MSG} {ERR_WAIT_MSG}</span>
                                         </p>
                                     }
                                 </div>

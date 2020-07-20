@@ -71,7 +71,8 @@ class TableBody extends React.Component {
                                 <td key={index}
                                     className={col.indexOf('p_') === 0 || col === '#' || col === 'create_at' || col === 'csv_ttl' || col === 'process_state' || col === 'download_ln'
                                         ? "text-center"
-                                        : "text-left"}>
+                                        : "text-left"}
+                                    className={STATUS_LABEL[row[col]] === "失敗" ? "text-danger" :null}>
                                     {col === 'download_ln'
                                         ?
                                         <a href="#file" role="button" onClick={(event) => this.onClickDownloadLn(event, row[col].split(".com/")[1])}>
