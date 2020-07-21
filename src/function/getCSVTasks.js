@@ -67,6 +67,7 @@ function modeling(response) {
     result.items = rows;
     result.is_process = response.is_process;
     result.is_folder_path = response.is_folder_path;
+    result.is_search_permission = response.is_search_permission
     return result
 
 }

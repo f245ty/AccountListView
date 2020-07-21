@@ -27,6 +27,7 @@ export const SEARCH_CONDITION = "指定できるメールアドレスは、１�
 export const SEARCH_CONDITION_FOLDER = "先頭に「/」を含むフォルダパスを指定してください。"
 export const EXECUTION_MSG = "の実行ステータスがあるため、ダウンロードを開始できません。実行ステータスが「完了」になるまで、しばらくお待ちください。"
 export const ATTENTION_MSG = "※ 実行ステータスが「失敗」の場合、システムエラーが発生しています。"
+export const FILE_VALIDATION_MSG = "少なくともルートフォルダ直下のフォルダから指定してください。"
 
 // 検索結果0件のメッセージ
 export const NO_DATA_MSG = "該当するデータが見つかりませんでした。"

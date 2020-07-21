@@ -8,9 +8,10 @@ import {
     NO_DATA_MSG,
     SEARCH_CONDITION,
     SEARCH_CONDITION_FOLDER,
-    NOT_FIND_FOLDER_PATH
+    NOT_FIND_FOLDER_PATH,
+    FILE_VALIDATION_MSG
 } from '../../config/message';
-import {STATUS_LABEL} from '../../config/config';
+import { STATUS_LABEL } from '../../config/config';
 
 class SystemMessage extends React.Component {
     constructor(props) {
@@ -42,7 +43,7 @@ class SystemMessage extends React.Component {
                     )
                 }
                 {// 検索して結果が0件の時は 結果がないと表示する
-                // ファイル情報集計機能に初期遷移時は、実行タスクが0件でも初期表示する
+                    // ファイル情報集計機能に初期遷移時は、実行タスクが0件でも初期表示する
                     (!this.props.login_state.location_flag) && (this.props.login_state.items.length === 0) && (
                         this.props.location.hash === "#file"
                             ? this.props.login_state.is_folder_path === undefined
@@ -65,32 +66,31 @@ class SystemMessage extends React.Component {
                 }
                 {// 表示行数が0行の時は表示しない
                     (!this.props.login_state.location_flag) && (this.props.login_state.items.length !== 0) && (
-                        <div>
+                        <div className="text-left">
                             {this.props.location.hash === "#file"
-                                ? <div className="text-left">
-                                    {this.props.login_state.is_folder_path === false
-                                        ?
-                                        <p>
-                                            {NOT_FIND_FOLDER_PATH}
+                                ?
+                                <div>
+                                    {(this.props.login_state.is_search_permission === false) && (FILE_VALIDATION_MSG)}
+                                    {(this.props.login_state.is_folder_path === false) && (NOT_FIND_FOLDER_PATH)}
+                                    {(this.props.login_state.is_search_permission === false || this.props.login_state.is_folder_path === false) && (
+                                        <div>
                                             <br />
                                             <br />
-                                        </p>
-                                        :
-                                        <p>
-                                            {this.props.login_state.is_process
-                                                ? 
+                                        </div>
+                                    )}
+                                    {(this.props.login_state.is_search_permission !== false && this.props.login_state.is_folder_path !== false) && (
+                                        <div>
+                                            {(this.props.login_state.is_process === true) && (
                                                 <span>「{STATUS_LABEL[this.props.login_state.items[0]['process_state']]}」{EXECUTION_MSG} <br /><br /></span>
-                                                :
-                                                null}
+                                            )}
                                             {EXPLANATION["file"]}
-                                            <br />
+                                            < br />
                                             <br />
                                             <span>{ATTENTION_MSG} {ERR_WAIT_MSG}</span>
-                                        </p>
-                                    }
+                                        </div>
+                                    )}
                                 </div>
-                                : null
-                            }
+                                : null}
                         </div>
                     )
                 }

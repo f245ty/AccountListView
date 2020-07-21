@@ -51,6 +51,7 @@ class App extends React.Component {
             is_folder_path: "",                     // #fileにおけるフォルダ検索結果可能
             is_logged_in: false,                    // ログイン判定用
             is_process: false,                      // #fileにおける実行中タスク有無判定用
+            is_search_permission: true,            // #fileにおける検索許可フラグ
             items: [],                              // tableに表示するアイテム群
             loading: false,                         // ロードモーダル表示判定用
             location_flag: false,                   // 検索実行判定用
@@ -266,6 +267,10 @@ class App extends React.Component {
         this.setState({ location_flag: false, })
     }
 
+    onChangeSystemMsg = () => {
+        this.setState({ is_search_permission: false })
+    }
+
     onChangeShowDialog = (dialog_text) => {
         this.setState({
             show_dialog: true,
@@ -348,6 +353,7 @@ class App extends React.Component {
                                                     client_config={this.state.client_config}
                                                     onChangeText={this.onChangeText}
                                                     onChangeRows={this.onChangeRows}
+                                                    onChangeSystemMsg={this.onChangeSystemMsg}
                                                     onChangeTableItems={this.onChangeTableItems}
                                                     onChangeShowDialog={this.onChangeShowDialog}
                                                     onChangeLocationFlg={this.onChangeLocationFlg}

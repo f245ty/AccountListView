@@ -21,6 +21,10 @@ class SearchArea extends React.Component {
         this.props.onChangeLocationFlg();
     }
 
+    handleChangeSystemMsg = () => {
+        this.props.onChangeSystemMsg();
+    }
+
     handleChangeShowDialog = (dialog_text) => {
         this.props.onChangeShowDialog(dialog_text);
     }
@@ -40,6 +44,7 @@ class SearchArea extends React.Component {
                     handleChangeLocationFlg={this.handleChangeLocationFlg}
                     handleChangeShowDialog={this.handleChangeShowDialog}
                     handleChangeTableItems={this.handleChangeTableItems}
+                    handleChangeSystemMsg={this.handleChangeSystemMsg}
                 />
                 <SystemMessage
                     login_state={this.props.login_state}

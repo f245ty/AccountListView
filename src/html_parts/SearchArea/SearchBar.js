@@ -3,8 +3,8 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-import { MENU_ITEMS } from '../../config/config'
-import { ID_TOKEN_ERR, LOGIN  } from '../../config/message'
+import { MENU_ITEMS, FILE_VALIDATION_PATH } from '../../config/config'
+import { ID_TOKEN_ERR, LOGIN } from '../../config/message'
 import Dialog from '../Dialog';
 import isAccessTokenEnable from '../../function/isAccessTokenEnable'
 import getCSVTasks from '../../function/getCSVTasks';
@@ -27,10 +27,16 @@ class Searchbar extends React.Component {
             console.log('search state')
             this.setState({ loading: true })
             if (hash === "#file") {
-                getCSVTasks(this.props.login_state.searchText, this.props.login_state, true).then((tableItems) => {
-                    this.handleChangeTableItems(tableItems);
+                if (this.isValidateFolderPath(this.props.login_state.searchText)) {
+                    getCSVTasks(this.props.login_state.searchText, this.props.login_state, true).then((tableItems) => {
+                        this.handleChangeTableItems(tableItems);
+                        this.setState({ loading: false })
+                    })
+                } else {
+                    console.log(this.props.login_state.searchText, " validated.")
                     this.setState({ loading: false })
-                })
+                    this.handleChangeSystemMsg();
+                }
             } else {
                 fetchData(this.props.login_state.page, searchType, this.props.login_state).then((tableItems) => {
                     this.handleChangeTableItems(tableItems)
@@ -44,6 +50,15 @@ class Searchbar extends React.Component {
             cookies.remove('jwt');
         }
         event.preventDefault();
+    }
+
+    isValidateFolderPath = (path) => {
+        if (path === FILE_VALIDATION_PATH) return false
+        else return true
+    }
+
+    handleChangeSystemMsg = () => {
+        this.props.handleChangeSystemMsg();
     }
 
     handleChangeText = (event) => {
