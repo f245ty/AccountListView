@@ -157,7 +157,7 @@ class Searchbar extends React.Component {
                         )}
                         <InputGroup.Append>
                             <Button className="rounded-left" type="submit" disabled={this.props.location.hash === "#file" && this.props.login_state.is_process}>
-                                <i className={this.props.location.hash === "#file" ? "fas fa-download" : "fa fa-search"}></i> {this.props.location.hash === "#file" ? "ダウンロード" : "検索"}
+                                CSV作成
                             </Button>
                         </InputGroup.Append>
                     </InputGroup>

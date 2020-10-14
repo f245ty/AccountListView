@@ -13,15 +13,16 @@ export const ERR_WAIT_MSG = 'しばらく時間を置いてから試してくだ
 // CSV
 export const CSV_HEADER = 'CSVファイルをダウンロード中'
 export const CSV_LOADING = 'ページを閉じてもダウンロードは実行し続けます。'
+export const CSV_RETENSION_PERIOD = 'CSV保管期間は１０日間です。'
 
 // 検索
-export const SEARCH_MSG = '検索中です。'
+export const SEARCH_MSG = 'CSV作成受付中です。'
 export const WAIT_MSG = '※しばらく時間がかかることがあります。'
 export const EXPLANATION = {
-    "owner": "指定したユーザが管理権限を持つフォルダの一覧と、それらのフォルダを利用できるユーザの一覧を表示します。",
-    "user": "指定したユーザが利用できるフォルダの一覧と、それらのフォルダを利用できるユーザの一覧を表示します。",
-    "folder": "指定したフォルダおよびすべてのサブフォルダの一覧と、各フォルダを利用できるユーザの一覧を表示します。",
-    "file": "現在の指定フォルダ（例：/S20001_〇〇工事/〇〇工事）に含まれているファイル数、サイズを集計します。サイズについては、Windows上のサイズと異なる場合があります。CSV保管期間は１０日間です。"
+    "owner": "指定したユーザが管理権限を持つフォルダの一覧と、それらのフォルダを利用できるユーザの一覧CSVを作成します。",
+    "user": "指定したユーザが利用できるフォルダの一覧CSVを作成します。",
+    "folder": "指定したフォルダおよびすべてのサブフォルダの一覧と、各フォルダを利用できるユーザの一覧CSVを作成します。",
+    "file": "現在の指定フォルダ（例：/S20001_〇〇工事/〇〇工事）に含まれているファイル数、サイズを集計します。サイズについては、Windows上のサイズと異なる場合があります。" + CSV_RETENSION_PERIOD
 }
 export const SEARCH_CONDITION = "指定できるメールアドレスは、１つだけです。"
 export const SEARCH_CONDITION_FOLDER = "先頭に「/」を含むフォルダパスを指定してください。"
@@ -32,3 +33,6 @@ export const FILE_VALIDATION_MSG = "「/」だけでは、検索対象が広す�
 // 検索結果0件のメッセージ
 export const NO_DATA_MSG = "該当するデータが見つかりませんでした。"
 export const NOT_FIND_FOLDER_PATH = "該当するフォルダパスが見つかりませんでした。"
+
+// メール通知
+export const MAIL_NOTIFICATION_MSG = "CSV作成完了後、メールにて通知を行います。"

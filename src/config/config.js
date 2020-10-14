@@ -88,7 +88,7 @@ export const MENU_ITEMS = {
 // 日本語ヘッダーを定義
 export const HEADER_LABEL = {
     "#": "#",
-    "user_email": "ユーザメールアドレス",
+    "user_email": "実行ユーザ",
     "user_name": "ユーザ名",
     "folder_path": "フォルダパス",
     "permission": "権限",
@@ -101,27 +101,29 @@ export const HEADER_LABEL = {
     "p_notify_ul": "アップロード通知",
     "p_notify_dl": "ダウンロード通知",
     "p_owner": "フォルダ所有権",
-    "create_at": "ダウンロード実行日時",
+    "create_at": "検索実行日時",
     "csv_ttl": "CSV保管期間",
     "download_ln": "ダウンロードリンク",
     "process_state": "実行ステータス",
+    "search_email": "フォルダ管理者",
 }
 
 // 表示ラベルの順番、ラベルの表示、非表示の設定
-const PERMISSION_LABELS = ['p_view', 'p_upload', 'p_download', 'p_delete', 'p_admin']
+// const PERMISSION_LABELS = ['p_view', 'p_upload', 'p_download', 'p_delete', 'p_admin']
 const PERMISSION_LABELS_CSV = ['p_view', 'p_upload', 'p_download', 'p_delete', 'p_admin']
-const OWNER_LABELS = ['#', 'owner_name', 'folder_path', 'user_email', 'user_name']
+// const OWNER_LABELS = ['#', 'owner_name', 'folder_path', 'user_email', 'user_name']
 const OWNER_LABELS_CSV = ['#', 'folder_path', 'owner_name', 'user_email', 'user_name']
-const USER_LABELS = ['#', 'folder_path', 'owner_name']
+// const USER_LABELS = ['#', 'folder_path', 'owner_name']
 const USER_LABELS_CSV = ['#', 'folder_path', 'owner_name']
-const FOLDER_LABELS = ['#', 'folder_path', 'owner_name']
+// const FOLDER_LABELS = ['#', 'folder_path', 'owner_name']
 const FOLDER_LABELS_CSV = ['#', 'folder_path', 'owner_name']
-const FILE_LABELS = ['#', 'folder_path', 'user_email', 'create_at', 'csv_ttl', 'process_state', 'download_ln']
+const FILE_LABELS = ['#', 'folder_path', 'create_at', 'csv_ttl', 'process_state', 'download_ln']
+const MAIL_ADD_LABELS = ['#', 'search_email', 'create_at', 'csv_ttl', 'process_state', 'download_ln']
 export const OUTPUT_LABELS = {
     "screen": {
-        "#owner": OWNER_LABELS.concat(PERMISSION_LABELS),
-        "#user": USER_LABELS.concat(PERMISSION_LABELS),
-        "#folder": FOLDER_LABELS.concat(PERMISSION_LABELS),
+        "#owner": MAIL_ADD_LABELS,
+        "#user": MAIL_ADD_LABELS,
+        "#folder": FILE_LABELS,
         "#file": FILE_LABELS
     },
     "csv": {

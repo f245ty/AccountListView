@@ -9,7 +9,9 @@ import {
     SEARCH_CONDITION,
     SEARCH_CONDITION_FOLDER,
     NOT_FIND_FOLDER_PATH,
-    FILE_VALIDATION_MSG
+    FILE_VALIDATION_MSG,
+    CSV_RETENSION_PERIOD,
+    MAIL_NOTIFICATION_MSG
 } from '../../config/message';
 import { STATUS_LABEL } from '../../config/config';
 
@@ -67,6 +69,14 @@ class SystemMessage extends React.Component {
                 {// 表示行数が0行の時は表示しない
                     (!this.props.login_state.location_flag) && (this.props.login_state.items.length !== 0) && (
                         <div className="text-left">
+                            {this.props.location.hash !== "#file"
+                                ?
+                                <div>
+                                    {MAIL_NOTIFICATION_MSG}
+                                    {CSV_RETENSION_PERIOD}
+                                </div>
+                                : null}
+
                             {this.props.location.hash === "#file"
                                 ?
                                 <div>

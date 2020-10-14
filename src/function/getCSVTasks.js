@@ -9,7 +9,7 @@ AWS.config.credentials = new AWS.CognitoIdentityCredentials({
     IdentityPoolId: IDENTITY_POOL_ID
 });
 
-async function getCSVTasks(searchText, login_state, post_flag=false) {
+async function getCSVTasks(searchText, login_state, post_flag = false) {
 
     var localstate = {}
     localstate["folder_path"] = searchText
@@ -68,6 +68,7 @@ function modeling(response) {
     result.is_process = response.is_process;
     result.is_folder_path = response.is_folder_path;
     result.is_search_permission = response.is_search_permission
+    // console.log(Object.keys(result.items).length)
     return result
 
 }

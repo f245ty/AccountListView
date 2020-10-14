@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import Pagination from 'react-bootstrap/Pagination';
 import fetchData from '../../../function/fetchData';
-import CreateCSV from '../../../html_parts/CreateCSV';
+// import CreateCSV from '../../../html_parts/CreateCSV';
 
 class TablePagination extends React.Component {
     constructor(props) {
@@ -17,7 +17,7 @@ class TablePagination extends React.Component {
     handlePage(num) {
         let searchType = this.props.location.hash.replace("#", "")
 
-        // APIを叩いて、画面を更新する
+        // テーブル表示するデータを変更し、画面を更新する
         fetchData(num, searchType, this.props.login_state).then((tableItems) => {
             this.props.handleChangeTableItems(tableItems)
         });
@@ -110,14 +110,14 @@ class TablePagination extends React.Component {
                 <Navbar.Text className="mr-auto">
                     <Pagination size="sm" className="text-center ailgn-items-center" >{items}</Pagination>
                 </Navbar.Text>
-                <Navbar.Text >
+                {/* <Navbar.Text >
                     データ更新日:{this.props.login_state.datetime} 検索結果:{this.props.login_state.total} 件
                 </Navbar.Text>
                 <CreateCSV
                     login_state={this.props.login_state}
                     location={this.props.location}
                     handleChangeTableItems={this.handleChangeTableItems}
-                />
+                /> */}
             </Navbar>
         );
     }

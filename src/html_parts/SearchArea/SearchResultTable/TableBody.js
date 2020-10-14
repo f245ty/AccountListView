@@ -56,7 +56,13 @@ class TableBody extends React.Component {
     onClickDownloadLn = (event, filename) => {
         event.preventDefault();
         this.props.onChangeLoading(true)
-        getS3Url(filename, this.props.login_state).then((s3_url) => {
+        let pj_name = ""
+        if (this.props.location === "#file") {
+            pj_name = "file in folder"
+        } else {
+            pj_name = "authority reference"
+        }
+        getS3Url(pj_name, filename, this.props.login_state).then((s3_url) => {
             this.csvDownload(filename, s3_url)
         })
     }
