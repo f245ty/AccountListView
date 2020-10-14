@@ -57,7 +57,7 @@ class TableBody extends React.Component {
         event.preventDefault();
         this.props.onChangeLoading(true)
         let pj_name = ""
-        if (this.props.location === "#file") {
+        if (this.props.location.hash === "#file") {
             pj_name = "file in folder"
         } else {
             pj_name = "authority reference"
