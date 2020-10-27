@@ -10,11 +10,11 @@ import Dialog from './html_parts/Dialog';
 import HeaderMenu from './html_parts/HeaderMenu';
 import SideMenu from './html_parts/SideMenu';
 import SearchArea from './html_parts/SearchArea'
-import isAccessTokenEnable from './function/isAccessTokenEnable'
+import isAccessTokenEnable from './function/isAccessTokenEnable';
+import filterTableItems from './function/filterTableItems';
 import getCSVTasks from './function/getCSVTasks';
 import {
     ACCOUNT_ID,
-    DEFAULT_ROWS_PAR_PAGE,
     GET_GROUPS_URL,
     IDENTITY_POOL_ID,
     LOGINS_SET_ID,
@@ -31,6 +31,7 @@ import {
 } from './config/message';
 import './assets/styles/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import fetchData from './function/fetchData';
 
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
 
@@ -51,20 +52,20 @@ class App extends React.Component {
             is_folder_path: "",                     // #fileにおけるフォルダ検索結果可能
             is_logged_in: false,                    // ログイン判定用
             is_process: false,                      // #fileにおける実行中タスク有無判定用
-            is_search_permission: true,            // #fileにおける検索許可フラグ
-            items: [],                              // tableに表示するアイテム群
+            is_search_permission: true,             // #fileにおける検索許可フラグ
+            is_search_result: false,                // #file以外の機能における検索結果フラグ
+            items: [],                              // APIで取得したアイテム群
+            tableItems: [],                         // tableに表示するアイテム群
             loading: false,                         // ロードモーダル表示判定用
             location_flag: false,                   // 検索実行判定用
             login_account: null,                    // ログインメールアドレス
             login_user: null,                       // ログインユーザ名
             order: "asc",                           // テーブル表示ソート条件
-            page: 1,                                // テーブル表示スタート番号
-            pages: null,                            // テーブル表示最終番号
-            rowsParPage: 10,                        // テーブル表示行数
+            page: 1,                                // テーブル表示ページ番号
+            pages: null,                            // テーブル表示最終ページ番号
             searchText: '',                         // 検索値
             show_dialog: false,                     // ベースモーダル表示判定用
             sort: {},                               // テーブル表示ソートカラム名
-            total: null,                            // テーブル表示合計行数
             user_role: null,                        // ログインユーザADロール
         }
         this.cookies = new Cookies();
@@ -259,12 +260,8 @@ class App extends React.Component {
         this.setState({ searchText: searchText });
     }
 
-    onChangeRows = (event) => {
-        this.setState({ rowsParPage: event.target.value });
-    }
-
     onChangeLocationFlg = () => {
-        this.setState({ location_flag: false, })
+        this.setState({ location_flag: false })
     }
 
     onChangeSystemMsg = () => {
@@ -278,18 +275,28 @@ class App extends React.Component {
         })
     }
 
-    onChangeTableItems = (tableItems) => {
-        Object.keys(tableItems).forEach(key => {
-            this.setState({ [key]: tableItems[key] });
+    onChangeTableItems = (state, num) => {
+        let tableItems = filterTableItems(state.items, num)
+        state.tableItems = tableItems
+        state.page = num
+        Object.keys(state).forEach(key => {
+            this.setState({ [key]: state[key] });
         })
+        // console.log(this.state)
     }
 
-    onGetCsvTasks = (updateSearchText) => {
+    onGetCsvTasks = (hash) => {
         console.log("will get csv tasks.")
         if (isAccessTokenEnable(this.state)) {
-            getCSVTasks(updateSearchText, this.state, false).then((tableItems) => {
-                this.onChangeTableItems(tableItems);
-            })
+            if (hash === "#file") {
+                getCSVTasks(hash, this.state, false).then((tableItems) => {
+                    this.onChangeTableItems(tableItems, this.state.page);
+                })
+            } else {
+                fetchData(hash, this.state, false).then((tableItems) => {
+                    this.onChangeTableItems(tableItems, this.state.page);
+                })
+            }
             this.onChangeLocationFlg();
             console.log("get csv_tasks.")
         } else {
@@ -306,15 +313,13 @@ class App extends React.Component {
         }
         this.setState({
             searchText: updateSearchText,
-            rowsParPage: DEFAULT_ROWS_PAR_PAGE,
+            page: 1,
             items: [],
             location_flag: true,
             sort: {}
         })
-        if (hash === "#file") {
-            this.onGetCsvTasks(updateSearchText)
-        }
-        console.log(`hash: ${hash}, updateSearchText: ${updateSearchText}`)
+        this.onGetCsvTasks(hash)
+        console.log(`hash: ${hash}, updateSearchText: ${this.searchText}`)
     }
 
     render() {
@@ -352,7 +357,6 @@ class App extends React.Component {
                                                     login_state={this.state}
                                                     client_config={this.state.client_config}
                                                     onChangeText={this.onChangeText}
-                                                    onChangeRows={this.onChangeRows}
                                                     onChangeSystemMsg={this.onChangeSystemMsg}
                                                     onChangeTableItems={this.onChangeTableItems}
                                                     onChangeShowDialog={this.onChangeShowDialog}

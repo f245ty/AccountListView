@@ -13,7 +13,7 @@ export const ERR_WAIT_MSG = 'しばらく時間を置いてから試してくだ
 // CSV
 export const CSV_HEADER = 'CSVファイルをダウンロード中'
 export const CSV_LOADING = 'ページを閉じてもダウンロードは実行し続けます。'
-export const CSV_RETENSION_PERIOD = 'CSV保管期間は１０日間です。'
+export const CSV_RETENSION_PERIOD = 'CSV保管期間は、約10日間です。'
 
 // 検索
 export const SEARCH_MSG = 'CSV作成受付中です。'
@@ -35,4 +35,4 @@ export const NO_DATA_MSG = "該当するデータが見つかりませんでし�
 export const NOT_FIND_FOLDER_PATH = "該当するフォルダパスが見つかりませんでした。"
 
 // メール通知
-export const MAIL_NOTIFICATION_MSG = "CSV作成完了後、メールにて通知を行います。"
+export const MAIL_NOTIFICATION_MSG = "一覧CSV作成を開始しました。作成完了は、ログインメールアドレスに通知されます。"

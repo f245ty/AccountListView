@@ -1,6 +1,6 @@
 import React from 'react';
-import fetchData from '../../../function/fetchData';
 import { HEADER_LABEL } from '../../../config/config'
+import sortTableItems from '../../../function/sortTableItems';
 
 class TableHeader extends React.Component {
     constructor(props) {
@@ -9,7 +9,6 @@ class TableHeader extends React.Component {
     }
 
     onClick = (col, e) => {
-        let searchType = this.props.location.hash.replace("#", "")
         var sort = this.props.login_state.sort; // 表示中のソートキー
         var order = this.props.login_state.order; // 表示中のオーダー
 
@@ -20,11 +19,9 @@ class TableHeader extends React.Component {
         state.sort = col;
         state.order = order;
 
-        fetchData(
-            this.props.login_state.page, searchType, state).then((tableItems) => {
-                this.props.handleChangeTableItems(tableItems)
-            }
-            );
+        let sortedTableItems = sortTableItems(this.props.login_state.items, col, order)
+        state.items = sortedTableItems
+        this.props.handleChangeTableItems(state, 1)
     }
 
     render() {
@@ -36,9 +33,9 @@ class TableHeader extends React.Component {
             <thead>
                 <tr>
                     {Object.keys(row).map((col, index) => (
-                        <th className={this.props.location.hash === "#file" ? "disable" : "res_header"}
+                        <th className={"res_header"}
                             key={index}
-                            onClick={e => { if (this.props.location.hash !== "#file" && col !== "#") this.onClick(col, e); }} >
+                            onClick={e => { if (col !== "#") this.onClick(col, e); }} >
                             {HEADER_LABEL[col]}
                             {sort_key === col && order === "asc" ? " ▲" : ""}
                             {sort_key === col && order === "desc" ? " ▼" : ""}

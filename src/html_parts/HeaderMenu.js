@@ -40,7 +40,7 @@ class HeaderMenu extends React.Component {
      */
     handleClose = () => this.setState({ show_dialog: false });
 
-    /**
+    /**D
      * ヘッダーメニューを作成する。ログインフラグに応じて、ボタン内部を変更する。
      */
     render() {

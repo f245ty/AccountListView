@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie';
 import React from 'react';
-import { STATUS_LABEL } from '../../../config/config';
+import { STATUS_LABEL, STATUS_LABEL_FILE } from '../../../config/config';
 import getS3Url from '../../../function/getS3Url';
 import isAccessTokenEnable from '../../../function/isAccessTokenEnable'
 
@@ -70,25 +70,34 @@ class TableBody extends React.Component {
     render() {
         return (
             <tbody>
-                {this.props.login_state.items.map((row, index) => (
+                {this.props.login_state.tableItems.map((row, index) => (
                     <tr key={index}>
                         {Object.keys(row).map((col, index) => {
                             return (
                                 <td key={index}
-                                    className={col === 'process_state' && STATUS_LABEL[row[col]] === "失敗" ? "text-center text-danger"
-                                        : col.indexOf('p_') === 0 || col === '#' || col === 'create_at' || col === 'csv_ttl' || col === 'process_state' || col === 'download_ln'
-                                            ? "text-center"
-                                            : "text-left"}
+                                    className={
+                                        // ステータスラベルの切り替え
+                                        "失敗" === (this.props.location.hash === "#file" ? STATUS_LABEL_FILE[row[col]] : STATUS_LABEL[row[col]])
+                                            && col === 'process_state'
+                                            ? "text-center text-danger"
+                                            : col === '#' || col === 'create_at' || col.match('ttl') || col === 'process_state' || col === 'download_ln'
+                                                ? "text-center"
+                                                : "text-left"}
                                 >
                                     {col === 'download_ln'
                                         ?
-                                        <a href="#file" role="button" onClick={(event) => this.onClickDownloadLn(event, row[col].split(".com/")[1])}>
+                                        <a href={this.props.location}
+                                            role="button"
+                                            onClick={(event) => this.onClickDownloadLn(event, row[col].split(".com/")[1])}
+                                        >
                                             {row[col].split(".com/")[1]}
                                         </a>
                                         :
                                         col === 'process_state'
                                             ?
-                                            STATUS_LABEL[row[col]]
+                                            this.props.location.hash === "#file"
+                                                ? STATUS_LABEL_FILE[row[col]]
+                                                : STATUS_LABEL[row[col]]
                                             :
                                             row[col]}
                                 </td>

@@ -13,10 +13,6 @@ class SearchArea extends React.Component {
         this.props.onChangeText(event);
     }
 
-    handleChangeRows = (event) => {
-        this.props.onChangeRows(event);
-    }
-
     handleChangeLocationFlg = () => {
         this.props.onChangeLocationFlg();
     }
@@ -29,8 +25,8 @@ class SearchArea extends React.Component {
         this.props.onChangeShowDialog(dialog_text);
     }
 
-    handleChangeTableItems = (tableItems) => {
-        this.props.onChangeTableItems(tableItems);
+    handleChangeTableItems = (tableItems, num) => {
+        this.props.onChangeTableItems(tableItems, num);
     }
 
     render() {
@@ -40,7 +36,6 @@ class SearchArea extends React.Component {
                     login_state={this.props.login_state}
                     location={this.props.location}
                     handleChangeText={this.handleChangeText}
-                    handleChangeRows={this.handleChangeRows}
                     handleChangeLocationFlg={this.handleChangeLocationFlg}
                     handleChangeShowDialog={this.handleChangeShowDialog}
                     handleChangeTableItems={this.handleChangeTableItems}
@@ -50,6 +45,7 @@ class SearchArea extends React.Component {
                     login_state={this.props.login_state}
                     location={this.props.location}
                 />
+                <br />
                 <div id="List">
                     <SearchResultTable
                         login_state={this.props.login_state}

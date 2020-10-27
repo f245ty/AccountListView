@@ -17,8 +17,8 @@ class SearchResultTable extends React.Component {
         }
     }
 
-    handleChangeTableItems = (tableItems) => {
-        this.props.handleChangeTableItems(tableItems);
+    handleChangeTableItems = (tableItems, num) => {
+        this.props.handleChangeTableItems(tableItems, num);
     }
 
     handleChangeShowDialog = () => {
@@ -54,15 +54,11 @@ class SearchResultTable extends React.Component {
             <>
                 {(this.props.login_state.items.length !== 0) && (
                     <div>
-                        {this.props.location.hash === "#file"
-                            ? null
-                            :
-                            <TablePagination
-                                login_state={this.props.login_state}
-                                location={this.props.location}
-                                handleChangeTableItems={this.handleChangeTableItems}
-                            />
-                        }
+                        <TablePagination
+                            login_state={this.props.login_state}
+                            location={this.props.location}
+                            handleChangeTableItems={this.handleChangeTableItems}
+                        />
                         <Table striped bordered hover id="res_table">
                             <TableHeader
                                 login_state={this.props.login_state}

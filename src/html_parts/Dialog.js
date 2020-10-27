@@ -13,9 +13,9 @@ const cookies = new Cookies();
  */
 class Dialog extends React.Component {
 	constructor(props) {
-        super(props);
-        this.state = {}
-    }
+		super(props);
+		this.state = {}
+	}
 
 	/**
 	 * 
@@ -24,6 +24,10 @@ class Dialog extends React.Component {
 	goLoginPage(e) {
 		cookies.remove('jwt');
 		document.location = '/';
+	}
+
+	handleClose = () => {
+		this.props.handleCloseDialog();
 	}
 
 	/**
@@ -53,11 +57,11 @@ class Dialog extends React.Component {
 				{this.props.search_flag
 					? <Modal.Body>
 						<div className="text-center">
-						{/* //ローディングアイコン */}
-						<br />
-						<p><i className="fa fa-refresh fa-spin fa-5x"></i></p>
-						<p>Loading...</p>
-						{this.props.search_flag ? <div>{M.WAIT_MSG}</div> : null}
+							{/* //ローディングアイコン */}
+							<br />
+							<p><i className="fa fa-refresh fa-spin fa-5x"></i></p>
+							<p>Loading...</p>
+							{this.props.search_flag ? <div>{M.WAIT_MSG}</div> : null}
 						</div>
 					</Modal.Body>
 					: null
@@ -73,7 +77,7 @@ class Dialog extends React.Component {
 						? null
 						: (this.props.err_flag && this.props.logout_flag)
 							? null
-							:<Button variant="secondary" onClick={(e) => this.props.handleClose()}>
+							: <Button variant="secondary" onClick={(e) => this.handleClose()}>
 								✕ 閉じる
 							</Button>
 					}

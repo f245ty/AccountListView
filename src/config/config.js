@@ -53,7 +53,7 @@ if (react_app_env === "prod") {
     APPLICATION_ID = '3a0aef16-07ab-4f88-8122-4114b7c496a1'
     PROTOCOL = 'oauth2/v2.0'
     GET_GROUPS_URL = `https://stp3h4k946.execute-api.${REGION}.amazonaws.com/develop`
-    GET_PERMISSION_URL = `https://k8bto0c6d5.execute-api.${REGION}.amazonaws.com/prototype/`
+    GET_PERMISSION_URL = `https://zmdn6x8rqd.execute-api.${REGION}.amazonaws.com/dev`
     GET_CSV_TASKS_URL = `https://fj0y0qtqe2.execute-api.${REGION}.amazonaws.com/dev`
     GET_S3_URL = `https://bwz2s1u3kc.execute-api.${REGION}.amazonaws.com/dev`
 }
@@ -89,58 +89,42 @@ export const MENU_ITEMS = {
 export const HEADER_LABEL = {
     "#": "#",
     "user_email": "実行ユーザ",
-    "user_name": "ユーザ名",
-    "folder_path": "フォルダパス",
-    "permission": "権限",
-    "owner_name": "フォルダ管理者名",
-    "p_view": "閲覧権限",
-    "p_download": "ダウンロード権限",
-    "p_upload": "アップロード権限",
-    "p_admin": "フォルダ管理権限",
-    "p_delete": "削除権限",
-    "p_notify_ul": "アップロード通知",
-    "p_notify_dl": "ダウンロード通知",
-    "p_owner": "フォルダ所有権",
-    "create_at": "検索実行日時",
+    "folder_path": "検索パス",
+    "create_at": "実行日時",
     "csv_ttl": "CSV保管期間",
+    "zip_ttl": "CSV保管期間",
     "download_ln": "ダウンロードリンク",
     "process_state": "実行ステータス",
-    "search_email": "フォルダ管理者",
+    // "search_email": "フォルダ管理者",
+    "search_condition": "検索パス"
 }
 
 // 表示ラベルの順番、ラベルの表示、非表示の設定
-// const PERMISSION_LABELS = ['p_view', 'p_upload', 'p_download', 'p_delete', 'p_admin']
-const PERMISSION_LABELS_CSV = ['p_view', 'p_upload', 'p_download', 'p_delete', 'p_admin']
-// const OWNER_LABELS = ['#', 'owner_name', 'folder_path', 'user_email', 'user_name']
-const OWNER_LABELS_CSV = ['#', 'folder_path', 'owner_name', 'user_email', 'user_name']
-// const USER_LABELS = ['#', 'folder_path', 'owner_name']
-const USER_LABELS_CSV = ['#', 'folder_path', 'owner_name']
-// const FOLDER_LABELS = ['#', 'folder_path', 'owner_name']
-const FOLDER_LABELS_CSV = ['#', 'folder_path', 'owner_name']
-const FILE_LABELS = ['#', 'folder_path', 'create_at', 'csv_ttl', 'process_state', 'download_ln']
-const MAIL_ADD_LABELS = ['#', 'search_email', 'create_at', 'csv_ttl', 'process_state', 'download_ln']
+const FILE_LABELS = ['#', 'folder_path', 'user_email', 'create_at', 'csv_ttl', 'process_state', 'download_ln']
+const PERMISSION_LABELS = ['#', 'search_condition', 'create_at', 'zip_ttl', 'process_state', 'download_ln']
 export const OUTPUT_LABELS = {
     "screen": {
-        "#owner": MAIL_ADD_LABELS,
-        "#user": MAIL_ADD_LABELS,
-        "#folder": FILE_LABELS,
+        "#owner": PERMISSION_LABELS,
+        "#user": PERMISSION_LABELS,
+        "#folder": PERMISSION_LABELS,
         "#file": FILE_LABELS
-    },
-    "csv": {
-        "#owner": OWNER_LABELS_CSV.concat(PERMISSION_LABELS_CSV),
-        "#user": USER_LABELS_CSV.concat(PERMISSION_LABELS_CSV),
-        "#folder": FOLDER_LABELS_CSV.concat(PERMISSION_LABELS_CSV)
     }
 }
 
 // 実行ステータスラベル
-export const STATUS_LABEL = {
+export const STATUS_LABEL_FILE = {
     0: "処理中",
     1: "CSV出力中",
     2: "正常終了中",
     3: "完了",
     4: "失敗",
     5: "失敗"
+}
+
+export const STATUS_LABEL = {
+    0: "CSV出力中",
+    1: "完了",
+    2: "失敗"
 }
 
 // 1ページあたりのページ数のデフォルト
