@@ -88,7 +88,7 @@ class Searchbar extends React.Component {
         this.props.handleChangeShowDialog(message);
     }
 
-    handleCloseDialog = () => {
+    handleClose = () => {
         this.setState({
             loading: false,
             search_flag: false,
@@ -166,7 +166,7 @@ class Searchbar extends React.Component {
                     search_flag={this.state.search_flag}
                     err_flag={this.state.err_flag}
                     text={this.state.text}
-                    handleCloseDialog={this.handleCloseDialog}
+                    handleClose={this.handleClose}
                 />
             </div>
         )

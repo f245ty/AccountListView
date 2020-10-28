@@ -53,7 +53,7 @@ class App extends React.Component {
             is_logged_in: false,                    // ログイン判定用
             is_process: false,                      // #fileにおける実行中タスク有無判定用
             is_search_permission: true,             // #fileにおける検索許可フラグ
-            is_search_result: false,                // #file以外の機能における検索結果フラグ
+            is_search_result: "",                // #file以外の機能における検索結果フラグ
             items: [],                              // APIで取得したアイテム群
             tableItems: [],                         // tableに表示するアイテム群
             loading: false,                         // ロードモーダル表示判定用
@@ -275,6 +275,10 @@ class App extends React.Component {
         })
     }
 
+    handleClose = () => {
+        this.setState({ show_dialog: false });
+    }
+
     onChangeTableItems = (state, num) => {
         let tableItems = filterTableItems(state.items, num)
         state.tableItems = tableItems
@@ -282,7 +286,6 @@ class App extends React.Component {
         Object.keys(state).forEach(key => {
             this.setState({ [key]: state[key] });
         })
-        // console.log(this.state)
     }
 
     onGetCsvTasks = (hash) => {
@@ -375,6 +378,7 @@ class App extends React.Component {
                         text={this.state.dialog_text}
                         logout_flag={true}
                         err_flag={true}
+                        handleClose={this.handleClose}
                     />
                 </BrowserRouter>
             </div>

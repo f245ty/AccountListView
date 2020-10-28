@@ -27,7 +27,7 @@ class Dialog extends React.Component {
 	}
 
 	handleClose = () => {
-		this.props.handleCloseDialog();
+		this.props.handleClose();
 	}
 
 	/**
