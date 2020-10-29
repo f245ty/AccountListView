@@ -26,7 +26,7 @@ class SystemMessage extends React.Component {
     handleClose = () => this.setState({ show_dialog: false });
 
     diffTTLDate = () => {
-        let row = this.props.login_state.tableItems[0]
+        let row = this.props.login_state.items[0]
         let dateFrom = Date.parse(row["create_at"])
         let dateTo = Date.parse(this.props.location.hash === "#file" ? row["csv_ttl"] : row["zip_ttl"])
         return Math.floor((dateTo - dateFrom) / 86400000)
@@ -36,7 +36,7 @@ class SystemMessage extends React.Component {
         return (
             <>
                 {// 初期遷移時は、実行タスクが0件でも初期表示する
-                    (!this.props.login_state.location_flag) && (
+                    (this.props.login_state !== undefined && !this.props.login_state.location_flag) && (
                         // ダウンロード開始不可の場合のメッセージ
                         (this.props.login_state.items.length !== 0 && this.props.login_state.is_process === true)
                             ?
@@ -60,7 +60,7 @@ class SystemMessage extends React.Component {
                                 <div className="text-left">
                                     {this.props.location.hash !== "#file"
                                         ?
-                                        this.props.login_state.is_search_result === true
+                                        (this.props.login_state.is_search_result === true && this.props.login_state.items.length !== 0)
                                             ?
                                             <div>
                                                 {MAIL_NOTIFICATION_MSG}
