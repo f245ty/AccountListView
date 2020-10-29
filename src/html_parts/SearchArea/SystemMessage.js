@@ -64,6 +64,7 @@ class SystemMessage extends React.Component {
                                             ?
                                             <div>
                                                 {MAIL_NOTIFICATION_MSG}
+                                                <br />
                                                 {CSV_RETENSION_PERIOD.replace('10', this.diffTTLDate())}
                                             </div>
                                             :

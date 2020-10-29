@@ -156,7 +156,7 @@ class Searchbar extends React.Component {
                         )}
                         <InputGroup.Append>
                             <Button className="rounded ml-3" type="submit" disabled={this.props.location.hash === "#file" && this.props.login_state.is_process}>
-                                <i className={this.props.location.hash === "#file" ? "fas fa-download" : "fa fa-search"}></i> {this.props.location.hash === "#file" ? "ダウンロード" : "一覧CSV作成開始"}
+                                <i className="fas fa-file-signature"></i> CSV 書出
                             </Button>
                         </InputGroup.Append>
                     </InputGroup>
