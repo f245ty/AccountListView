@@ -17,9 +17,11 @@ AWS.config.credentials = new AWS.CognitoIdentityCredentials({
 async function fetchData(searchType, login_state, post_flag = false) {
 
     let url = GET_PERMISSION_URL
+    let is_all_search_permission = login_state.user_role === "superuser" ? true : false
     var localstate = {
         "process_type": searchType.replace("#", ""),
-        "user_email": login_state.login_account
+        "user_email": login_state.login_account,
+        "is_all_search_permission": is_all_search_permission
     }
 
     login_state.client_config.invokeUrl = url;

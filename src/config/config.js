@@ -7,6 +7,7 @@ var IDENTITY_POOL_ID = ''
 var ACCOUNT_ID = ''
 
 // Group ID
+var SUPER_USER_GROUP_ID = ''
 var ADMIN_GROUP_ID = ''
 var MNG_GROUP_ID = ''
 
@@ -32,6 +33,7 @@ if (react_app_env === "prod") {
     REGION = 'ap-northeast-1'
     IDENTITY_POOL_ID = `${REGION}:fe11ba82-e9f9-4481-b370-8eb53729fc29`
     ACCOUNT_ID = '498191950326'
+    SUPER_USER_GROUP_ID = ``
     ADMIN_GROUP_ID = '269ec94e-7c5f-48b6-a541-1a34b08208a0'
     MNG_GROUP_ID = 'd5b80467-c8b5-4edc-a714-45c30e86fbee'
     DOMAIN = 'login.microsoftonline.com'
@@ -46,6 +48,7 @@ if (react_app_env === "prod") {
     REGION = 'ap-northeast-1'
     IDENTITY_POOL_ID = `${REGION}:9cd11c18-7668-4ea3-8427-40a8aed8ec94`
     ACCOUNT_ID = '707439530427'
+    SUPER_USER_GROUP_ID = `a384385b-2edd-4038-91ed-94ccf529c3c6`
     ADMIN_GROUP_ID = '86c759da-6918-4d19-8931-2cfa5f8f6ec7'
     MNG_GROUP_ID = 'a746a5b4-795b-4d5a-8d2b-4559b92d9bf4'
     DOMAIN = 'login.microsoftonline.com'
@@ -71,6 +74,12 @@ export {
 // common
 // メニュー定義
 export const MENU_ITEMS = {
+    "superuser": {
+        "#owner": ["@", "管理権限フォルダ一覧"],
+        "#user": ["@", "利用可能フォルダ一覧"],
+        "#folder": ["/", "指定フォルダ利用者一覧"],
+        "#file": ["/", "指定フォルダ内ファイル情報集計"],
+    },
     "administrator": {
         "#owner": ["@", "管理権限フォルダ一覧"],
         "#user": ["@", "利用可能フォルダ一覧"],
@@ -114,7 +123,7 @@ export const OUTPUT_LABELS = {
 // 実行ステータスラベル
 export const STATUS_LABEL_FILE = {
     0: "処理中",
-    1: "CSV出力中",
+    1: "ファイル作成中",
     2: "正常終了中",
     3: "完了",
     4: "失敗",
@@ -122,7 +131,7 @@ export const STATUS_LABEL_FILE = {
 }
 
 export const STATUS_LABEL = {
-    0: "CSV出力中",
+    0: "ファイル作成中",
     1: "完了",
     2: "失敗"
 }
@@ -145,16 +154,18 @@ export const LOGINS_SET_ID = DOMAIN + '/' + DIRECTORY_ID + '/v2.0'
 
 // ロール設定(groupe ID : 名前)
 export const ROLE_NAME = {
+    "superuser": "SuperUser",
     "administrator": "システム管理者",
     "manager": "一般管理者",
     "user": "一般ユーザ"
 }
 
 // ロールの権限序列設定
-export const ROLE_ORDER = ["administrator", "manager"]
+export const ROLE_ORDER = ["superuser", "administrator", "manager"]
 
 // ロール付与グループ一覧
 export const ROLES = {
+    "superuser": SUPER_USER_GROUP_ID,
     "administrator": ADMIN_GROUP_ID,
     "manager": MNG_GROUP_ID
 }
