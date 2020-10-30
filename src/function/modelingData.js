@@ -1,13 +1,13 @@
 import { OUTPUT_LABELS, DEFAULT_ROWS_PAR_PAGE } from '../config/config'
 
 // Dynamo の JSON から内部用 JSON リストに成形
-function modelingData(response, searchType) {
+function modelingData(response, searchType, superuser_flag = false) {
     var response_data = response.datas;
 
     var result = [];
     var rows = [];
     var count = 0;
-    var labels = OUTPUT_LABELS['screen'][searchType]
+    var labels = superuser_flag ? OUTPUT_LABELS["superuser"][searchType] : OUTPUT_LABELS['screen'][searchType]
 
     response_data.forEach(data => {
         var col = {};

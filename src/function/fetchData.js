@@ -46,7 +46,7 @@ async function fetchData(searchType, login_state, post_flag = false) {
         .then(function (result) {
             console.log(result)
             let state = login_state
-            state = modelingData(result.data, searchType)
+            state = modelingData(result.data, searchType, is_all_search_permission)
             return state
 
         }).catch(function (result) {

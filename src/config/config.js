@@ -111,11 +111,18 @@ export const HEADER_LABEL = {
 // 表示ラベルの順番、ラベルの表示、非表示の設定
 const FILE_LABELS = ['#', 'folder_path', 'user_email', 'create_at', 'csv_ttl', 'process_state', 'download_ln']
 const PERMISSION_LABELS = ['#', 'search_condition', 'create_at', 'zip_ttl', 'process_state', 'download_ln']
+const PERMISSION_LABELS_SUPERUSER = ['#', 'search_condition', 'user_email', 'create_at', 'zip_ttl', 'process_state', 'download_ln']
 export const OUTPUT_LABELS = {
     "screen": {
         "#owner": PERMISSION_LABELS,
         "#user": PERMISSION_LABELS,
         "#folder": PERMISSION_LABELS,
+        "#file": FILE_LABELS
+    },
+    "superuser": {
+        "#owner": PERMISSION_LABELS_SUPERUSER,
+        "#user": PERMISSION_LABELS_SUPERUSER,
+        "#folder": PERMISSION_LABELS_SUPERUSER,
         "#file": FILE_LABELS
     }
 }
