@@ -16,12 +16,18 @@ class TableBody extends React.Component {
         if (isAccessTokenEnable(this.props.login_state)) {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', s3_url);
-            xhr.responseType = "text"
+            xhr.responseType = "blob"
             xhr.onload = (oEvent) => {
+                console.log(xhr)
                 // ダウンロード完了後の処理を定義する
                 if (xhr.status === 200) {
                     let bom = new Uint8Array([0xEF, 0xBB, 0xBF]); // UTF-8
-                    let blob = new Blob([bom, xhr.response], { type: 'text/csv' });
+                    let blob
+                    if (this.props.location.hash === "#file") {
+                        blob = new Blob([bom, xhr.response], { type: 'text/csv' });
+                    } else {
+                        blob = new Blob([xhr.response, { headers: { Accept: 'application/zip' } }])
+                    }
                     let f_name = filename;
                     if (window.navigator.msSaveBlob) {
                         // IEとEdge
