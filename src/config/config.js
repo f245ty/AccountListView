@@ -49,8 +49,8 @@ if (react_app_env === "prod") {
     IDENTITY_POOL_ID = `${REGION}:9cd11c18-7668-4ea3-8427-40a8aed8ec94`
     ACCOUNT_ID = '707439530427'
     SUPER_USER_GROUP_ID = `a384385b-2edd-4038-91ed-94ccf529c3c6`
-    ADMIN_GROUP_ID = '86c759da-6918-4d19-8931-2cfa5f8f6ec7'
-    MNG_GROUP_ID = 'a746a5b4-795b-4d5a-8d2b-4559b92d9bf4'
+    ADMIN_GROUP_ID = '308b1ec4-989d-4de7-aff8-4a40a63b9d60'
+    MNG_GROUP_ID = '1a776e53-06d1-432b-b2fd-f53f80a6d795'
     DOMAIN = 'login.microsoftonline.com'
     DIRECTORY_ID = '8a08112f-92e8-43fe-9a0a-56d393b9f042'
     APPLICATION_ID = '3a0aef16-07ab-4f88-8122-4114b7c496a1'
