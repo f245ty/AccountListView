@@ -100,8 +100,8 @@ export const HEADER_LABEL = {
     "user_email": "実行ユーザ",
     "folder_path": "検索パス",
     "create_at": "実行日時",
-    "csv_ttl": "CSV保管期間",
-    "zip_ttl": "CSV保管期間",
+    "csv_ttl": "ファイル保管期間",
+    "zip_ttl": "ファイル保管期間",
     "download_ln": "ダウンロードリンク",
     "process_state": "実行ステータス",
     // "search_email": "フォルダ管理者",
@@ -138,9 +138,9 @@ export const STATUS_LABEL_FILE = {
 }
 
 export const STATUS_LABEL = {
-    0: "ファイル作成中",
-    1: "完了",
-    2: "失敗"
+    1: "ファイル作成中",
+    2: "完了",
+    3: "失敗"
 }
 
 // 1ページあたりのページ数のデフォルト
