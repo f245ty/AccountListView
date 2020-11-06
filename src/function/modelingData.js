@@ -1,4 +1,5 @@
 import { OUTPUT_LABELS, DEFAULT_ROWS_PAR_PAGE } from '../config/config'
+import sortTableItems from './sortTableItems';
 
 // Dynamo の JSON から内部用 JSON リストに成形
 function modelingData(response, searchType, superuser_flag = false) {
@@ -26,6 +27,8 @@ function modelingData(response, searchType, superuser_flag = false) {
     result.is_search_result = response.is_search_result
     // ページ数を算出
     result.pages = Math.ceil(rows.length / DEFAULT_ROWS_PAR_PAGE)
+    let sortedTableItems = sortTableItems(result.items, "create_at", "desc")
+    result.items = sortedTableItems
     return result
 
 }
