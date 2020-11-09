@@ -41,7 +41,7 @@ if (react_app_env === "prod") {
     APPLICATION_ID = '7adcb600-5dfd-422e-8df0-0f33363bd19c'
     PROTOCOL = 'oauth2/v2.0'
     GET_GROUPS_URL = `https://g37zf38yj5.execute-api.${REGION}.amazonaws.com/prod`
-    GET_PERMISSION_URL = `https://uuy7k5gfqb.execute-api.${REGION}.amazonaws.com/prod/`
+    GET_PERMISSION_URL = `https://h3px2pt230.execute-api.${REGION}.amazonaws.com/prod/`
     GET_CSV_TASKS_URL = `https://wxq147i7n1.execute-api.${REGION}.amazonaws.com/prod`
     GET_S3_URL = `https://navhbhki2d.execute-api.${REGION}.amazonaws.com/prod`
 } else if (react_app_env === "dev") {
