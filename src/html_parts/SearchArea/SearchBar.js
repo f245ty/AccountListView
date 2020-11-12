@@ -112,6 +112,16 @@ class Searchbar extends React.Component {
                                 {MENU_ITEMS[this.props.login_state.user_role][this.props.location.hash][0]}
                             </InputGroup.Text>
                         </InputGroup.Prepend>
+                        {(this.props.location.hash === "#check") && (
+                            <Form.Control
+                                className="rounded-right"
+                                value={this.props.login_state.searchText}
+                                placeholder="前方一致検索を行います。"
+                                type="text"
+                                required
+                                onChange={(e) => { this.handleChangeText(e); }}
+                            />
+                        )}
                         {(this.props.location.hash === "#file") && (
                             <Form.Control
                                 className="rounded-right"
@@ -156,7 +166,14 @@ class Searchbar extends React.Component {
                         )}
                         <InputGroup.Append>
                             <Button className="rounded ml-3" type="submit" disabled={this.props.location.hash === "#file" && this.props.login_state.is_process}>
-                                <i className="fas fa-file-signature"></i> CSV 書出
+                                {this.props.location.hash === "#check"
+                                    ? <i className="fas fa-search"></i>
+                                    : <i className="fas fa-file-signature"></i>
+                                }
+                                {this.props.location.hash === "#check"
+                                    ? " 検索"
+                                    : " CSV 書出"
+                                }
                             </Button>
                         </InputGroup.Append>
                     </InputGroup>

@@ -23,7 +23,7 @@ class TableBody extends React.Component {
                 if (xhr.status === 200) {
                     let bom = new Uint8Array([0xEF, 0xBB, 0xBF]); // UTF-8
                     let blob
-                    if (this.props.location.hash === "#file") {
+                    if (this.props.location.hash === "#file" || this.props.location.hash === "#check") {
                         blob = new Blob([bom, xhr.response], { type: 'text/csv' });
                     } else {
                         blob = new Blob([xhr.response, { headers: { Accept: 'application/zip' } }])
@@ -77,7 +77,15 @@ class TableBody extends React.Component {
         return (
             <tbody>
                 {this.props.login_state.tableItems.map((row, index) => (
-                    <tr key={index}>
+                    <tr key={index}
+                        className={
+                            this.props.location.hash === "#check"
+                                ? row["unauthorized_users"] !== 0
+                                    ? "table-danger"
+                                    : null
+                                : null
+                        }
+                    >
                         {Object.keys(row).map((col, index) => {
                             return (
                                 <td key={index}
@@ -86,11 +94,18 @@ class TableBody extends React.Component {
                                         "失敗" === (this.props.location.hash === "#file" ? STATUS_LABEL_FILE[row[col]] : STATUS_LABEL[row[col]])
                                             && col === 'process_state'
                                             ? "text-center text-danger"
-                                            : col === '#' || col === 'create_at' || col.match('ttl') || col === 'process_state' || col === 'download_ln'
+                                            : col === '#'
+                                                || col === 'create_at'
+                                                || col.match('ttl')
+                                                || col === 'check_date'
+                                                || col === 'process_state'
+                                                || col.match('download')
+                                                || col === "unauthorized_users"
                                                 ? "text-center"
-                                                : "text-left"}
+                                                : "text-left"
+                                    }
                                 >
-                                    {col === 'download_ln'
+                                    { col === 'download_ln'
                                         ?
                                         <a href={this.props.location}
                                             role="button"
@@ -109,7 +124,8 @@ class TableBody extends React.Component {
                                 </td>
                             )
                         })}
-                    </tr>))}
+                    </tr>))
+                }
             </tbody>
         )
     }
