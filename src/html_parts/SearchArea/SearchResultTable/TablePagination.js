@@ -102,7 +102,9 @@ class TablePagination extends React.Component {
                     <Pagination size="sm" className="text-center ailgn-items-center" >{items}</Pagination>
                 </Navbar.Text>
                 <Navbar>
-                    <span className="text-left mb-0 small">{ATTENTION_MSG}{ERR_WAIT_MSG}</span>
+                    <span className="text-left mb-0 small">
+                        {this.props.location.hash !== "#check" ? ATTENTION_MSG + ERR_WAIT_MSG : null}
+                    </span>
                 </Navbar>
             </Navbar>
         );

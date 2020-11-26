@@ -29,6 +29,9 @@ var GET_CSV_TASKS_URL = ''
 // CSVダウンロード実行タスクのダウンロードリンクから署名付きURLを取得するAPI
 var GET_S3_URL = ''
 
+// 不正権限検査履歴テーブル情報取得API
+var GET_CHECK_AUTH = ''
+
 if (react_app_env === "prod") {
     REGION = 'ap-northeast-1'
     IDENTITY_POOL_ID = `${REGION}:fe11ba82-e9f9-4481-b370-8eb53729fc29`
@@ -55,10 +58,11 @@ if (react_app_env === "prod") {
     DIRECTORY_ID = '8a08112f-92e8-43fe-9a0a-56d393b9f042'
     APPLICATION_ID = '3a0aef16-07ab-4f88-8122-4114b7c496a1'
     PROTOCOL = 'oauth2/v2.0'
-    GET_GROUPS_URL = `https://stp3h4k946.execute-api.${REGION}.amazonaws.com/develop`
+    GET_GROUPS_URL = `https://stp3h4k946.execute-api.${REGION}.amazonaws.com/localhost`
     GET_PERMISSION_URL = `https://fusppa21xg.execute-api.${REGION}.amazonaws.com/dev`
     GET_CSV_TASKS_URL = `https://fj0y0qtqe2.execute-api.${REGION}.amazonaws.com/dev`
     GET_S3_URL = `https://bwz2s1u3kc.execute-api.${REGION}.amazonaws.com/dev`
+    GET_CHECK_AUTH = `https://bbybt277lb.execute-api.${REGION}.amazonaws.com/dev`
 }
 
 export {
@@ -68,7 +72,8 @@ export {
     GET_GROUPS_URL,
     GET_PERMISSION_URL,
     GET_CSV_TASKS_URL,
-    GET_S3_URL
+    GET_S3_URL,
+    GET_CHECK_AUTH
 }
 
 // common
@@ -79,12 +84,14 @@ export const MENU_ITEMS = {
         "#user": ["@", "利用可能フォルダ一覧"],
         "#folder": ["/", "指定フォルダ利用者一覧"],
         "#file": ["/", "指定フォルダ内ファイル情報集計"],
+        "#check": ["/", "社内限定サイト不正権限検査"],
     },
     "administrator": {
         "#owner": ["@", "管理権限フォルダ一覧"],
         "#user": ["@", "利用可能フォルダ一覧"],
         "#folder": ["/", "指定フォルダ利用者一覧"],
         "#file": ["/", "指定フォルダ内ファイル情報集計"],
+        "#check": ["/", "社内限定サイト不正権限検査"],
     },
     "manager": {
         "#owner": ["@", "管理権限フォルダ一覧"],
@@ -104,26 +111,32 @@ export const HEADER_LABEL = {
     "zip_ttl": "ファイル保管期間",
     "download_ln": "ダウンロードリンク",
     "process_state": "実行ステータス",
-    // "search_email": "フォルダ管理者",
-    "search_condition": "検索パス"
+    "search_condition": "検索パス",
+    "site_path": "サイトパス",
+    "check_date": "検査日時",
+    "download_ttl": "ファイルダウンロード期限",
+    "unauthorized_users": "不正権限アカウント数",
 }
 
 // 表示ラベルの順番、ラベルの表示、非表示の設定
 const FILE_LABELS = ['#', 'folder_path', 'user_email', 'create_at', 'csv_ttl', 'process_state', 'download_ln']
 const PERMISSION_LABELS = ['#', 'search_condition', 'create_at', 'zip_ttl', 'process_state', 'download_ln']
 const PERMISSION_LABELS_SUPERUSER = ['#', 'search_condition', 'user_email', 'create_at', 'zip_ttl', 'process_state', 'download_ln']
+const CHECK_LABELS = ['#', 'site_path', 'check_date', 'download_ttl', 'unauthorized_users', 'download_ln']
 export const OUTPUT_LABELS = {
     "screen": {
         "#owner": PERMISSION_LABELS,
         "#user": PERMISSION_LABELS,
         "#folder": PERMISSION_LABELS,
-        "#file": FILE_LABELS
+        "#file": FILE_LABELS,
+        "#check": CHECK_LABELS,
     },
     "superuser": {
         "#owner": PERMISSION_LABELS_SUPERUSER,
         "#user": PERMISSION_LABELS_SUPERUSER,
         "#folder": PERMISSION_LABELS_SUPERUSER,
-        "#file": FILE_LABELS
+        "#file": FILE_LABELS,
+        "#check": CHECK_LABELS,
     }
 }
 

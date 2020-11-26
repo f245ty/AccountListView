@@ -27,7 +27,9 @@ function modelingData(response, searchType, superuser_flag = false) {
     result.is_search_result = response.is_search_result
     // ページ数を算出
     result.pages = Math.ceil(rows.length / DEFAULT_ROWS_PAR_PAGE)
-    let sortedTableItems = sortTableItems(result.items, "create_at", "desc")
+    let sort_key = "create_at"
+    if (searchType === "#check") sort_key = "check_date"
+    let sortedTableItems = sortTableItems(result.items, sort_key, "desc")
     result.items = sortedTableItems
     return result
 

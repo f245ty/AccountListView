@@ -27,9 +27,23 @@ class SystemMessage extends React.Component {
 
     diffTTLDate = () => {
         let row = this.props.login_state.items[0]
-        let dateFrom = Date.parse(row["create_at"])
-        let dateTo = Date.parse(this.props.location.hash === "#file" ? row["csv_ttl"] : row["zip_ttl"])
-        return Math.floor((dateTo - dateFrom) / 86400000)
+        let dateFrom
+        let dateTo
+        let diff
+        if (this.props.location.hash === "#check") {
+            if (this.props.login_state.items.length === 0) {
+                diff = '90'
+            } else {
+                dateFrom = Date.parse(row["check_date"])
+                dateTo = Date.parse(row["download_ttl"])
+                diff = Math.floor((dateTo - dateFrom) / 86400000)
+            }
+        } else {
+            dateFrom = Date.parse(row["create_at"])
+            dateTo = Date.parse(this.props.location.hash === "#file" ? row["csv_ttl"] : row["zip_ttl"])
+            diff = Math.floor((dateTo - dateFrom) / 86400000)
+        }
+        return diff
     }
 
     render() {
@@ -51,6 +65,7 @@ class SystemMessage extends React.Component {
                                     {(this.props.location.hash === "#user") && (EXPLANATION["user"])}
                                     {(this.props.location.hash === "#folder") && (EXPLANATION["folder"])}
                                     {(this.props.location.hash === "#file") && (EXPLANATION["file"])}
+                                    {(this.props.location.hash === "#check") && (EXPLANATION["check"].replace('10', this.diffTTLDate()))}
                                     <br />
                                     {this.props.location.hash === "#folder" && (SEARCH_CONDITION_FOLDER)}
                                     {(this.props.location.hash === "#owner" || this.props.location.hash === "#user") && (SEARCH_CONDITION)}

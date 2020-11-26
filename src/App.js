@@ -32,6 +32,7 @@ import {
 import './assets/styles/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import fetchData from './function/fetchData';
+import getCheckAuth from './function/getCheckAuth';
 
 var apigClientFactory = require('../node_modules/aws-api-gateway-client').default;
 
@@ -295,6 +296,10 @@ class App extends React.Component {
                 getCSVTasks(hash, this.state, false).then((tableItems) => {
                     this.onChangeTableItems(tableItems, this.state.page);
                 })
+            } else if (hash === "#check") {
+                getCheckAuth(hash, this.state).then((tableItems) => {
+                    this.onChangeTableItems(tableItems, this.state.page);
+                })
             } else {
                 fetchData(hash, this.state, false).then((tableItems) => {
                     this.onChangeTableItems(tableItems, this.state.page);
@@ -311,7 +316,7 @@ class App extends React.Component {
 
     onChangePage = (hash) => {
         let updateSearchText = this.state.login_account
-        if (hash === "#file" || hash === "#folder") {
+        if (MENU_ITEMS[this.state.user_role][hash][0] === "/") {
             updateSearchText = "/"
         }
         this.setState({
