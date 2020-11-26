@@ -36,7 +36,7 @@ if (react_app_env === "prod") {
     REGION = 'ap-northeast-1'
     IDENTITY_POOL_ID = `${REGION}:fe11ba82-e9f9-4481-b370-8eb53729fc29`
     ACCOUNT_ID = '498191950326'
-    SUPER_USER_GROUP_ID = ``
+    SUPER_USER_GROUP_ID = `6ceb8deb-060c-4af6-8f4b-0488e606ed45`
     ADMIN_GROUP_ID = '269ec94e-7c5f-48b6-a541-1a34b08208a0'
     MNG_GROUP_ID = 'd5b80467-c8b5-4edc-a714-45c30e86fbee'
     DOMAIN = 'login.microsoftonline.com'
