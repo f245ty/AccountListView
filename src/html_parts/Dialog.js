@@ -49,6 +49,10 @@ class Dialog extends React.Component {
 						? <Modal.Title>{M.SEARCH_MSG}</Modal.Title>
 						: null
 					}
+					{this.props.reception_flag
+						? <Modal.Title>{M.RECEPTION_MSG}</Modal.Title>
+						: null
+					}
 					{this.props.csv_flag
 						? <Modal.Title>{M.CSV_HEADER}</Modal.Title>
 						: null

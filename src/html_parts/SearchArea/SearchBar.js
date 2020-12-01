@@ -9,6 +9,7 @@ import Dialog from '../Dialog';
 import isAccessTokenEnable from '../../function/isAccessTokenEnable'
 import getCSVTasks from '../../function/getCSVTasks';
 import fetchData from '../../function/fetchData';
+import getCheckAuth from '../../function/getCheckAuth';
 
 var cookies = new Cookies()
 
@@ -18,6 +19,7 @@ class Searchbar extends React.Component {
         this.state = {
             loading: false,
             search_flag: false,
+            reception_flag: false,
             err_flag: false,
             text: ""
         }
@@ -52,17 +54,25 @@ class Searchbar extends React.Component {
     }
 
     executeSearch = (hash) => {
-        this.setState({
-            loading: true,
-            search_flag: true
-        })
+        this.setState({ loading: true })
+        if (hash === "#check") {
+            this.setState({ search_flag: true })
+        } else {
+            this.setState({ reception_flag: true })
+        }
 
         if (hash === "#file") {
             getCSVTasks(this.props.location.hash, this.props.login_state, true).then((datas) => {
                 this.handleChangeTableItems(datas, 1);
                 this.setState({ loading: false })
             })
-        } else {
+        } else if (hash === "#check") {
+            getCheckAuth(this.props.location.hash, this.props.login_state, true).then((datas) => {
+                this.handleChangeTableItems(datas, 1);
+                this.setState({ loading: false })
+            })
+        }
+        else {
             fetchData(this.props.location.hash, this.props.login_state, true).then((datas) => {
                 this.handleChangeTableItems(datas, 1)
                 this.setState({ loading: false })
@@ -181,6 +191,7 @@ class Searchbar extends React.Component {
                 <Dialog
                     show={this.state.loading}
                     search_flag={this.state.search_flag}
+                    reception_flag={this.state.reception_flag}
                     err_flag={this.state.err_flag}
                     text={this.state.text}
                     handleClose={this.handleClose}

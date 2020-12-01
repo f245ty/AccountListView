@@ -317,7 +317,7 @@ class App extends React.Component {
     onChangePage = (hash) => {
         let updateSearchText = this.state.login_account
         if (MENU_ITEMS[this.state.user_role][hash][0] === "/") {
-            updateSearchText = "/"
+            updateSearchText = MENU_ITEMS[this.state.user_role][hash][0]
         }
         this.setState({
             searchText: updateSearchText,

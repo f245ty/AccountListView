@@ -16,7 +16,8 @@ export const CSV_LOADING = 'ページを閉じてもダウンロードは実行�
 export const CSV_RETENSION_PERIOD = 'CSV保管期間は、約10日間です。'
 
 // 検索
-export const SEARCH_MSG = 'CSV作成受付中です。'
+export const RECEPTION_MSG = 'CSV作成受付中です。'
+export const SEARCH_MSG = '検索中です。'
 export const WAIT_MSG = '※しばらく時間がかかることがあります。'
 export const EXPLANATION = {
     "owner": "指定したユーザが管理権限を持つフォルダの一覧と、それらのフォルダを利用できるユーザの一覧をCSVファイル形式で作成します。",
