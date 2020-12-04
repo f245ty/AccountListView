@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie';
 import React from 'react';
-import { STATUS_LABEL } from '../../../config/config';
+import { STATUS_LABEL, STATUS_LABEL_FILE } from '../../../config/config';
 import getS3Url from '../../../function/getS3Url';
 import isAccessTokenEnable from '../../../function/isAccessTokenEnable'
 
@@ -16,12 +16,18 @@ class TableBody extends React.Component {
         if (isAccessTokenEnable(this.props.login_state)) {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', s3_url);
-            xhr.responseType = "text"
+            xhr.responseType = "blob"
             xhr.onload = (oEvent) => {
+                console.log(xhr)
                 // ダウンロード完了後の処理を定義する
                 if (xhr.status === 200) {
                     let bom = new Uint8Array([0xEF, 0xBB, 0xBF]); // UTF-8
-                    let blob = new Blob([bom, xhr.response], { type: 'text/csv' });
+                    let blob
+                    if (this.props.location.hash === "#file" || this.props.location.hash === "#check") {
+                        blob = new Blob([bom, xhr.response], { type: 'text/csv' });
+                    } else {
+                        blob = new Blob([xhr.response, { headers: { Accept: 'application/zip' } }])
+                    }
                     let f_name = filename;
                     if (window.navigator.msSaveBlob) {
                         // IEとEdge
@@ -56,7 +62,13 @@ class TableBody extends React.Component {
     onClickDownloadLn = (event, filename) => {
         event.preventDefault();
         this.props.onChangeLoading(true)
-        getS3Url(filename, this.props.login_state).then((s3_url) => {
+        let pj_name = ""
+        if (this.props.location.hash === "#file") {
+            pj_name = "file in folder"
+        } else {
+            pj_name = "authority reference"
+        }
+        getS3Url(pj_name, filename, this.props.login_state).then((s3_url) => {
             this.csvDownload(filename, s3_url)
         })
     }
@@ -64,31 +76,56 @@ class TableBody extends React.Component {
     render() {
         return (
             <tbody>
-                {this.props.login_state.items.map((row, index) => (
-                    <tr key={index}>
+                {this.props.login_state.tableItems.map((row, index) => (
+                    <tr key={index}
+                        className={
+                            this.props.location.hash === "#check"
+                                ? row["unauthorized_users"] !== 0
+                                    ? "table-danger"
+                                    : null
+                                : null
+                        }
+                    >
                         {Object.keys(row).map((col, index) => {
                             return (
                                 <td key={index}
-                                    className={col === 'process_state' && STATUS_LABEL[row[col]] === "失敗" ? "text-center text-danger"
-                                        : col.indexOf('p_') === 0 || col === '#' || col === 'create_at' || col === 'csv_ttl' || col === 'process_state' || col === 'download_ln'
-                                            ? "text-center"
-                                            : "text-left"}
+                                    className={
+                                        // ステータスラベルの切り替え
+                                        "失敗" === (this.props.location.hash === "#file" ? STATUS_LABEL_FILE[row[col]] : STATUS_LABEL[row[col]])
+                                            && col === 'process_state'
+                                            ? "text-center text-danger"
+                                            : col === '#'
+                                                || col === 'create_at'
+                                                || col.match('ttl')
+                                                || col === 'check_date'
+                                                || col === 'process_state'
+                                                || col.match('download')
+                                                || col === "unauthorized_users"
+                                                ? "text-center"
+                                                : "text-left"
+                                    }
                                 >
-                                    {col === 'download_ln'
+                                    { col === 'download_ln'
                                         ?
-                                        <a href="#file" role="button" onClick={(event) => this.onClickDownloadLn(event, row[col].split(".com/")[1])}>
+                                        <a href={this.props.location}
+                                            role="button"
+                                            onClick={(event) => this.onClickDownloadLn(event, row[col].split(".com/")[1])}
+                                        >
                                             {row[col].split(".com/")[1]}
                                         </a>
                                         :
                                         col === 'process_state'
                                             ?
-                                            STATUS_LABEL[row[col]]
+                                            this.props.location.hash === "#file"
+                                                ? STATUS_LABEL_FILE[row[col]]
+                                                : STATUS_LABEL[row[col]]
                                             :
                                             row[col]}
                                 </td>
                             )
                         })}
-                    </tr>))}
+                    </tr>))
+                }
             </tbody>
         )
     }

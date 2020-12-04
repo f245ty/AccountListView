@@ -40,16 +40,16 @@ class HeaderMenu extends React.Component {
      */
     handleClose = () => this.setState({ show_dialog: false });
 
-    /**
+    /**D
      * ヘッダーメニューを作成する。ログインフラグに応じて、ボタン内部を変更する。
      */
     render() {
         // hash を各要素に分割
         let hashs = this.props.location.hash.slice(1).split('&');
         let hash = {};
-        for(let item of hashs){
+        for (let item of hashs) {
             let kv = item.split('=');
-            hash[kv[0]]=kv[1];
+            hash[kv[0]] = kv[1];
         }
 
         // id_token がハッシュに指定されていたら Cookie に退避

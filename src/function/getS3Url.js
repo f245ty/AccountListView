@@ -9,14 +9,15 @@ AWS.config.credentials = new AWS.CognitoIdentityCredentials({
     IdentityPoolId: IDENTITY_POOL_ID
 });
 
-async function getS3Url(filename, login_state) {
+async function getS3Url(pj_name, filename, login_state) {
     login_state.client_config.invokeUrl = GET_S3_URL;
     var apigClient = apigClientFactory.newClient(login_state.client_config);
     var pathParams = {};
     var pathTemplate = '';
     var additionalParams = {
         queryParams: {
-            "filename": filename
+            "filename": filename,
+            "pj_name": pj_name
         }
     };
     var body = {};
