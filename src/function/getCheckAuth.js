@@ -19,8 +19,8 @@ async function getCheckAuth(searchType, login_state) {
     var pathParams = {};
     var pathTemplate = '';
     var additionalParams = {};
+    var method = 'POST'
     var body = localstate
-    var method = 'POST';
 
     console.log(localstate)
 

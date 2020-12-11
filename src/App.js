@@ -72,6 +72,7 @@ class App extends React.Component {
         this.cookies = new Cookies();
     }
 
+
     /**
      * JWTトークン検証を行い、Cognitoへ認証情報を問い合わせ、ログイン/ログアウトを実施する。
      * @param {string} id_token_jwt jwtトークン
@@ -94,12 +95,13 @@ class App extends React.Component {
         }
 
         // nonce が一致しなかったらトークンを破棄
-        let nonce = this.cookies.get('nonce');
-        this.cookies.remove('nonce');
-        if (nonce !== id_token.nonce) {
-            this.cookies.remove('jwt');
-            return;
-        }
+        // let nonce = this.cookies.get('nonce');
+        // this.cookies.remove('nonce');
+        // if (nonce !== id_token.nonce) {
+        //     console.log(`nonce: ${nonce}, id_token_nonce: ${id_token.nonce}`)
+        //     this.cookies.remove('jwt');
+        //     return;
+        // }
         console.log('Below is the log of id_token in getClientConfig')
         console.log(id_token)
 
@@ -116,7 +118,7 @@ class App extends React.Component {
         cognitoidentity.getId(params,
             (err, data) => {
                 if (err) {
-                    console.log('can not get CognitIdentity')
+                    console.log('can not get CognitoIdentity')
                     console.log(err, err.stack); // an error occurred
                     this.onChangeShowDialog(LOGIN_ERR + ERR_WAIT_MSG)
                     this.setLogout()
@@ -141,6 +143,7 @@ class App extends React.Component {
                                     sessionToken: data.Credentials.SessionToken,
                                     region: REGION
                                 }
+                                console.log(config)
                                 this.setLogIn(config, id_token)
                             }
                         }
@@ -177,6 +180,8 @@ class App extends React.Component {
                 user_role: user_role,
                 client_config: config
             })
+            let latest_hash = sessionStorage.getItem("hash")
+            if (latest_hash) this.onChangePage(latest_hash)
             console.log('login sequence')
         } catch {
             this.onChangeShowDialog(LOGIN_ERR + ERR_WAIT_MSG)
@@ -192,7 +197,10 @@ class App extends React.Component {
     getUserRole(config) {
         // CORS オリジンで呼べないので、Lambda から Azure AD の Token エンドポイントを呼び出して
         // 取得したトークンを取得している
-        let code = { "code": this.cookies.get('code') };
+        let code = {
+            "code": this.cookies.get('code'),
+            "refresh_token": this.cookies.get("refresh_token")
+        };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {};
         var pathTemplate = '';
@@ -206,8 +214,9 @@ class App extends React.Component {
             .then(result => {
                 var id_token = jwt.decode(result.data.id_token);
                 console.log('Below is the log of id_token in getUserRole')
-                console.log(id_token)
                 var user_role = this.applyUserGroup(id_token.groups)
+                // リロード時の認証のため、リフレッシュトークンをCookieに保存する
+                this.cookies.set('refresh_token', result.data.refresh_token)
                 return user_role
             })
             .catch(function (result) {
@@ -297,7 +306,9 @@ class App extends React.Component {
                     this.onChangeTableItems(tableItems, this.state.page);
                 })
             } else if (hash === "#check") {
-                getCheckAuth(hash, this.state).then((tableItems) => {
+                var temp = this.state
+                if (this.state.searchText !== "/") temp.searchText = "/"
+                getCheckAuth(hash, temp).then((tableItems) => {
                     this.onChangeTableItems(tableItems, this.state.page);
                 })
             } else {
@@ -315,6 +326,7 @@ class App extends React.Component {
     }
 
     onChangePage = (hash) => {
+        sessionStorage.setItem("hash", hash)
         let updateSearchText = this.state.login_account
         if (MENU_ITEMS[this.state.user_role][hash][0] === "/") {
             updateSearchText = MENU_ITEMS[this.state.user_role][hash][0]

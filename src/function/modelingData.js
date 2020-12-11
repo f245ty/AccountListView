@@ -4,7 +4,6 @@ import sortTableItems from './sortTableItems';
 // Dynamo の JSON から内部用 JSON リストに成形
 function modelingData(response, searchType, superuser_flag = false) {
     var response_data = response.datas;
-
     var result = [];
     var rows = [];
     var count = 0;
@@ -14,7 +13,7 @@ function modelingData(response, searchType, superuser_flag = false) {
         var col = {};
         col['#'] = ++count;
         for (var value in data) {
-            col[value] = data[value]
+            col[value] = (data[value] === "undefined") ? "" : data[value]
         }
         col = swapColumns(col, labels)  // 列を指定ラベル順に変更
         rows.push(col);
@@ -27,8 +26,7 @@ function modelingData(response, searchType, superuser_flag = false) {
     result.is_search_result = response.is_search_result
     // ページ数を算出
     result.pages = Math.ceil(rows.length / DEFAULT_ROWS_PAR_PAGE)
-    let sort_key = "create_at"
-    if (searchType === "#check") sort_key = "check_date"
+    let sort_key = (searchType === "#check") ? "check_date" : "create_at"
     let sortedTableItems = sortTableItems(result.items, sort_key, "desc")
     result.items = sortedTableItems
     return result

@@ -36,7 +36,7 @@ class Searchbar extends React.Component {
                     this.setState({
                         loading: true,
                         err_flag: true,
-                        search_flag: false,
+                        reception_flag: false,
                         text: FILE_VALIDATION_MSG
                     })
                 } else {
@@ -54,28 +54,37 @@ class Searchbar extends React.Component {
     }
 
     executeSearch = (hash) => {
-        this.setState({ loading: true })
         if (hash === "#check") {
             this.setState({ search_flag: true })
         } else {
             this.setState({ reception_flag: true })
         }
+        this.setState({ loading: true })
 
         if (hash === "#file") {
             getCSVTasks(this.props.location.hash, this.props.login_state, true).then((datas) => {
                 this.handleChangeTableItems(datas, 1);
-                this.setState({ loading: false })
+                this.setState({
+                    loading: false,
+                    reception_flag: false
+                })
             })
         } else if (hash === "#check") {
             getCheckAuth(this.props.location.hash, this.props.login_state, true).then((datas) => {
                 this.handleChangeTableItems(datas, 1);
-                this.setState({ loading: false })
+                this.setState({
+                    loading: false,
+                    search_flag: false
+                })
             })
         }
         else {
             fetchData(this.props.location.hash, this.props.login_state, true).then((datas) => {
                 this.handleChangeTableItems(datas, 1)
-                this.setState({ loading: false })
+                this.setState({
+                    loading: false,
+                    reception_flag: false
+                })
             });
         }
         this.props.handleChangeLocationFlg();

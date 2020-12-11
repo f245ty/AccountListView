@@ -67,7 +67,7 @@ class SystemMessage extends React.Component {
                                     {(this.props.location.hash === "#file") && (EXPLANATION["file"])}
                                     {(this.props.location.hash === "#check") && (EXPLANATION["check"].replace('10', this.diffTTLDate()))}
                                     <br />
-                                    {this.props.location.hash === "#folder" && (SEARCH_CONDITION_FOLDER)}
+                                    {(this.props.location.hash === "#folder" || this.props.location.hash === "#check") && (SEARCH_CONDITION_FOLDER)}
                                     {(this.props.location.hash === "#owner" || this.props.location.hash === "#user") && (SEARCH_CONDITION)}
                                 </div>
                                 :
@@ -77,11 +77,18 @@ class SystemMessage extends React.Component {
                                         ?
                                         (this.props.login_state.is_search_result === true && this.props.login_state.items.length !== 0)
                                             ?
-                                            <div>
-                                                {MAIL_NOTIFICATION_MSG}
-                                                <br />
-                                                {CSV_RETENSION_PERIOD.replace('10', this.diffTTLDate())}
-                                            </div>
+                                            this.props.location.hash === "#check"
+                                                ?
+                                                <div>
+                                                    {EXPLANATION["check"].replace('10', this.diffTTLDate())}
+                                                    <br />
+                                                    {SEARCH_CONDITION_FOLDER}
+                                                </div>
+                                                : <div>
+                                                    {MAIL_NOTIFICATION_MSG}
+                                                    <br />
+                                                    {CSV_RETENSION_PERIOD.replace('10', this.diffTTLDate())}
+                                                </div>
                                             :
                                             // 検索して結果が0件の時は 結果がないと表示する
                                             <div>

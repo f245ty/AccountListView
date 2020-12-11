@@ -62,7 +62,7 @@ if (react_app_env === "prod") {
     GET_PERMISSION_URL = `https://fusppa21xg.execute-api.${REGION}.amazonaws.com/dev`
     GET_CSV_TASKS_URL = `https://fj0y0qtqe2.execute-api.${REGION}.amazonaws.com/dev`
     GET_S3_URL = `https://bwz2s1u3kc.execute-api.${REGION}.amazonaws.com/dev`
-    GET_CHECK_AUTH = `https://bbybt277lb.execute-api.${REGION}.amazonaws.com/dev`
+    GET_CHECK_AUTH = `https://9dxwfufex4.execute-api.${REGION}.amazonaws.com/dev`
 }
 
 export {

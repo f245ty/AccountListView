@@ -58,13 +58,14 @@ class TableBody extends React.Component {
         }
     }
 
-
     onClickDownloadLn = (event, filename) => {
         event.preventDefault();
         this.props.onChangeLoading(true)
         let pj_name = ""
         if (this.props.location.hash === "#file") {
             pj_name = "file in folder"
+        } else if (this.props.location.hash === "#check") {
+            pj_name = "check auth"
         } else {
             pj_name = "authority reference"
         }
@@ -73,19 +74,21 @@ class TableBody extends React.Component {
         })
     }
 
+    splitDownloadLink = (download_ln) => {
+        var display_ln = download_ln.split("_")[0]
+            + "_" + download_ln.split("_")[1]
+            + "_" + download_ln.split("_")[2]
+        if (download_ln.split("_")[3]) {
+            display_ln += download_ln.split("_")[3].slice(-4)
+        }
+        return (display_ln)
+    }
+
     render() {
         return (
             <tbody>
                 {this.props.login_state.tableItems.map((row, index) => (
-                    <tr key={index}
-                        className={
-                            this.props.location.hash === "#check"
-                                ? row["unauthorized_users"] !== 0
-                                    ? "table-danger"
-                                    : null
-                                : null
-                        }
-                    >
+                    <tr key={index}>
                         {Object.keys(row).map((col, index) => {
                             return (
                                 <td key={index}
@@ -105,13 +108,13 @@ class TableBody extends React.Component {
                                                 : "text-left"
                                     }
                                 >
-                                    { col === 'download_ln'
+                                    {col === 'download_ln'
                                         ?
                                         <a href={this.props.location}
                                             role="button"
                                             onClick={(event) => this.onClickDownloadLn(event, row[col].split(".com/")[1])}
                                         >
-                                            {row[col].split(".com/")[1]}
+                                            {row[col] ? this.splitDownloadLink(row[col].split(".com/")[1]) : row[col]}
                                         </a>
                                         :
                                         col === 'process_state'

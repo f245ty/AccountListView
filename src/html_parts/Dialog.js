@@ -58,14 +58,14 @@ class Dialog extends React.Component {
 						: null
 					}
 				</Modal.Header>
-				{this.props.search_flag
+				{this.props.search_flag || this.props.reception_flag
 					? <Modal.Body>
 						<div className="text-center">
 							{/* //ローディングアイコン */}
 							<br />
 							<p><i className="fa fa-refresh fa-spin fa-5x"></i></p>
 							<p>Loading...</p>
-							{this.props.search_flag ? <div>{M.WAIT_MSG}</div> : null}
+							<div>{M.WAIT_MSG}</div>
 						</div>
 					</Modal.Body>
 					: null
