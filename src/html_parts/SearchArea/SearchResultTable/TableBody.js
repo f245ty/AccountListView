@@ -23,7 +23,7 @@ class TableBody extends React.Component {
                 if (xhr.status === 200) {
                     let bom = new Uint8Array([0xEF, 0xBB, 0xBF]); // UTF-8
                     let blob
-                    if (this.props.location.hash === "#file" || this.props.location.hash === "#check") {
+                    if (this.props.location.hash === "#file") {
                         blob = new Blob([bom, xhr.response], { type: 'text/csv' });
                     } else {
                         blob = new Blob([xhr.response, { headers: { Accept: 'application/zip' } }])
