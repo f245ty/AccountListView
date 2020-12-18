@@ -7,8 +7,7 @@ import {
     NO_DATA_MSG,
     SEARCH_CONDITION,
     SEARCH_CONDITION_FOLDER,
-    NOT_FIND_FOLDER_PATH,
-    FILE_VALIDATION_MSG,
+    NOT_FOUND_FOLDER_PATH,
     CSV_RETENSION_PERIOD,
     MAIL_NOTIFICATION_MSG
 } from '../../config/message';
@@ -25,6 +24,7 @@ class SystemMessage extends React.Component {
     // ダイアログ用のハンドラ
     handleClose = () => this.setState({ show_dialog: false });
 
+    // 保管期間をAPIから返却したデータから算出
     diffTTLDate = () => {
         let row = this.props.login_state.items[0]
         let dateFrom
@@ -39,75 +39,88 @@ class SystemMessage extends React.Component {
                 diff = Math.floor((dateTo - dateFrom) / 86400000)
             }
         } else {
-            dateFrom = Date.parse(row["create_at"])
-            dateTo = Date.parse(this.props.location.hash === "#file" ? row["csv_ttl"] : row["zip_ttl"])
-            diff = Math.floor((dateTo - dateFrom) / 86400000)
+            if (this.props.login_state.items.length === 0) {
+                diff = '10'
+            } else {
+                dateFrom = Date.parse(row["create_at"])
+                dateTo = Date.parse(this.props.location.hash === "#file" ? row["csv_ttl"] : row["zip_ttl"])
+                diff = Math.floor((dateTo - dateFrom) / 86400000)
+            }
         }
         return diff
     }
 
-    render() {
-        return (
-            <>
-                {// 初期遷移時は、実行タスクが0件でも初期表示する
-                    (this.props.login_state !== undefined && !this.props.login_state.location_flag) && (
-                        // ダウンロード開始不可の場合のメッセージ
-                        (this.props.login_state.items.length !== 0 && this.props.login_state.is_process === true)
-                            ?
-                            <p>
-                                <span>「{STATUS_LABEL_FILE[this.props.login_state.items[0]['process_state']]}」{EXECUTION_MSG} <br /><br /></span>
-                                {EXPLANATION["file"]}
-                            </p>
-                            :
-                            (this.props.login_state.is_folder_path === undefined && this.props.login_state.is_search_result === undefined)
-                                ? <div>
-                                    {(this.props.location.hash === "#owner") && (EXPLANATION["owner"])}
-                                    {(this.props.location.hash === "#user") && (EXPLANATION["user"])}
-                                    {(this.props.location.hash === "#folder") && (EXPLANATION["folder"])}
-                                    {(this.props.location.hash === "#file") && (EXPLANATION["file"])}
-                                    {(this.props.location.hash === "#check") && (EXPLANATION["check"].replace('10', this.diffTTLDate()))}
-                                    <br />
-                                    {(this.props.location.hash === "#folder" || this.props.location.hash === "#check") && (SEARCH_CONDITION_FOLDER)}
-                                    {(this.props.location.hash === "#owner" || this.props.location.hash === "#user") && (SEARCH_CONDITION)}
-                                </div>
-                                :
-                                // API実行後のメッセージ
-                                <div className="text-left">
-                                    {this.props.location.hash !== "#file"
-                                        ?
-                                        (this.props.login_state.is_search_result === true && this.props.login_state.items.length !== 0)
-                                            ?
-                                            this.props.location.hash === "#check"
-                                                ?
-                                                <div>
-                                                    {EXPLANATION["check"].replace('10', this.diffTTLDate())}
-                                                    <br />
-                                                    {SEARCH_CONDITION_FOLDER}
-                                                </div>
-                                                : <div>
-                                                    {MAIL_NOTIFICATION_MSG}
-                                                    <br />
-                                                    {CSV_RETENSION_PERIOD.replace('10', this.diffTTLDate())}
-                                                </div>
-                                            :
-                                            // 検索して結果が0件の時は 結果がないと表示する
-                                            <div>
-                                                {NO_DATA_MSG}
-                                            </div>
-                                        :
-                                        <div>
-                                            {(this.props.login_state.is_search_permission === false) && (FILE_VALIDATION_MSG)}
-                                            {(this.props.login_state.is_folder_path === false) && (NOT_FIND_FOLDER_PATH)}
-                                        </div>}
-                                </div>
-                    )
+    // システムメッセージを設定
+    setSystemMessage = () => {
+        var message = {}
+        var location = this.props.location.hash.slice(1)
+
+        // 初期遷移時は、実行タスクが0件でも初期表示する
+        message.first_message = EXPLANATION[location]
+
+        if (location === "file") {
+            message.first_message = EXPLANATION[location].replace('10', this.diffTTLDate())
+            // ダウンロード開始不可の場合のメッセージ
+            if (this.props.login_state.items[0] !== undefined && this.props.login_state.is_process === true) {
+                message.no_download_message = `「${STATUS_LABEL_FILE[this.props.login_state.items[0]['process_state']]}」${EXECUTION_MSG}`
+            }
+
+            // 検索フォルダパスの有無
+            if (this.props.login_state.location_flag === false && this.props.login_state.is_folder_path === false) {
+                message.notfound_message = NOT_FOUND_FOLDER_PATH
+            }
+
+        } else if (location === "check") {
+            // 初期遷移時は、実行タスクが0件でも初期表示する
+            message.first_message = EXPLANATION[location].replace('10', this.diffTTLDate())
+            message.second_message = SEARCH_CONDITION_FOLDER
+
+            // 検索結果の有無
+            if (this.props.login_state.location_flag === false && this.props.login_state.is_folder_path === false) {
+                message.notfound_message = NO_DATA_MSG
+            }
+
+        } else {
+            // CSV作成受付後
+            if (this.props.login_state.is_search_result === true && this.props.login_state.items.length !== 0) {
+                message.first_message = MAIL_NOTIFICATION_MSG
+                message.second_message = CSV_RETENSION_PERIOD.replace('10', this.diffTTLDate())
+            } else {
+                if (location === "folder") {
+                    message.second_message = SEARCH_CONDITION_FOLDER
+                } else {
+                    message.second_message = SEARCH_CONDITION
                 }
+            }
+        }
+        return message
+    }
+
+    render() {
+        var message = this.setSystemMessage()
+
+        return (
+            <div>
+                {(message.no_download_message) && (message.no_download_message)}
+                {(message.notfound_message) && (message.notfound_message)}
+                {(message.no_download_message || message.notfound_message) && (<><br /><br /></>)}
+                <div>
+                    {message.first_message}
+                    <br />
+                    {message.second_message}
+                </div>
+
                 {// エラーが発生した時は、エラーメッセージを表示する
                     (this.props.login_state.items.length === 0) && (this.props.login_state.error !== null) && (
-                        <Dialog show={this.state.show_dialog} err_flag={true} text={ERR_WAIT_MSG} handleClose={this.handleClose} />
+                        <Dialog show={this.state.show_dialog}
+                            err_flag={true}
+                            text={ERR_WAIT_MSG}
+                            handleClose={this.handleClose}
+                        />
                     )
                 }
-            </>
+            </div>
+
         )
     }
 }

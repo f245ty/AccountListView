@@ -308,6 +308,7 @@ class App extends React.Component {
             } else if (hash === "#check") {
                 var temp = this.state
                 if (this.state.searchText !== "/") temp.searchText = "/"
+                this.setState({ location_flag: true })
                 getCheckAuth(hash, temp).then((tableItems) => {
                     this.onChangeTableItems(tableItems, this.state.page);
                 })

@@ -34,7 +34,7 @@ export const FILE_VALIDATION_MSG = "「/」だけでは、検索対象が広す�
 
 // 検索結果0件のメッセージ
 export const NO_DATA_MSG = "該当するデータが見つかりませんでした。"
-export const NOT_FIND_FOLDER_PATH = "該当するフォルダパスが見つかりませんでした。"
+export const NOT_FOUND_FOLDER_PATH = "該当するフォルダパスが見つかりませんでした。"
 
 // メール通知
 export const MAIL_NOTIFICATION_MSG = "CSV形式のファイル作成を開始しました。作成完了は、ログインメールアドレスに通知されます。"
