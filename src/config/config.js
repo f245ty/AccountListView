@@ -47,6 +47,7 @@ if (react_app_env === "prod") {
     GET_PERMISSION_URL = `https://h3px2pt230.execute-api.${REGION}.amazonaws.com/prod/`
     GET_CSV_TASKS_URL = `https://wxq147i7n1.execute-api.${REGION}.amazonaws.com/prod`
     GET_S3_URL = `https://navhbhki2d.execute-api.${REGION}.amazonaws.com/prod`
+    GET_CHECK_AUTH = `https://fpm6n3jvm0.execute-api.${REGION}.amazonaws.com/prod`
 } else if (react_app_env === "dev") {
     REGION = 'ap-northeast-1'
     IDENTITY_POOL_ID = `${REGION}:9cd11c18-7668-4ea3-8427-40a8aed8ec94`
@@ -58,7 +59,7 @@ if (react_app_env === "prod") {
     DIRECTORY_ID = '8a08112f-92e8-43fe-9a0a-56d393b9f042'
     APPLICATION_ID = '3a0aef16-07ab-4f88-8122-4114b7c496a1'
     PROTOCOL = 'oauth2/v2.0'
-    GET_GROUPS_URL = `https://stp3h4k946.execute-api.${REGION}.amazonaws.com/localhost`
+    GET_GROUPS_URL = `https://stp3h4k946.execute-api.${REGION}.amazonaws.com/develop`
     GET_PERMISSION_URL = `https://fusppa21xg.execute-api.${REGION}.amazonaws.com/dev`
     GET_CSV_TASKS_URL = `https://fj0y0qtqe2.execute-api.${REGION}.amazonaws.com/dev`
     GET_S3_URL = `https://bwz2s1u3kc.execute-api.${REGION}.amazonaws.com/dev`
